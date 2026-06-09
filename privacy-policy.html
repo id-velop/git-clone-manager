@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Git Magager - Privacy Policy</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f6f8fa;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      color: #24292e;
+      margin-bottom: 10px;
+      font-size: 2em;
+      border-bottom: 2px solid #0366d6;
+      padding-bottom: 10px;
+    }
+    
+    .last-updated {
+      color: #586069;
+      font-size: 0.9em;
+      margin-bottom: 30px;
+      font-style: italic;
+    }
+    
+    h2 {
+      color: #24292e;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+    }
+    
+    h3 {
+      color: #24292e;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1.2em;
+    }
+    
+    p {
+      margin-bottom: 15px;
+    }
+    
+    ul {
+      margin-left: 30px;
+      margin-bottom: 15px;
+    }
+    
+    li {
+      margin-bottom: 8px;
+    }
+    
+    strong {
+      color: #24292e;
+    }
+    
+    a {
+      color: #0366d6;
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    .highlight-box {
+      background: #f1f8ff;
+      border-left: 4px solid #0366d6;
+      padding: 15px 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #e1e4e8;
+      color: #586069;
+      font-size: 0.9em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last updated: June 9, 2026</p>
+
+    <div class="highlight-box">
+      <strong>Summary:</strong> Git Magager does NOT collect, store, or transmit any personal information or user data to external servers. All operations are performed locally on your device.
+    </div>
+
+    <h2>1. Data Collection</h2>
+    <p>Git Magager does <strong>NOT</strong> collect, store, or transmit any of the following:</p>
+    <ul>
+      <li>Personal identification information (name, email, address, etc.)</li>
+      <li>Financial information</li>
+      <li>Authentication credentials</li>
+      <li>Personal communications</li>
+      <li>Location data</li>
+      <li>Browsing history or web activity</li>
+      <li>User behavior or activity logs</li>
+    </ul>
+
+    <h2>2. Local Data Processing</h2>
+    <p>All operations are performed locally on your device. The extension:</p>
+    <ul>
+      <li>Accesses GitHub and GitLab repository pages to detect clone URLs (HTTPS/SSH)</li>
+      <li>Injects a clone button into the page DOM for user convenience</li>
+      <li>Communicates only with a local server running on your machine (localhost:9456)</li>
+      <li>Stores only user preferences (e.g., terminal auto-open setting) in browser local storage</li>
+    </ul>
+
+    <h2>3. Permissions Usage</h2>
+    <p>The extension requests the following permissions, each serving a specific purpose:</p>
+    
+    <h3>3.1 Core Permissions</h3>
+    <ul>
+      <li><strong>storage</strong>: Stores user preferences and configuration settings locally</li>
+      <li><strong>activeTab</strong>: Reads the current tab's URL to pre-fill the clone dialog with repository information</li>
+      <li><strong>scripting</strong>: Injects the clone button interface into GitHub and GitLab pages</li>
+    </ul>
+
+    <h3>3.2 Host Permissions</h3>
+    <p>Host permissions are strictly limited to code hosting platforms:</p>
+    <ul>
+      <li><code>https://github.com/*</code></li>
+      <li><code>https://gitlab.com/*</code></li>
+      <li><code>https://*.gitlab.com/*</code></li>
+      <li><code>https://*.gitlab.org/*</code></li>
+    </ul>
+    <p>These permissions are used solely for:</p>
+    <ul>
+      <li>Detecting Git repository clone URLs on repository pages</li>
+      <li>Injecting clone buttons into the page interface</li>
+      <li>Monitoring page navigation changes for single-page applications</li>
+    </ul>
+
+    <h2>4. Third-Party Services</h2>
+    <p>Git Magager does <strong>NOT</strong> use any third-party services, analytics, or tracking tools.</p>
+    <p>The extension communicates <strong>only</strong> with a local companion server running on your machine at <code>http://127.0.0.1:9456</code>. This server:</p>
+    <ul>
+      <li>Executes Git clone commands in your terminal</li>
+      <li>Opens native folder selection dialogs</li>
+      <li>Stores configuration files locally on your device</li>
+      <li>Does NOT transmit any data to external servers</li>
+    </ul>
+
+    <h2>5. Data Security</h2>
+    <p>Since all data processing occurs locally on your device, there is no risk of data transmission or server-side data breaches. Your repository URLs and file paths never leave your computer.</p>
+
+    <h2>6. Children's Privacy</h2>
+    <p>Git Magager does not knowingly collect any information from children under the age of 13. As the extension does not collect any personal data, this is not applicable.</p>
+
+    <h2>7. Changes to This Privacy Policy</h2>
+    <p>We may update this Privacy Policy from time to time. We will notify you of any changes by updating the "Last updated" date at the top of this page.</p>
+
+    <h2>8. Contact Us</h2>
+    <p>If you have any questions or concerns about this Privacy Policy, please contact us at:</p>
+    <p><strong>Email:</strong> [your-email@example.com]<br>
+    <strong>GitHub:</strong> <a href="https://github.com/yourusername/git-magager" target="_blank">https://github.com/yourusername/git-magager</a></p>
+
+    <footer>
+      <p>&copy; 2026 Git Magager. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
