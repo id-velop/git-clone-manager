@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Git Magager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "One-click git clone on GitHub, GitLab, and more. No terminal needed.",
   "permissions": [
     "storage",
