@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Git Magager - Settings</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f0f1a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #8b5cf6;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: #64748b;
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+
+    .card {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 16px;
+      color: #94a3b8;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 10px 12px;
+      background: #0f0f1a;
+      border: 1px solid #2d2d44;
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: #8b5cf6;
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toggle {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #2d2d44;
+      border-radius: 24px;
+      transition: 0.3s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .toggle input:checked + .toggle-slider {
+      background: #8b5cf6;
+    }
+
+    .toggle input:checked + .toggle-slider::before {
+      transform: translateX(20px);
+    }
+
+    .save-btn {
+      padding: 10px 24px;
+      background: #8b5cf6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .save-btn:hover { background: #7c3aed; }
+
+    .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .status {
+      margin-top: 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .status.success {
+      display: block;
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .status.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #4a5568;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Git Magager Settings</h1>
+    <p class="subtitle">Configure your one-click git clone experience</p>
+
+    <div class="card">
+      <h2>Clone Settings</h2>
+      <div class="form-group">
+        <label for="clone-dir">Default Clone Directory</label>
+        <input type="text" id="clone-dir" placeholder="~/Projects" />
+        <p class="hint">Repositories will be cloned into this directory</p>
+      </div>
+
+      <div class="form-group">
+        <label for="terminal-app">Terminal Application</label>
+        <select id="terminal-app">
+          <option value="Terminal">macOS Terminal</option>
+          <option value="iTerm">iTerm2</option>
+          <option value="Warp">Warp</option>
+        </select>
+        <p class="hint">Choose which terminal app to open for cloning</p>
+      </div>
+
+      <div class="form-group">
+        <div class="toggle-row">
+          <label for="open-terminal" style="margin-bottom:0">Open in Terminal after clone</label>
+          <label class="toggle">
+            <input type="checkbox" id="open-terminal" checked />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <p class="hint">When enabled, opens Terminal and runs the clone command. When disabled, clone runs in background.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Server Info</h2>
+      <div class="form-group">
+        <label>Companion Server</label>
+        <p style="font-size: 14px; color: #e2e8f0;">http://127.0.0.1:9456</p>
+        <p class="hint">The local server must be running for cloning to work</p>
+      </div>
+    </div>
+
+    <button class="save-btn" id="save-btn">Save Settings</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

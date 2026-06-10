@@ -1,0 +1,11 @@
+{
+  "name": "git-magager-host",
+  "version": "1.0.0",
+  "description": "Local companion server for Git Magager Chrome extension",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "install-service": "node install-service.js"
+  },
+  "dependencies": {}
+}
