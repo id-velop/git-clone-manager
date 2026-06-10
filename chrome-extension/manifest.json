@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "Git Magager",
+  "version": "1.0.0",
+  "description": "One-click git clone on GitHub, GitLab, and more. No terminal needed.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://github.com/*",
+    "https://gitlab.com/*",
+    "https://*.gitlab.com/*",
+    "https://*.gitlab.org/*",
+    "https://git.example.com/*",
+    "https://*.example.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*",
+        "https://gitlab.com/*",
+        "https://*.gitlab.com/*",
+        "https://*.gitlab.org/*",
+        "https://git.example.com/*",
+        "https://*.example.com/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
