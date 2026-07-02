@@ -59,15 +59,29 @@
         </svg>
         <div>
           <strong>Local server not running</strong>
-          <p>Start the companion server first:</p>
-          <code>cd native-host && npm start</code>
+          <p>Click below to start the server automatically.</p>
+          <button id="start-server-btn" class="start-server-btn">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path fill="currentColor" d="M8 5v14l11-7z"/>
+            </svg>
+            Start Server
+          </button>
+          <p id="start-error" class="start-error" style="display:none;"></p>
         </div>
+      </div>
+    </div>
+
+    <div id="starting-server" class="section" style="display:none;">
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <p>Starting server...</p>
+        <p class="loading-sub">This may take a few seconds</p>
       </div>
     </div>
 
     <div class="footer">
       <a href="#" id="options-link">Settings</a>
-      <span class="version">v1.0.0</span>
+      <span class="version">v2.1.0</span>
     </div>
   </div>
 

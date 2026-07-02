@@ -238,6 +238,74 @@ body {
   color: #8b5cf6;
 }
 
+/* Start Server button */
+.start-server-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  margin-top: 8px;
+  background: #8b5cf6;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.start-server-btn:hover {
+  background: #7c3aed;
+}
+
+.start-server-btn:disabled {
+  background: #4a5568;
+  cursor: not-allowed;
+}
+
+.start-error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+/* Loading box */
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+  background: #1a1a2e;
+  border: 1px solid #2d2d44;
+  border-radius: 8px;
+}
+
+.loading-box p {
+  color: #e2e8f0;
+  font-size: 14px;
+}
+
+.loading-sub {
+  color: #64748b !important;
+  font-size: 12px !important;
+}
+
+/* Spinner */
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #2d2d44;
+  border-top: 3px solid #8b5cf6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Footer */
 .footer {
   display: flex;

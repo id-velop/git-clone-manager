@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const statusText = document.getElementById('status-text');
   const cloneSection = document.getElementById('clone-section');
   const noServer = document.getElementById('no-server');
+  const startingServer = document.getElementById('starting-server');
+  const startServerBtn = document.getElementById('start-server-btn');
+  const startError = document.getElementById('start-error');
   const cloneUrlInput = document.getElementById('clone-url');
   const cloneBtn = document.getElementById('clone-btn');
   const openTerminalToggle = document.getElementById('open-terminal');
@@ -35,28 +38,96 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Check server health
-  try {
-    const connected = await chrome.runtime.sendMessage({ type: 'CHECK_SERVER' });
-    if (connected) {
-      statusDot.classList.add('connected');
-      statusText.textContent = 'Server connected';
-      cloneSection.style.display = 'block';
-      noServer.style.display = 'none';
+  async function checkAndShowServerStatus() {
+    try {
+      const connected = await chrome.runtime.sendMessage({ type: 'CHECK_SERVER' });
+      if (connected) {
+        statusDot.classList.remove('disconnected');
+        statusDot.classList.add('connected');
+        statusText.textContent = 'Server connected';
+        cloneSection.style.display = 'block';
+        noServer.style.display = 'none';
+        startingServer.style.display = 'none';
 
-      // Load config
-      const config = await chrome.runtime.sendMessage({ type: 'GET_CONFIG' });
-      if (config && !config.error) {
-        openTerminalToggle.checked = config.openInTerminal !== false;
+        // Load config
+        const config = await chrome.runtime.sendMessage({ type: 'GET_CONFIG' });
+        if (config && !config.error) {
+          openTerminalToggle.checked = config.openInTerminal !== false;
+        }
+        return true;
       }
-    } else {
-      throw new Error('Not connected');
+    } catch (e) {
+      // Server not reachable
     }
-  } catch (e) {
+    return false;
+  }
+
+  const isConnected = await checkAndShowServerStatus();
+  if (!isConnected) {
     statusDot.classList.add('disconnected');
     statusText.textContent = 'Server not running';
     cloneSection.style.display = 'none';
     noServer.style.display = 'block';
+    startingServer.style.display = 'none';
   }
+
+  // Start Server button
+  startServerBtn.addEventListener('click', async () => {
+    startServerBtn.disabled = true;
+    startServerBtn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="16" height="16">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10" class="spin"/>
+      </svg>
+      Starting...
+    `;
+    startError.style.display = 'none';
+
+    // Show loading UI
+    noServer.style.display = 'none';
+    startingServer.style.display = 'block';
+    statusText.textContent = 'Launching...';
+
+    try {
+      const result = await chrome.runtime.sendMessage({ type: 'LAUNCH_SERVER' });
+
+      if (result && result.success) {
+        // Poll for HTTP server to be ready
+        let connected = false;
+        for (let i = 0; i < 10; i++) {
+          await new Promise(r => setTimeout(r, 500));
+          const ok = await chrome.runtime.sendMessage({ type: 'CHECK_SERVER' });
+          if (ok) {
+            connected = true;
+            break;
+          }
+        }
+
+        if (connected) {
+          await checkAndShowServerStatus();
+        } else {
+          throw new Error('Server started but not responding on HTTP. Please check manually.');
+        }
+      } else {
+        throw new Error(result?.error || 'Failed to launch server');
+      }
+    } catch (err) {
+      // Show error and revert to no-server view
+      startingServer.style.display = 'none';
+      noServer.style.display = 'block';
+      startError.textContent = err.message || 'Failed to start server';
+      startError.style.display = 'block';
+      statusText.textContent = 'Server not running';
+    }
+
+    // Reset button
+    startServerBtn.disabled = false;
+    startServerBtn.innerHTML = `
+      <svg viewBox="0 0 24 24" width="16" height="16">
+        <path fill="currentColor" d="M8 5v14l11-7z"/>
+      </svg>
+      Start Server
+    `;
+  });
 
   // Handle HTTPS/SSH toggle
   document.querySelectorAll('input[name="clone-type"]').forEach(radio => {

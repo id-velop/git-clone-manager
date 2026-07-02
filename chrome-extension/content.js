@@ -4,8 +4,6 @@
 (function () {
   'use strict';
 
-  const SERVER_URL = 'http://127.0.0.1:9456';
-
   // Prevent double injection
   if (window.__gitMagagerInjected) return;
   window.__gitMagagerInjected = true;
@@ -110,31 +108,47 @@
     return false;
   }
 
-  // ─── Server API helpers (direct fetch, no background proxy) ───
+  // ─── Server API helpers (via background script) ───
 
-  async function serverGet(path) {
-    const res = await fetch(`${SERVER_URL}${path}`);
-    if (!res.ok) throw new Error(`Server error: ${res.status}`);
-    return res.json();
-  }
-
-  async function serverPost(path, body) {
-    const res = await fetch(`${SERVER_URL}${path}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
+  function sendMessageToBackground(message) {
+    return new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage(message, (response) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+        } else {
+          resolve(response);
+        }
+      });
     });
-    if (!res.ok) throw new Error(`Server error: ${res.status}`);
-    return res.json();
   }
 
   async function checkServer() {
     try {
-      const data = await serverGet('/health');
-      return data.status === 'ok';
+      const result = await sendMessageToBackground({ type: 'CHECK_SERVER' });
+      return result === true;
     } catch (e) {
       return false;
     }
+  }
+
+  async function ensureServerRunning() {
+    // First check if already running
+    if (await checkServer()) return true;
+
+    // Try to auto-launch via native messaging
+    try {
+      const launchResult = await sendMessageToBackground({ type: 'LAUNCH_SERVER' });
+      if (launchResult && launchResult.success) {
+        // Wait for HTTP server to be ready (poll)
+        for (let i = 0; i < 10; i++) {
+          await new Promise(r => setTimeout(r, 500));
+          if (await checkServer()) return true;
+        }
+      }
+    } catch (e) {
+      // Launch failed, will fall through to error
+    }
+    return false;
   }
 
   // ─── Clone Execution ──────────────────────────────────────
@@ -150,19 +164,19 @@
     btn.classList.add('gm-cloning');
 
     try {
-      const serverOk = await checkServer();
+      const serverOk = await ensureServerRunning();
       if (!serverOk) {
         btn.innerHTML = originalHTML;
         btn.disabled = false;
         btn.classList.remove('gm-cloning');
-        showNotification('Server not running. Start it: cd native-host && node server.js', 'error');
+        showNotification('Server not running. Click the extension icon and press "Start Server".', 'error');
         return;
       }
 
       // Step 1: Show folder picker
       btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Choose folder...';
 
-      const folderResult = await serverPost('/choose-folder', {});
+      const folderResult = await sendMessageToBackground({ type: 'CHOOSE_FOLDER' });
 
       if (!folderResult || !folderResult.success || folderResult.cancelled) {
         btn.innerHTML = originalHTML;
@@ -179,7 +193,12 @@
       // Step 2: Clone to the selected folder
       btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Cloning to ' + selectedFolder.split('/').pop() + '...';
 
-      const result = await serverPost('/clone', { url, openTerminal: true, directory: selectedFolder });
+      const result = await sendMessageToBackground({ 
+        type: 'CLONE', 
+        url, 
+        openTerminal: true, 
+        directory: selectedFolder 
+      });
 
       if (result && result.success) {
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Cloned!';
@@ -195,7 +214,7 @@
       btn.classList.add('gm-error');
       if (err.message === 'Failed to fetch') {
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> No Server';
-        showNotification('Server not running! Run: cd native-host && node server.js', 'error');
+        showNotification('Server not running. Click the extension icon and press "Start Server".', 'error');
       } else {
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> Failed';
         showNotification(`Clone failed: ${err.message}`, 'error');
