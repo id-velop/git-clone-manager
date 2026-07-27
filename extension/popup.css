@@ -59,6 +59,58 @@ body {
   box-shadow: 0 0 6px rgba(239, 68, 68, 0.5);
 }
 
+/* Payment bar */
+.payment-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #1a1a2e;
+  border: 1px solid #2d2d44;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.payment-bar.paid {
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.08);
+}
+
+.payment-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.payment-btn {
+  padding: 4px 14px;
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.payment-btn:hover {
+  background: #7c3aed;
+}
+
+.payment-btn.manage {
+  background: transparent;
+  border: 1px solid #2d2d44;
+  color: #94a3b8;
+}
+
+.payment-btn.manage:hover {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+  background: transparent;
+}
+
 /* Sections */
 .section {
   margin-bottom: 16px;

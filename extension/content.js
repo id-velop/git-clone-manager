@@ -4,8 +4,6 @@
 (function () {
   'use strict';
 
-  const SERVER_URL = 'http://127.0.0.1:9456';
-
   // Prevent double injection
   if (window.__gitMagagerInjected) return;
   window.__gitMagagerInjected = true;
@@ -110,96 +108,46 @@
     return false;
   }
 
-  // ─── Server API helpers (direct fetch, no background proxy) ───
-
-  async function serverGet(path) {
-    const res = await fetch(`${SERVER_URL}${path}`);
-    if (!res.ok) throw new Error(`Server error: ${res.status}`);
-    return res.json();
-  }
-
-  async function serverPost(path, body) {
-    const res = await fetch(`${SERVER_URL}${path}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) throw new Error(`Server error: ${res.status}`);
-    return res.json();
-  }
-
-  async function checkServer() {
-    try {
-      const data = await serverGet('/health');
-      return data.status === 'ok';
-    } catch (e) {
-      return false;
-    }
-  }
-
   // ─── Clone Execution ──────────────────────────────────────
 
-  async function doClone(url) {
-    const btn = document.getElementById('git-magager-clone-btn') || document.getElementById('git-magager-page-btn');
+  function setBusyLabel(btn, label) {
+    btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg><span></span>';
+    btn.querySelector('span').textContent = label;
+  }
+
+  async function doClone(url, triggerButton) {
+    const btn = triggerButton || document.getElementById('git-magager-clone-btn') || document.getElementById('git-magager-page-btn');
     if (!btn) return;
     const originalHTML = btn.innerHTML;
 
-    // Step 0: Check server is running
-    btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Connecting...';
+    setBusyLabel(btn, 'Choose folder...');
     btn.disabled = true;
     btn.classList.add('gm-cloning');
 
     try {
-      const serverOk = await checkServer();
-      if (!serverOk) {
-        btn.innerHTML = originalHTML;
-        btn.disabled = false;
-        btn.classList.remove('gm-cloning');
-        showNotification('Server not running. Start it: cd native-host && node server.js', 'error');
-        return;
-      }
-
-      // Step 1: Show folder picker
-      btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Choose folder...';
-
-      const folderResult = await serverPost('/choose-folder', {});
-
-      if (!folderResult || !folderResult.success || folderResult.cancelled) {
-        btn.innerHTML = originalHTML;
-        btn.disabled = false;
-        btn.classList.remove('gm-cloning');
-        if (folderResult && !folderResult.cancelled) {
-          showNotification('Folder selection failed: ' + (folderResult.error || 'Unknown error'), 'error');
+      const result = await globalThis.GitMagagerBrowser.cloneRepository(url, {
+        onStatus(label) {
+          setBusyLabel(btn, label);
         }
-        return;
-      }
+      });
 
-      const selectedFolder = folderResult.path;
-
-      // Step 2: Clone to the selected folder
-      btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Cloning to ' + selectedFolder.split('/').pop() + '...';
-
-      const result = await serverPost('/clone', { url, openTerminal: true, directory: selectedFolder });
-
-      if (result && result.success) {
-        btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Cloned!';
-        btn.classList.remove('gm-cloning');
-        btn.classList.add('gm-success');
-        showNotification(`Cloned to ${selectedFolder}`, 'success');
-      } else {
-        throw new Error((result && result.error) || 'Clone failed');
-      }
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Cloned!';
+      btn.classList.remove('gm-cloning');
+      btn.classList.add('gm-success');
+      showNotification(`Cloned to ${result.destinationName}`, 'success');
     } catch (err) {
       console.error('Git Magager clone error:', err);
+      if (err.name === 'AbortError') {
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+        btn.classList.remove('gm-cloning');
+        return;
+      }
+
       btn.classList.remove('gm-cloning');
       btn.classList.add('gm-error');
-      if (err.message === 'Failed to fetch') {
-        btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> No Server';
-        showNotification('Server not running! Run: cd native-host && node server.js', 'error');
-      } else {
-        btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> Failed';
-        showNotification(`Clone failed: ${err.message}`, 'error');
-      }
+      btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> Failed';
+      showNotification(`Clone failed: ${err.message}`, 'error');
     }
 
     setTimeout(() => {
@@ -240,7 +188,7 @@
     const btn = document.createElement('button');
     btn.id = 'git-magager-clone-btn';
     btn.className = 'gm-clone-btn';
-    btn.title = `Clone with Git Magager\nHTTPS: ${urls.https || 'N/A'}\nSSH: ${urls.ssh || 'N/A'}`;
+    btn.title = `Clone with Git Magager\nHTTPS: ${urls.https || 'N/A'}`;
     btn.innerHTML = `
       <svg viewBox="0 0 24 24" width="16" height="16">
         <path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 12 7.4l3.38 4.6L17 10.83 14.92 8H20v6z"/>
@@ -248,7 +196,7 @@
       <span>Clone</span>
     `;
 
-    // Create dropdown for HTTPS/SSH selection
+    // Create the HTTPS clone action.
     const dropdown = document.createElement('div');
     dropdown.className = 'gm-dropdown';
     dropdown.id = 'git-magager-dropdown';
@@ -264,25 +212,9 @@
       httpsBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         dropdown.classList.remove('gm-dropdown-show');
-        doClone(urls.https);
+        doClone(urls.https, btn);
       });
       dropdown.appendChild(httpsBtn);
-    }
-
-    if (urls.ssh) {
-      const sshBtn = document.createElement('button');
-      sshBtn.className = 'gm-dropdown-item';
-      sshBtn.innerHTML = `
-        <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z"/></svg>
-        SSH Clone
-      `;
-      sshBtn.title = urls.ssh;
-      sshBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdown.classList.remove('gm-dropdown-show');
-        doClone(urls.ssh);
-      });
-      dropdown.appendChild(sshBtn);
     }
 
     // Toggle dropdown on click
@@ -331,7 +263,7 @@
       btn.addEventListener('click', () => {
         // Default to HTTPS, or SSH if that's what's available
         const url = urls.https || urls.ssh;
-        if (url) doClone(url);
+        if (url) doClone(url, btn);
       });
 
       actionBar.appendChild(btn);

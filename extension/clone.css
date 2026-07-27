@@ -1,0 +1,143 @@
+:root {
+  color-scheme: dark;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0f0f1a;
+  color: #e2e8f0;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.18), transparent 42%),
+    #0f0f1a;
+}
+
+.clone-card {
+  width: min(560px, 100%);
+  padding: 32px;
+  background: rgba(26, 26, 46, 0.96);
+  border: 1px solid #2d2d44;
+  border-radius: 18px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #8b5cf6;
+}
+
+.eyebrow {
+  margin: 0 0 2px;
+  color: #8b5cf6;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 26px;
+}
+
+.description {
+  margin: 20px 0 24px;
+  color: #94a3b8;
+  line-height: 1.6;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  height: 44px;
+  padding: 0 13px;
+  color: #f8fafc;
+  background: #0f0f1a;
+  border: 1px solid #35354f;
+  border-radius: 9px;
+  outline: none;
+}
+
+input:focus { border-color: #8b5cf6; }
+
+button {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: white;
+  background: #8b5cf6;
+  border: 0;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+button:hover { background: #7c3aed; }
+button:active { transform: scale(0.99); }
+button:disabled { opacity: 0.7; cursor: wait; }
+
+.status {
+  display: none;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.status.active {
+  display: block;
+  color: #c4b5fd;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.24);
+}
+
+.status.success {
+  display: block;
+  color: #86efac;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.24);
+}
+
+.status.error {
+  display: block;
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.24);
+}
+
+.note {
+  margin: 18px 0 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+code { color: #94a3b8; }
+
+.spin { animation: spin 1s linear infinite; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

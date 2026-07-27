@@ -170,52 +170,34 @@
 </head>
 <body>
   <div class="container">
-    <h1>Git Magager Settings</h1>
-    <p class="subtitle">Configure your one-click git clone experience</p>
+    <h1>Git Magager</h1>
+    <p class="subtitle">Browser-native repository cloning</p>
 
     <div class="card">
-      <h2>Clone Settings</h2>
+      <h2>How it works</h2>
       <div class="form-group">
-        <label for="clone-dir">Default Clone Directory</label>
-        <input type="text" id="clone-dir" placeholder="~/Projects" />
-        <p class="hint">Repositories will be cloned into this directory</p>
+        <label>Choose a folder on every clone</label>
+        <p class="hint">Click Clone on a GitHub or GitLab repository page. Chrome will ask where to save the repository, then Git Magager clones it directly into that folder.</p>
       </div>
 
       <div class="form-group">
-        <label for="terminal-app">Terminal Application</label>
-        <select id="terminal-app">
-          <option value="Terminal">macOS Terminal</option>
-          <option value="iTerm">iTerm2</option>
-          <option value="Warp">Warp</option>
-        </select>
-        <p class="hint">Choose which terminal app to open for cloning</p>
+        <label>No companion server</label>
+        <p class="hint">The Git engine runs inside the extension. You do not need to run <code>node server.js</code> or keep a terminal open.</p>
       </div>
 
       <div class="form-group">
-        <div class="toggle-row">
-          <label for="open-terminal" style="margin-bottom:0">Open in Terminal after clone</label>
-          <label class="toggle">
-            <input type="checkbox" id="open-terminal" checked />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <p class="hint">When enabled, opens Terminal and runs the clone command. When disabled, clone runs in background.</p>
+        <label>Shallow clone</label>
+        <p class="hint">The initial browser clone downloads the latest commit and includes a working <code>.git</code> directory. Run <code>git fetch --unshallow</code> later if you need the complete history.</p>
       </div>
     </div>
 
     <div class="card">
-      <h2>Server Info</h2>
+      <h2>Compatibility</h2>
       <div class="form-group">
-        <label>Companion Server</label>
-        <p style="font-size: 14px; color: #e2e8f0;">http://127.0.0.1:9456</p>
-        <p class="hint">The local server must be running for cloning to work</p>
+        <label>Chrome or Edge required</label>
+        <p class="hint">Direct folder access uses the browser's File System Access API. HTTPS repository URLs are supported; SSH-style URLs are automatically converted to HTTPS.</p>
       </div>
     </div>
-
-    <button class="save-btn" id="save-btn">Save Settings</button>
-    <div class="status" id="status"></div>
   </div>
-
-  <script src="options.js"></script>
 </body>
 </html>

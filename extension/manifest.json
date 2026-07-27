@@ -1,8 +1,10 @@
 {
+"update_url": "https://clients2.google.com/service/update2/crx",
+
   "manifest_version": 3,
   "name": "Git Magager",
-  "version": "1.0.2",
-  "description": "One-click git clone on GitHub, GitLab, and more. No terminal needed.",
+  "version": "1.1.0",
+  "description": "Clone GitHub and GitLab repositories directly to a folder. No terminal or local server needed.",
   "permissions": [
     "storage",
     "activeTab",
@@ -37,9 +39,19 @@
         "https://git.example.com/*",
         "https://*.example.com/*"
       ],
-      "js": ["content.js"],
+      "js": [
+        "vendor/lightning-fs/lightning-fs.min.js",
+        "vendor/isomorphic-git/index.umd.min.js",
+        "browser-git.js",
+        "content.js"
+      ],
       "css": ["content.css"],
       "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://extensionpay.com/*"],
+      "js": ["ExtPay.js"],
+      "run_at": "document_start"
     }
   ],
   "options_page": "options.html",

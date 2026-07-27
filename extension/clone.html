@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clone Repository — Git Magager</title>
+  <link rel="stylesheet" href="clone.css">
+</head>
+<body>
+  <main class="clone-card">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true">
+        <path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
+      </svg>
+      <div>
+        <p class="eyebrow">Git Magager</p>
+        <h1>Clone repository</h1>
+      </div>
+    </div>
+
+    <p class="description">Choose a parent folder and the repository will be cloned there directly. No terminal or local server is required.</p>
+
+    <label for="clone-url">Repository URL</label>
+    <input id="clone-url" type="url" spellcheck="false" placeholder="https://github.com/user/repo.git">
+
+    <button id="clone-btn" type="button">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+      </svg>
+      <span>Choose Folder &amp; Clone</span>
+    </button>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+    <p class="note">Browser clones are shallow (latest commit) and include a working <code>.git</code> directory. You can fetch more history later with Git.</p>
+  </main>
+
+  <script src="vendor/lightning-fs/lightning-fs.min.js"></script>
+  <script src="vendor/isomorphic-git/index.umd.min.js"></script>
+  <script src="browser-git.js"></script>
+  <script src="clone.js"></script>
+</body>
+</html>
