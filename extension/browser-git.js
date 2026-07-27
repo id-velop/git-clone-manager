@@ -1,4 +1,4 @@
-// Browser-native Git clone support for Git Magager.
+// Browser-native Git clone support for Clone Manager.
 // Requires the vendored `git` (isomorphic-git) and `LightningFS` globals.
 
 (function (global) {
@@ -271,13 +271,13 @@
         await fs.promises._deactivate();
       }
     } catch (error) {
-      console.warn('[Git Magager] Could not close temporary filesystem:', error);
+      console.warn('[Clone Manager] Could not close temporary filesystem:', error);
     }
 
     try {
       indexedDB.deleteDatabase(databaseName);
     } catch (error) {
-      console.warn('[Git Magager] Could not delete temporary filesystem:', error);
+      console.warn('[Clone Manager] Could not delete temporary filesystem:', error);
     }
   }
 
@@ -296,7 +296,7 @@
     // This must remain the first awaited browser operation so the picker keeps
     // the transient user activation from the Clone button click.
     const parentHandle = await global.showDirectoryPicker({
-      id: 'git-magager-clone',
+      id: 'clone-manager-clone',
       mode: 'readwrite',
       startIn: 'downloads'
     });
@@ -308,7 +308,7 @@
 
     try {
       destination = await getEmptyDestination(parentHandle, repositoryName);
-      databaseName = `git-magager-${crypto.randomUUID()}`;
+      databaseName = `clone-manager-${crypto.randomUUID()}`;
       fs = new global.LightningFS(databaseName, { wipe: true });
 
       onStatus?.('Connecting to repository...');
@@ -345,7 +345,7 @@
         try {
           await parentHandle.removeEntry(repositoryName, { recursive: true });
         } catch (cleanupError) {
-          console.warn('[Git Magager] Could not remove incomplete clone:', cleanupError);
+          console.warn('[Clone Manager] Could not remove incomplete clone:', cleanupError);
         }
       }
       throw error;
@@ -355,7 +355,7 @@
     }
   }
 
-  global.GitMagagerBrowser = {
+  global.CloneManagerBrowser = {
     cloneRepository,
     normalizeCloneUrl,
     getRepositoryName

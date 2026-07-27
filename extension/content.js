@@ -1,12 +1,12 @@
-// Git Magager - Content Script
+// Clone Manager - Content Script
 // Detects clone URLs on GitHub and GitLab pages and injects Clone button
 
 (function () {
   'use strict';
 
   // Prevent double injection
-  if (window.__gitMagagerInjected) return;
-  window.__gitMagagerInjected = true;
+  if (window.__cloneManagerInjected) return;
+  window.__cloneManagerInjected = true;
 
   // ─── URL Detection ────────────────────────────────────────
 
@@ -116,7 +116,7 @@
   }
 
   async function doClone(url, triggerButton) {
-    const btn = triggerButton || document.getElementById('git-magager-clone-btn') || document.getElementById('git-magager-page-btn');
+    const btn = triggerButton || document.getElementById('clone-manager-clone-btn') || document.getElementById('clone-manager-page-btn');
     if (!btn) return;
     const originalHTML = btn.innerHTML;
 
@@ -125,7 +125,7 @@
     btn.classList.add('gm-cloning');
 
     try {
-      const result = await globalThis.GitMagagerBrowser.cloneRepository(url, {
+      const result = await globalThis.CloneManagerBrowser.cloneRepository(url, {
         onStatus(label) {
           setBusyLabel(btn, label);
         }
@@ -136,7 +136,7 @@
       btn.classList.add('gm-success');
       showNotification(`Cloned to ${result.destinationName}`, 'success');
     } catch (err) {
-      console.error('Git Magager clone error:', err);
+      console.error('Clone Manager clone error:', err);
       if (err.name === 'AbortError') {
         btn.innerHTML = originalHTML;
         btn.disabled = false;
@@ -179,16 +179,16 @@
 
   function injectCloneButton() {
     if (!isRepoPage()) return;
-    if (document.getElementById('git-magager-clone-btn')) return;
+    if (document.getElementById('clone-manager-clone-btn')) return;
 
     const urls = getCloneUrls();
     if (!urls.https && !urls.ssh) return;
 
     // Create the floating clone button
     const btn = document.createElement('button');
-    btn.id = 'git-magager-clone-btn';
+    btn.id = 'clone-manager-clone-btn';
     btn.className = 'gm-clone-btn';
-    btn.title = `Clone with Git Magager\nHTTPS: ${urls.https || 'N/A'}`;
+    btn.title = `Clone with Clone Manager\nHTTPS: ${urls.https || 'N/A'}`;
     btn.innerHTML = `
       <svg viewBox="0 0 24 24" width="16" height="16">
         <path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 12 7.4l3.38 4.6L17 10.83 14.92 8H20v6z"/>
@@ -199,7 +199,7 @@
     // Create the HTTPS clone action.
     const dropdown = document.createElement('div');
     dropdown.className = 'gm-dropdown';
-    dropdown.id = 'git-magager-dropdown';
+    dropdown.id = 'clone-manager-dropdown';
 
     if (urls.https) {
       const httpsBtn = document.createElement('button');
@@ -230,7 +230,7 @@
 
     // Insert button into the page
     const container = document.createElement('div');
-    container.id = 'git-magager-container';
+    container.id = 'clone-manager-container';
     container.appendChild(btn);
     container.appendChild(dropdown);
     document.body.appendChild(container);
@@ -241,7 +241,7 @@
   function injectGitHubPageButton() {
     if (detectPlatform() !== 'github') return;
     if (!isRepoPage()) return;
-    if (document.getElementById('git-magager-page-btn')) return;
+    if (document.getElementById('clone-manager-page-btn')) return;
 
     const urls = getCloneUrls();
     if (!urls.https && !urls.ssh) return;
@@ -251,7 +251,7 @@
     
     if (actionBar) {
       const btn = document.createElement('button');
-      btn.id = 'git-magager-page-btn';
+      btn.id = 'clone-manager-page-btn';
       btn.className = 'gm-page-btn';
       btn.innerHTML = `
         <svg viewBox="0 0 24 24" width="16" height="16">
@@ -273,7 +273,7 @@
   // ─── Init ─────────────────────────────────────────────────
 
   function init() {
-    console.log('[Git Magager] Initializing...');
+    console.log('[Clone Manager] Initializing...');
     injectCloneButton();
     injectGitHubPageButton();
   }

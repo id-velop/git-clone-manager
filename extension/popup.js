@@ -1,4 +1,4 @@
-// Git Magager - Popup Script
+// Clone Manager - Popup Script
 
 document.addEventListener('DOMContentLoaded', async () => {
   const statusDot = document.getElementById('status-dot');
@@ -25,14 +25,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       paymentBtn.classList.add('manage');
     }
   } catch (error) {
-    console.warn('[Git Magager] ExtPay getUser error:', error);
+    console.warn('[Clone Manager] ExtPay getUser error:', error);
   }
 
   paymentBtn.addEventListener('click', async () => {
     try {
       await chrome.runtime.sendMessage({ type: 'OPEN_PAYMENT_PAGE' });
     } catch (error) {
-      console.error('[Git Magager] Payment error:', error);
+      console.error('[Clone Manager] Payment error:', error);
     }
   });
 
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
   } catch (error) {
-    console.warn('[Git Magager] Could not detect repository URL:', error);
+    console.warn('[Clone Manager] Could not detect repository URL:', error);
   }
 
   cloneBtn.addEventListener('click', async () => {

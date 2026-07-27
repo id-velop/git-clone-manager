@@ -1,20 +1,20 @@
-// Git Magager - Background Service Worker
+// Clone Manager - Background Service Worker
 
 importScripts('ExtPay.js');
 
-// Initialize ExtPay - replace 'git-magager' with your ExtensionPay extension ID
-// Register at https://extensionpay.com to get your own ID
+// ExtensionPay is keyed by the published Chrome extension ID. Renaming the
+// product does not change this identifier.
 var extpay = ExtPay('hckpgnffhjfblnaehcnchfhaihebmkfo');
 extpay.startBackground();
 
 // React when a user pays or logs in with a paid account
 extpay.onPaid.addListener(user => {
-  console.log('[Git Magager] User paid:', user);
+  console.log('[Clone Manager] User paid:', user);
   // You can add custom logic here, e.g. unlock premium features
 });
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('[Git Magager] Extension installed');
+  console.log('[Clone Manager] Extension installed');
 });
 
 function bytesToBase64(bytes) {

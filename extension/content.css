@@ -1,4 +1,4 @@
-/* Git Magager - Content Styles */
+/* Clone Manager - Content Styles */
 
 :root {
   --gm-primary: #8b5cf6;
@@ -10,7 +10,7 @@
   --gm-border: #45475a;
 }
 
-#git-magager-container {
+#clone-manager-container {
   position: fixed;
   bottom: 24px;
   right: 24px;

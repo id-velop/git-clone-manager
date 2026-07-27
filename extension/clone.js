@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setStatus('Waiting for folder selection...');
 
     try {
-      const result = await globalThis.GitMagagerBrowser.cloneRepository(url, {
+      const result = await globalThis.CloneManagerBrowser.cloneRepository(url, {
         onStatus(message) {
           setButtonLabel(message);
           setStatus(message);
