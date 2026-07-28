@@ -4,7 +4,7 @@
   "manifest_version": 3,
   "name": "Clone Manager",
   "version": "1.1.0",
-  "description": "Clone GitHub and GitLab repositories directly to a folder. No terminal or local server needed.",
+  "description": "Clone Git repositories directly to a folder.",
   "permissions": [
     "storage",
     "activeTab",
