@@ -3,8 +3,8 @@
 
   "manifest_version": 3,
   "name": "Clone Manager",
-  "version": "1.1.0",
-  "description": "Clone Git repositories directly to a folder.",
+  "version": "1.1.7",
+  "description": "One-click Git clone for GitHub, GitLab, and more. No Terminal or commands—just choose a folder like saving a file.",
   "permissions": [
     "storage",
     "activeTab",
@@ -41,6 +41,7 @@
       ],
       "js": [
         "vendor/lightning-fs/lightning-fs.min.js",
+        "vendor/buffer/buffer.min.js",
         "vendor/isomorphic-git/index.umd.min.js",
         "browser-git.js",
         "content.js"
@@ -52,6 +53,19 @@
       "matches": ["https://extensionpay.com/*"],
       "js": ["ExtPay.js"],
       "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/clone-manager.svg"],
+      "matches": [
+        "https://github.com/*",
+        "https://gitlab.com/*",
+        "https://*.gitlab.com/*",
+        "https://*.gitlab.org/*",
+        "https://git.example.com/*",
+        "https://*.example.com/*"
+      ]
     }
   ],
   "options_page": "options.html",

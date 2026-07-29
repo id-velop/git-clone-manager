@@ -34,6 +34,30 @@ body {
   color: #8b5cf6;
 }
 
+.brand-icon {
+  display: block;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.brand-icon-18 {
+  width: 18px;
+  height: 18px;
+}
+
+.brand-icon-32 {
+  width: 32px;
+  height: 32px;
+}
+
+.brand > .brand-icon {
+  filter: brightness(0) saturate(100%) invert(42%) sepia(92%) saturate(2317%) hue-rotate(239deg) brightness(101%) contrast(93%);
+}
+
+button .brand-icon {
+  filter: brightness(0) invert(1);
+}
+
 .eyebrow {
   margin: 0 0 2px;
   color: #8b5cf6;
@@ -97,6 +121,7 @@ button {
 button:hover { background: #7c3aed; }
 button:active { transform: scale(0.99); }
 button:disabled { opacity: 0.7; cursor: wait; }
+button[hidden] { display: none; }
 
 .status {
   display: none;
@@ -135,6 +160,81 @@ button:disabled { opacity: 0.7; cursor: wait; }
 }
 
 code { color: #94a3b8; }
+
+.paywall {
+  margin-top: 18px;
+  padding: 22px;
+  text-align: center;
+  background: #0f0f1a;
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  border-radius: 12px;
+}
+
+.paywall[hidden] { display: none; }
+
+.paywall-label {
+  margin: 0 0 6px;
+  color: #a78bfa;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.paywall h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 20px;
+}
+
+.paywall > p:not(.paywall-label):not(.payment-feedback) {
+  margin: 10px 0;
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.paywall-price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0 2px;
+}
+
+.paywall-price strong {
+  color: #f8fafc;
+  font-size: 30px;
+}
+
+.paywall-price span {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.paywall .upgrade-btn {
+  margin-top: 14px;
+}
+
+.paywall .restore-btn {
+  min-height: 36px;
+  margin-top: 8px;
+  color: #a78bfa;
+  background: transparent;
+  font-size: 12px;
+}
+
+.paywall .restore-btn:hover {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.payment-feedback {
+  min-height: 16px;
+  margin: 8px 0 0;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.payment-feedback.error { color: #fca5a5; }
 
 .spin { animation: spin 1s linear infinite; }
 

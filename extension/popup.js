@@ -11,28 +11,78 @@ document.addEventListener('DOMContentLoaded', async () => {
   const paymentIcon = document.getElementById('payment-icon');
   const paymentText = document.getElementById('payment-text');
   const paymentBtn = document.getElementById('payment-btn');
+  const paymentMessage = document.getElementById('payment-message');
+  let accessState = null;
 
   statusDot.classList.add('connected');
   statusText.textContent = 'Ready — no local server required';
 
-  try {
-    const user = await chrome.runtime.sendMessage({ type: 'GET_USER' });
-    if (user && !user.error && user.paid) {
+  function showPaymentMessage(message, type = '') {
+    paymentMessage.textContent = message;
+    paymentMessage.className = `payment-message ${type}`.trim();
+  }
+
+  function renderAccess(state) {
+    accessState = state;
+    paymentStatus.classList.toggle('paid', Boolean(state.paid));
+    paymentStatus.classList.toggle('locked', !state.allowed);
+
+    if (state.paid) {
       paymentStatus.classList.add('paid');
       paymentIcon.textContent = '✅';
-      paymentText.textContent = 'Pro';
+      paymentText.textContent = 'Pro — unlimited cloning';
       paymentBtn.textContent = 'Manage';
       paymentBtn.classList.add('manage');
+      cloneBtn.disabled = false;
+      showPaymentMessage('');
+      return;
     }
+
+    paymentBtn.classList.remove('manage');
+    paymentBtn.textContent = 'Get Pro';
+    paymentIcon.textContent = state.allowed ? '🎁' : '🔒';
+    paymentText.textContent = state.allowed
+      ? `${state.remainingUses} of ${state.freeUseLimit} free clones left`
+      : 'Free trial ended';
+    cloneBtn.classList.toggle('locked', !state.allowed);
+    cloneBtn.setAttribute('aria-disabled', String(!state.allowed));
+    cloneBtn.querySelector('span').textContent = state.allowed
+      ? 'Open Clone Page'
+      : 'Unlock Unlimited Cloning';
+    showPaymentMessage(
+      state.allowed
+        ? 'Early Access: $4.99 one-time purchase. The regular price will be $9.99.'
+        : 'You have used all 5 free clones. Upgrade once to keep cloning.',
+      state.allowed ? '' : 'locked'
+    );
+  }
+
+  try {
+    const state = await chrome.runtime.sendMessage({ type: 'GET_ACCESS_STATUS' });
+    if (state && !state.error) renderAccess(state);
+    else throw new Error(state?.error || 'Could not check access');
   } catch (error) {
-    console.warn('[Clone Manager] ExtPay getUser error:', error);
+    console.warn('[Clone Manager] Access check error:', error);
+    showPaymentMessage('Could not check access. Reopen the extension to try again.', 'error');
+    cloneBtn.classList.add('locked');
+    cloneBtn.setAttribute('aria-disabled', 'true');
   }
 
   paymentBtn.addEventListener('click', async () => {
+    showPaymentMessage('Opening secure checkout...');
     try {
-      await chrome.runtime.sendMessage({ type: 'OPEN_PAYMENT_PAGE' });
+      const result = await chrome.runtime.sendMessage({
+        type: accessState?.paid ? 'OPEN_LOGIN_PAGE' : 'OPEN_PAYMENT_PAGE'
+      });
+      if (!result?.success) throw new Error(result?.error || 'Could not open payment page');
+      showPaymentMessage(
+        accessState?.paid
+          ? 'Sign in to view or restore your purchase.'
+          : 'Complete your one-time purchase in the new tab.'
+      );
     } catch (error) {
       console.error('[Clone Manager] Payment error:', error);
+      showPaymentMessage(`Payment page error: ${error.message}`, 'error');
     }
   });
 
@@ -58,6 +108,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   cloneBtn.addEventListener('click', async () => {
+    if (!accessState?.allowed) {
+      paymentBtn.click();
+      return;
+    }
+
     const url = cloneUrlInput.value.trim();
     if (!url) {
       cloneUrlInput.style.borderColor = '#ef4444';

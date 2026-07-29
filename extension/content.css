@@ -10,6 +10,25 @@
   --gm-border: #45475a;
 }
 
+.gm-brand-icon {
+  display: block;
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.gm-dropdown-item .gm-brand-icon {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0) saturate(100%) invert(42%) sepia(92%) saturate(2317%) hue-rotate(239deg) brightness(101%) contrast(93%);
+}
+
+.gm-clone-btn .gm-brand-icon,
+.gm-page-btn .gm-brand-icon {
+  filter: brightness(0) invert(1);
+}
+
 #clone-manager-container {
   position: fixed;
   bottom: 24px;
@@ -171,4 +190,32 @@
 
 .gm-notification-info {
   background: var(--gm-primary);
+}
+
+.gm-notification-paywall {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #171725;
+  border: 1px solid rgba(139, 92, 246, 0.6);
+}
+
+.gm-notification-paywall button {
+  padding: 7px 11px;
+  color: white;
+  background: var(--gm-primary);
+  border: 0;
+  border-radius: 7px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.gm-notification-paywall button:hover {
+  background: var(--gm-primary-hover);
+}
+
+.gm-notification-paywall button:disabled {
+  cursor: wait;
+  opacity: 0.7;
 }

@@ -110,6 +110,11 @@
 
   // ─── Clone Execution ──────────────────────────────────────
 
+  function brandIconMarkup() {
+    const iconUrl = chrome.runtime.getURL('icons/clone-manager.svg');
+    return `<img class="gm-brand-icon" src="${iconUrl}" alt="">`;
+  }
+
   function setBusyLabel(btn, label) {
     btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg><span></span>';
     btn.querySelector('span').textContent = label;
@@ -119,6 +124,19 @@
     const btn = triggerButton || document.getElementById('clone-manager-clone-btn') || document.getElementById('clone-manager-page-btn');
     if (!btn) return;
     const originalHTML = btn.innerHTML;
+
+    let claim;
+    try {
+      claim = await chrome.runtime.sendMessage({ type: 'CLAIM_CLONE_USE' });
+    } catch (error) {
+      showNotification(`Could not check access: ${error.message}`, 'error');
+      return;
+    }
+
+    if (!claim?.allowed) {
+      showUpgradeNotification();
+      return;
+    }
 
     setBusyLabel(btn, 'Choose folder...');
     btn.disabled = true;
@@ -134,7 +152,10 @@
       btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Cloned!';
       btn.classList.remove('gm-cloning');
       btn.classList.add('gm-success');
-      showNotification(`Cloned to ${result.destinationName}`, 'success');
+      const trialMessage = claim.paid
+        ? ''
+        : ` · ${claim.remainingUses} free clone${claim.remainingUses === 1 ? '' : 's'} left`;
+      showNotification(`Cloned to ${result.destinationName}${trialMessage}`, 'success');
     } catch (err) {
       console.error('Clone Manager clone error:', err);
       if (err.name === 'AbortError') {
@@ -175,6 +196,36 @@
     }, 3000);
   }
 
+  function showUpgradeNotification() {
+    const notification = document.createElement('div');
+    notification.className = 'gm-notification gm-notification-paywall';
+
+    const message = document.createElement('span');
+    message.textContent = 'Free trial ended after 5 clones.';
+
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = 'Get Pro · $4.99 once';
+    button.addEventListener('click', async () => {
+      button.disabled = true;
+      button.textContent = 'Opening checkout...';
+      const result = await chrome.runtime.sendMessage({ type: 'OPEN_PAYMENT_PAGE' });
+      if (!result?.success) {
+        button.disabled = false;
+        button.textContent = 'Try again';
+      }
+    });
+
+    notification.append(message, button);
+    document.body.appendChild(notification);
+    requestAnimationFrame(() => notification.classList.add('gm-notification-show'));
+
+    setTimeout(() => {
+      notification.classList.remove('gm-notification-show');
+      setTimeout(() => notification.remove(), 300);
+    }, 10000);
+  }
+
   // ─── Button Injection ─────────────────────────────────────
 
   function injectCloneButton() {
@@ -190,9 +241,7 @@
     btn.className = 'gm-clone-btn';
     btn.title = `Clone with Clone Manager\nHTTPS: ${urls.https || 'N/A'}`;
     btn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="16" height="16">
-        <path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 12 7.4l3.38 4.6L17 10.83 14.92 8H20v6z"/>
-      </svg>
+      ${brandIconMarkup()}
       <span>Clone</span>
     `;
 
@@ -205,7 +254,7 @@
       const httpsBtn = document.createElement('button');
       httpsBtn.className = 'gm-dropdown-item';
       httpsBtn.innerHTML = `
-        <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9zm4.5-12.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5S14.17 7 15 7s1.5.67 1.5 1.5zM9 9.5C9 10.33 8.33 11 7.5 11S6 10.33 6 9.5 6.67 8 7.5 8 9 8.67 9 9.5zm6.5 4.5c-.73 0-1.41-.2-2-.55v.05c0 1.94-1.57 3.5-3.5 3.5S6.5 15.44 6.5 13.5v-.05c.59.35 1.27.55 2 .55h7z"/></svg>
+        ${brandIconMarkup()}
         HTTPS Clone
       `;
       httpsBtn.title = urls.https;
@@ -254,9 +303,7 @@
       btn.id = 'clone-manager-page-btn';
       btn.className = 'gm-page-btn';
       btn.innerHTML = `
-        <svg viewBox="0 0 24 24" width="16" height="16">
-          <path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
-        </svg>
+        ${brandIconMarkup()}
         Instant Clone
       `;
 

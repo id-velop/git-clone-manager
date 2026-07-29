@@ -9,9 +9,7 @@
   <div class="popup">
     <div class="header">
       <div class="logo">
-        <svg viewBox="0 0 24 24" width="24" height="24">
-          <path fill="#8b5cf6" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
-        </svg>
+        <img class="brand-icon brand-icon-24" src="icons/clone-manager.svg" alt="">
       </div>
       <h1>Clone Manager</h1>
     </div>
@@ -25,10 +23,11 @@
     <div id="payment-status" class="payment-bar">
       <div class="payment-info">
         <span id="payment-icon">🔒</span>
-        <span id="payment-text">Free tier</span>
+        <span id="payment-text">Checking access...</span>
       </div>
-      <button id="payment-btn" class="payment-btn">Upgrade</button>
+      <button id="payment-btn" class="payment-btn">Get Pro</button>
     </div>
+    <p id="payment-message" class="payment-message" role="status" aria-live="polite"></p>
 
     <div id="clone-section" class="section">
       <label class="label">Clone URL</label>
@@ -37,16 +36,14 @@
       </div>
 
       <button id="clone-btn" class="clone-btn">
-        <svg viewBox="0 0 24 24" width="18" height="18">
-          <path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
-        </svg>
+        <img class="brand-icon brand-icon-18" src="icons/clone-manager.svg" alt="">
         Open Clone Page
       </button>
     </div>
 
     <div class="footer">
       <a href="#" id="options-link">How it works</a>
-      <span class="version">v1.1.0</span>
+      <span class="version">v1.1.7</span>
     </div>
   </div>
 

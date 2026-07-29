@@ -24,6 +24,34 @@ body {
   margin-bottom: 16px;
 }
 
+.logo {
+  color: #8b5cf6;
+}
+
+.brand-icon {
+  display: block;
+  flex: 0 0 auto;
+  object-fit: contain;
+}
+
+.brand-icon-18 {
+  width: 18px;
+  height: 18px;
+}
+
+.brand-icon-24 {
+  width: 24px;
+  height: 24px;
+}
+
+.logo .brand-icon {
+  filter: brightness(0) saturate(100%) invert(42%) sepia(92%) saturate(2317%) hue-rotate(239deg) brightness(101%) contrast(93%);
+}
+
+.clone-btn .brand-icon {
+  filter: brightness(0) invert(1);
+}
+
 .header h1 {
   font-size: 18px;
   font-weight: 700;
@@ -77,10 +105,32 @@ body {
   background: rgba(34, 197, 94, 0.08);
 }
 
+.payment-bar.locked {
+  border-color: rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.08);
+}
+
 .payment-info {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.payment-message {
+  min-height: 0;
+  margin: -8px 2px 16px;
+  color: #94a3b8;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.payment-message:empty {
+  display: none;
+}
+
+.payment-message.locked,
+.payment-message.error {
+  color: #fca5a5;
 }
 
 .payment-btn {
@@ -248,6 +298,16 @@ body {
 .clone-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.clone-btn.locked {
+  background: #27273d;
+  color: #c4b5fd;
+  outline: 1px solid #8b5cf6;
+}
+
+.clone-btn.locked:hover {
+  background: #30304a;
 }
 
 .clone-btn.success {

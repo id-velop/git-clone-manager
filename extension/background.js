@@ -2,15 +2,25 @@
 
 importScripts('ExtPay.js');
 
+const EXTPAY_EXTENSION_ID = 'hckpgnffhjfblnaehcnchfhaihebmkfo';
+const FREE_USE_LIMIT = 5;
+const USAGE_STORAGE_KEY = 'usage';
+
 // ExtensionPay is keyed by the published Chrome extension ID. Renaming the
 // product does not change this identifier.
-var extpay = ExtPay('hckpgnffhjfblnaehcnchfhaihebmkfo');
+var extpay = ExtPay(EXTPAY_EXTENSION_ID);
 extpay.startBackground();
 
 // React when a user pays or logs in with a paid account
 extpay.onPaid.addListener(user => {
   console.log('[Clone Manager] User paid:', user);
-  // You can add custom logic here, e.g. unlock premium features
+  chrome.storage.local.set({
+    [USAGE_STORAGE_KEY]: {
+      paid: true,
+      useCount: FREE_USE_LIMIT,
+      updatedAt: Date.now()
+    }
+  });
 });
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -155,6 +165,90 @@ async function setConfig(config) {
   return { success: true };
 }
 
+async function getStoredUsage() {
+  const stored = await chrome.storage.local.get(USAGE_STORAGE_KEY);
+  const usage = stored[USAGE_STORAGE_KEY] || {};
+  return {
+    paid: usage.paid === true,
+    useCount: Math.max(0, Number(usage.useCount) || 0),
+    updatedAt: Number(usage.updatedAt) || 0
+  };
+}
+
+async function getPaymentUser() {
+  try {
+    const user = await extpay.getUser();
+    const usage = await getStoredUsage();
+    await chrome.storage.local.set({
+      [USAGE_STORAGE_KEY]: {
+        ...usage,
+        paid: Boolean(user && user.paid),
+        updatedAt: Date.now()
+      }
+    });
+    return { user, paid: Boolean(user && user.paid), paymentError: null };
+  } catch (error) {
+    const usage = await getStoredUsage();
+    return {
+      user: null,
+      paid: usage.paid,
+      paymentError: error.message || 'Could not verify payment status'
+    };
+  }
+}
+
+function toAccessState(usage, paid, paymentError = null) {
+  const useCount = Math.min(usage.useCount, FREE_USE_LIMIT);
+  return {
+    paid,
+    allowed: paid || useCount < FREE_USE_LIMIT,
+    useCount,
+    remainingUses: paid ? null : Math.max(0, FREE_USE_LIMIT - useCount),
+    freeUseLimit: FREE_USE_LIMIT,
+    paymentError
+  };
+}
+
+async function getAccessState() {
+  const payment = await getPaymentUser();
+  const usage = await getStoredUsage();
+  return toAccessState(usage, payment.paid, payment.paymentError);
+}
+
+// Serialize claims so simultaneous tabs cannot exceed the free-use allowance.
+let claimQueue = Promise.resolve();
+
+function claimCloneUse() {
+  const claim = claimQueue.then(async () => {
+    const payment = await getPaymentUser();
+    const usage = await getStoredUsage();
+
+    if (payment.paid) {
+      return toAccessState(usage, true, payment.paymentError);
+    }
+
+    if (usage.useCount >= FREE_USE_LIMIT) {
+      return toAccessState(usage, false, payment.paymentError);
+    }
+
+    const nextUsage = {
+      ...usage,
+      paid: false,
+      useCount: usage.useCount + 1,
+      updatedAt: Date.now()
+    };
+    await chrome.storage.local.set({ [USAGE_STORAGE_KEY]: nextUsage });
+    return {
+      ...toAccessState(nextUsage, false, payment.paymentError),
+      allowed: true,
+      claimGranted: true
+    };
+  });
+
+  claimQueue = claim.catch(() => {});
+  return claim;
+}
+
 // Listen for messages from popup and content scripts
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'GET_CONFIG') {
@@ -173,15 +267,30 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
   // ─── ExtPay payment handlers ──────────────────────────────────
   if (message.type === 'GET_USER') {
-    var extpay = ExtPay('hckpgnffhjfblnaehcnchfhaihebmkfo');
-    extpay.getUser()
-      .then(sendResponse)
+    getPaymentUser()
+      .then(result => sendResponse(result.user || {
+        paid: result.paid,
+        error: result.paymentError
+      }))
       .catch(err => sendResponse({ error: err.message }));
     return true;
   }
 
+  if (message.type === 'GET_ACCESS_STATUS') {
+    getAccessState()
+      .then(sendResponse)
+      .catch(err => sendResponse({ allowed: false, error: err.message }));
+    return true;
+  }
+
+  if (message.type === 'CLAIM_CLONE_USE') {
+    claimCloneUse()
+      .then(sendResponse)
+      .catch(err => sendResponse({ allowed: false, error: err.message }));
+    return true;
+  }
+
   if (message.type === 'OPEN_PAYMENT_PAGE') {
-    var extpay = ExtPay('hckpgnffhjfblnaehcnchfhaihebmkfo');
     extpay.openPaymentPage()
       .then(() => sendResponse({ success: true }))
       .catch(err => sendResponse({ success: false, error: err.message }));
@@ -189,7 +298,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
 
   if (message.type === 'OPEN_LOGIN_PAGE') {
-    var extpay = ExtPay('hckpgnffhjfblnaehcnchfhaihebmkfo');
     extpay.openLoginPage()
       .then(() => sendResponse({ success: true }))
       .catch(err => sendResponse({ success: false, error: err.message }));
