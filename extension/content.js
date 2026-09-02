@@ -128,6 +128,7 @@
     let claim;
     try {
       claim = await chrome.runtime.sendMessage({ type: 'CLAIM_CLONE_USE' });
+      if (claim?.error) throw new Error(claim.error);
     } catch (error) {
       showNotification(`Could not check access: ${error.message}`, 'error');
       return;
@@ -209,10 +210,12 @@
     button.addEventListener('click', async () => {
       button.disabled = true;
       button.textContent = 'Opening checkout...';
-      const result = await chrome.runtime.sendMessage({ type: 'OPEN_PAYMENT_PAGE' });
-      if (!result?.success) {
+      try {
+        const result = await chrome.runtime.sendMessage({ type: 'OPEN_PAYMENT_PAGE' });
+        if (!result?.success) throw new Error(result?.error || 'Could not open checkout');
+      } catch (error) {
         button.disabled = false;
-        button.textContent = 'Try again';
+        button.textContent = 'Checkout unavailable · Try again';
       }
     });
 

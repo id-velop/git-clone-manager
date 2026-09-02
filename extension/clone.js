@@ -74,7 +74,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     setStatus('Checking access...');
-    const claim = await chrome.runtime.sendMessage({ type: 'CLAIM_CLONE_USE' });
+    let claim;
+    try {
+      claim = await chrome.runtime.sendMessage({ type: 'CLAIM_CLONE_USE' });
+      if (claim?.error) throw new Error(claim.error);
+    } catch (error) {
+      setStatus(`Could not check access: ${error.message}`, 'error');
+      return;
+    }
+
     if (!claim?.allowed) {
       renderAccess(claim || {
         paid: false,

@@ -8,6 +8,16 @@ The maintained source for the Clone Manager Chrome extension.
 The public product page and privacy policy live at
 [id-velop.github.io/clone-manager](https://id-velop.github.io/clone-manager/).
 
+## Access model
+
+- Every installation includes 5 free clone attempts.
+- Pro unlocks unlimited cloning with a one-time purchase.
+- Early Access price: $4.99. Planned regular price: $9.99.
+- Existing paid users keep access to the current core Pro features.
+
+The checkout price is configured in the ExtensionPay dashboard and must match
+the price shown in the extension and product page before publishing.
+
 ## Preview
 
 ![Clone Manager — repository page](1.png)
