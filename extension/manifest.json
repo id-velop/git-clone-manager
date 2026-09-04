@@ -2,7 +2,7 @@
 "update_url": "https://clients2.google.com/service/update2/crx",
 
   "manifest_version": 3,
-  "name": "Clone Manager",
+  "name": "Git Clone Manager",
   "version": "1.1.7",
   "description": "One-click Git clone for GitHub, GitLab, and more. No Terminal or commands—just choose a folder like saving a file.",
   "permissions": [

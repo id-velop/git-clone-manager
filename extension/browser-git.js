@@ -1,4 +1,4 @@
-// Browser-native Git clone support for Clone Manager.
+// Browser-native Git clone support for Git Clone Manager.
 // Requires the vendored `git` (isomorphic-git) and `LightningFS` globals.
 
 (function (global) {
@@ -271,13 +271,13 @@
         await fs.promises._deactivate();
       }
     } catch (error) {
-      console.warn('[Clone Manager] Could not close temporary filesystem:', error);
+      console.warn('[Git Clone Manager] Could not close temporary filesystem:', error);
     }
 
     try {
       indexedDB.deleteDatabase(databaseName);
     } catch (error) {
-      console.warn('[Clone Manager] Could not delete temporary filesystem:', error);
+      console.warn('[Git Clone Manager] Could not delete temporary filesystem:', error);
     }
   }
 
@@ -345,7 +345,7 @@
         try {
           await parentHandle.removeEntry(repositoryName, { recursive: true });
         } catch (cleanupError) {
-          console.warn('[Clone Manager] Could not remove incomplete clone:', cleanupError);
+          console.warn('[Git Clone Manager] Could not remove incomplete clone:', cleanupError);
         }
       }
       throw error;

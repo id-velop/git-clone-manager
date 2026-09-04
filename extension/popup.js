@@ -1,4 +1,4 @@
-// Clone Manager - Popup Script
+// Git Clone Manager - Popup Script
 
 document.addEventListener('DOMContentLoaded', async () => {
   const statusDot = document.getElementById('status-dot');
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (state && !state.error) renderAccess(state);
     else throw new Error(state?.error || 'Could not check access');
   } catch (error) {
-    console.warn('[Clone Manager] Access check error:', error);
+    console.warn('[Git Clone Manager] Access check error:', error);
     showPaymentMessage('Could not check access. Reopen the extension to try again.', 'error');
     cloneBtn.classList.add('locked');
     cloneBtn.setAttribute('aria-disabled', 'true');
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           : 'Complete your one-time purchase in the new tab.'
       );
     } catch (error) {
-      console.error('[Clone Manager] Payment error:', error);
+      console.error('[Git Clone Manager] Payment error:', error);
       showPaymentMessage(`Payment page error: ${error.message}`, 'error');
     }
   });
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     }
   } catch (error) {
-    console.warn('[Clone Manager] Could not detect repository URL:', error);
+    console.warn('[Git Clone Manager] Could not detect repository URL:', error);
   }
 
   cloneBtn.addEventListener('click', async () => {

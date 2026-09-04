@@ -1,4 +1,4 @@
-// Clone Manager - Background Service Worker
+// Git Clone Manager - Background Service Worker
 
 importScripts('ExtPay.js');
 
@@ -13,7 +13,7 @@ extpay.startBackground();
 
 // React when a user pays or logs in with a paid account
 extpay.onPaid.addListener(user => {
-  console.log('[Clone Manager] User paid:', user);
+  console.log('[Git Clone Manager] User paid:', user);
   chrome.storage.local.set({
     [USAGE_STORAGE_KEY]: {
       paid: true,
@@ -24,7 +24,7 @@ extpay.onPaid.addListener(user => {
 });
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('[Clone Manager] Extension installed');
+  console.log('[Git Clone Manager] Extension installed');
 });
 
 function bytesToBase64(bytes) {

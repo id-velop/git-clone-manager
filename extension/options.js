@@ -1,4 +1,4 @@
-// Clone Manager - Options Script
+// Git Clone Manager - Options Script
 
 document.addEventListener('DOMContentLoaded', async () => {
   const cloneDirInput = document.getElementById('clone-dir');

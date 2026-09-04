@@ -1,4 +1,4 @@
-// Clone Manager - Content Script
+// Git Clone Manager - Content Script
 // Detects clone URLs on GitHub and GitLab pages and injects Clone button
 
 (function () {
@@ -158,7 +158,7 @@
         : ` · ${claim.remainingUses} free clone${claim.remainingUses === 1 ? '' : 's'} left`;
       showNotification(`Cloned to ${result.destinationName}${trialMessage}`, 'success');
     } catch (err) {
-      console.error('Clone Manager clone error:', err);
+      console.error('Git Clone Manager clone error:', err);
       if (err.name === 'AbortError') {
         btn.innerHTML = originalHTML;
         btn.disabled = false;
@@ -242,7 +242,7 @@
     const btn = document.createElement('button');
     btn.id = 'clone-manager-clone-btn';
     btn.className = 'gm-clone-btn';
-    btn.title = `Clone with Clone Manager\nHTTPS: ${urls.https || 'N/A'}`;
+    btn.title = `Clone with Git Clone Manager\nHTTPS: ${urls.https || 'N/A'}`;
     btn.innerHTML = `
       ${brandIconMarkup()}
       <span>Clone</span>
@@ -323,7 +323,7 @@
   // ─── Init ─────────────────────────────────────────────────
 
   function init() {
-    console.log('[Clone Manager] Initializing...');
+    console.log('[Git Clone Manager] Initializing...');
     injectCloneButton();
     injectGitHubPageButton();
   }
