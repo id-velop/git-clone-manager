@@ -154,14 +154,15 @@
   // ─── Clone Execution ──────────────────────────────────────
 
   async function doClone(url) {
-    const btn = document.getElementById('git-magager-clone-btn') || document.getElementById('git-magager-page-btn');
-    if (!btn) return;
+    const btn = document.getElementById('git-magager-page-btn');
+    if (!btn || btn.disabled) return;
     const originalHTML = btn.innerHTML;
 
     // Step 0: Check server is running
     btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Connecting...';
     btn.disabled = true;
     btn.classList.add('gm-cloning');
+    btn.setAttribute('aria-busy', 'true');
 
     try {
       const serverOk = await ensureServerRunning();
@@ -169,6 +170,7 @@
         btn.innerHTML = originalHTML;
         btn.disabled = false;
         btn.classList.remove('gm-cloning');
+        btn.removeAttribute('aria-busy');
         showNotification('Server not running. Click the extension icon and press "Start Server".', 'error');
         return;
       }
@@ -182,6 +184,7 @@
         btn.innerHTML = originalHTML;
         btn.disabled = false;
         btn.classList.remove('gm-cloning');
+        btn.removeAttribute('aria-busy');
         if (folderResult && !folderResult.cancelled) {
           showNotification('Folder selection failed: ' + (folderResult.error || 'Unknown error'), 'error');
         }
@@ -190,19 +193,24 @@
 
       const selectedFolder = folderResult.path;
 
-      // Step 2: Clone to the selected folder
-      btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Cloning to ' + selectedFolder.split('/').pop() + '...';
-
-      const result = await sendMessageToBackground({ 
-        type: 'CLONE', 
-        url, 
-        openTerminal: true, 
-        directory: selectedFolder 
+      // Keep the spinner active until Git exits, including for large repositories.
+      btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="42 15"/></svg> Cloning…';
+      let result = await sendMessageToBackground({
+        type: 'START_CLONE', url, directory: selectedFolder
       });
+      if (!result || !result.success) throw new Error(result?.error || 'Could not start clone');
+      const jobId = result.id;
+      while (result.status === 'running') {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        result = await sendMessageToBackground({ type: 'CLONE_STATUS', id: jobId });
+        if (!result || !result.success) throw new Error(result?.error || 'Could not read clone status');
+      }
+      if (result.status !== 'complete') throw new Error(result.error || 'Clone failed');
 
       if (result && result.success) {
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Cloned!';
         btn.classList.remove('gm-cloning');
+        btn.removeAttribute('aria-busy');
         btn.classList.add('gm-success');
         showNotification(`Cloned to ${selectedFolder}`, 'success');
       } else {
@@ -211,6 +219,7 @@
     } catch (err) {
       console.error('Git Magager clone error:', err);
       btn.classList.remove('gm-cloning');
+      btn.removeAttribute('aria-busy');
       btn.classList.add('gm-error');
       if (err.message === 'Failed to fetch') {
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> No Server';
@@ -244,83 +253,6 @@
       notification.classList.remove('gm-notification-show');
       setTimeout(() => notification.remove(), 300);
     }, 3000);
-  }
-
-  // ─── Button Injection ─────────────────────────────────────
-
-  function injectCloneButton() {
-    if (!isRepoPage()) return;
-    if (document.getElementById('git-magager-clone-btn')) return;
-
-    const urls = getCloneUrls();
-    if (!urls.https && !urls.ssh) return;
-
-    // Create the floating clone button
-    const btn = document.createElement('button');
-    btn.id = 'git-magager-clone-btn';
-    btn.className = 'gm-clone-btn';
-    btn.title = `Clone with Git Magager\nHTTPS: ${urls.https || 'N/A'}\nSSH: ${urls.ssh || 'N/A'}`;
-    btn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="16" height="16">
-        <path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 12 7.4l3.38 4.6L17 10.83 14.92 8H20v6z"/>
-      </svg>
-      <span>Clone</span>
-    `;
-
-    // Create dropdown for HTTPS/SSH selection
-    const dropdown = document.createElement('div');
-    dropdown.className = 'gm-dropdown';
-    dropdown.id = 'git-magager-dropdown';
-
-    if (urls.https) {
-      const httpsBtn = document.createElement('button');
-      httpsBtn.className = 'gm-dropdown-item';
-      httpsBtn.innerHTML = `
-        <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 1C5.93 1 1 5.93 1 12s4.93 11 11 11 11-4.93 11-11S18.07 1 12 1zm0 20c-4.96 0-9-4.04-9-9s4.04-9 9-9 9 4.04 9 9-4.04 9-9 9zm4.5-12.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5S14.17 7 15 7s1.5.67 1.5 1.5zM9 9.5C9 10.33 8.33 11 7.5 11S6 10.33 6 9.5 6.67 8 7.5 8 9 8.67 9 9.5zm6.5 4.5c-.73 0-1.41-.2-2-.55v.05c0 1.94-1.57 3.5-3.5 3.5S6.5 15.44 6.5 13.5v-.05c.59.35 1.27.55 2 .55h7z"/></svg>
-        HTTPS Clone
-      `;
-      httpsBtn.title = urls.https;
-      httpsBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdown.classList.remove('gm-dropdown-show');
-        doClone(urls.https);
-      });
-      dropdown.appendChild(httpsBtn);
-    }
-
-    if (urls.ssh) {
-      const sshBtn = document.createElement('button');
-      sshBtn.className = 'gm-dropdown-item';
-      sshBtn.innerHTML = `
-        <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM9 8V6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9z"/></svg>
-        SSH Clone
-      `;
-      sshBtn.title = urls.ssh;
-      sshBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdown.classList.remove('gm-dropdown-show');
-        doClone(urls.ssh);
-      });
-      dropdown.appendChild(sshBtn);
-    }
-
-    // Toggle dropdown on click
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      dropdown.classList.toggle('gm-dropdown-show');
-    });
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', () => {
-      dropdown.classList.remove('gm-dropdown-show');
-    });
-
-    // Insert button into the page
-    const container = document.createElement('div');
-    container.id = 'git-magager-container';
-    container.appendChild(btn);
-    container.appendChild(dropdown);
-    document.body.appendChild(container);
   }
 
   // ─── GitHub-specific: Inject into page UI ─────────────────
@@ -361,7 +293,6 @@
 
   function init() {
     console.log('[Git Magager] Initializing...');
-    injectCloneButton();
     injectGitHubPageButton();
   }
 
@@ -377,7 +308,6 @@
   const observer = new MutationObserver(() => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-      injectCloneButton();
       injectGitHubPageButton();
     }, 500);
   });

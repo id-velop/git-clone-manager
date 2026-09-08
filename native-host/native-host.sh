@@ -1,5 +1,5 @@
 #!/bin/bash
-# Native Messaging Host wrapper script
-# This script is called by Chrome when the extension sends a message
-
-exec node git-clone-manager/native-host/native-server.js
+set -euo pipefail
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+exec node "$SCRIPT_DIR/launcher.js"

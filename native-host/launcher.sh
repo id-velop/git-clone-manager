@@ -1,8 +1,5 @@
 #!/bin/bash
-# Git Magager - Native Host Launcher
-# Chrome auto-launches this script via Native Messaging.
-# It starts the HTTP server (server.js) and keeps the connection alive.
-
+set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 exec node "$SCRIPT_DIR/launcher.js"

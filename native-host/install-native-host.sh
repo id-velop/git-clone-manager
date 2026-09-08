@@ -1,99 +1,47 @@
 #!/bin/bash
-# Git Magager - Install Native Messaging Host
-# This script registers the native messaging host with Chrome
-
-set -e
-
+set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-EXTENSION_DIR="$SCRIPT_DIR/../chrome-extension"
-
-echo "🚀 Git Magager - Native Host Installation"
-echo "=========================================="
-echo ""
-
-# Check Node.js
-if ! command -v node &> /dev/null; then
-    echo "❌ Node.js is not installed. Please install it from https://nodejs.org"
-    exit 1
+NODE_BIN="$(command -v node || true)"
+if [[ -z "$NODE_BIN" ]]; then
+  echo "Node.js is required." >&2
+  exit 1
 fi
-
-echo "✅ Node.js found: $(node --version)"
-
-# Get Chrome extension ID
-echo ""
-echo "📋 Getting Chrome Extension ID..."
-echo ""
-echo "Please follow these steps:"
-echo "1. Open Chrome and go to chrome://extensions"
-echo "2. Enable 'Developer mode' (top right toggle)"
-echo "3. Click 'Load unpacked' and select: $EXTENSION_DIR"
-echo "4. Copy the Extension ID (looks like: abcdefghijklmnopqrstuvwxyz123456)"
-echo ""
-read -p "Enter your Extension ID: " EXTENSION_ID
-
-if [ -z "$EXTENSION_ID" ]; then
-    echo "❌ Extension ID cannot be empty"
-    exit 1
+if ! command -v git >/dev/null; then
+  echo "Git is required." >&2
+  exit 1
 fi
-
-echo ""
-echo "🔧 Configuring Native Messaging Host..."
-
-# Update the allowed_origins in the manifest file
-MANIFEST_FILE="$SCRIPT_DIR/com.git-magager.host.json"
-HOST_SCRIPT="$SCRIPT_DIR/native-host.sh"
-NATIVE_SERVER="$SCRIPT_DIR/native-server.js"
-
-# Create the manifest with the correct extension ID
-cat > "$MANIFEST_FILE" << EOF
-{
-  "name": "com.git-magager.host",
-  "description": "Git Magager Native Host",
-  "path": "$HOST_SCRIPT",
-  "type": "stdio",
-  "allowed_origins": [
-    "chrome-extension://$EXTENSION_ID/"
-  ]
+EXTENSION_ID="${1:-}"
+if [[ -z "$EXTENSION_ID" ]]; then
+  read -r -p "Chrome extension ID: " EXTENSION_ID
+fi
+if [[ ! "$EXTENSION_ID" =~ ^[a-p]{32}$ ]]; then
+  echo "Invalid Chrome extension ID." >&2
+  exit 1
+fi
+"$NODE_BIN" - "$SCRIPT_DIR" "$EXTENSION_ID" <<'NODE'
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+const [source, id] = process.argv.slice(2);
+const installDir = path.join(os.homedir(), 'Library/Application Support/Git Magager');
+const hostsDir = path.join(os.homedir(), 'Library/Application Support/Google/Chrome/NativeMessagingHosts');
+fs.mkdirSync(installDir, { recursive: true });
+fs.mkdirSync(hostsDir, { recursive: true });
+for (const file of ['launcher.js', 'server.js']) {
+  fs.copyFileSync(path.join(source, file), path.join(installDir, file));
 }
-EOF
-
-# Make scripts executable
-chmod +x "$HOST_SCRIPT"
-chmod +x "$NATIVE_SERVER"
-
-# Install to Chrome's native messaging hosts directory
-NATIVE_HOSTS_DIR="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"
-mkdir -p "$NATIVE_HOSTS_DIR"
-
-cp "$MANIFEST_FILE" "$NATIVE_HOSTS_DIR/com.git-magager.host.json"
-
-echo "✅ Native host manifest installed to: $NATIVE_HOSTS_DIR"
-
-# Create default config if not exists
-CONFIG_FILE="$HOME/.git-magager.json"
-if [ ! -f "$CONFIG_FILE" ]; then
-    echo ""
-    echo "📝 Creating default config at $CONFIG_FILE"
-    mkdir -p "$HOME/Projects"
-    cat > "$CONFIG_FILE" << EOF
-{
-  "cloneDirectory": "$HOME/Projects",
-  "openInTerminal": true,
-  "terminalApp": "Terminal"
-}
-EOF
-    echo "   Default clone directory: $HOME/Projects"
-else
-    echo "✅ Config already exists at $CONFIG_FILE"
-fi
-
-echo ""
-echo "🎉 Installation complete!"
-echo ""
-echo "Next steps:"
-echo "1. Reload the extension in Chrome (chrome://extensions → Reload button)"
-echo "2. Visit any GitHub/GitLab repository"
-echo "3. Click the Clone button!"
-echo ""
-echo "The native host will automatically start when needed."
-echo "No manual server startup required! 🚀"
+const quote = value => "'" + value.replace(/'/g, "'\\''") + "'";
+const launcher = path.join(installDir, 'launcher.sh');
+fs.writeFileSync(launcher, '#!/bin/bash\nexport PATH=' + quote(path.dirname(process.execPath) + ':/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin') + '\nexec ' + quote(process.execPath) + ' ' + quote(path.join(installDir, 'launcher.js')) + '\n', { mode: 0o755 });
+fs.chmodSync(launcher, 0o755);
+const manifest = {
+  name: 'com.git_magager.host',
+  description: 'Git Magager Native Host',
+  path: launcher,
+  type: 'stdio',
+  allowed_origins: ['chrome-extension://' + id + '/']
+};
+fs.writeFileSync(path.join(hostsDir, manifest.name + '.json'), JSON.stringify(manifest, null, 2) + '\n');
+console.log('Installed Native Host for extension ' + id);
+console.log('Reload the extension, then click Start Server.');
+NODE

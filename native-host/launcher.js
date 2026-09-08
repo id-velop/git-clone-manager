@@ -2,7 +2,7 @@
  * Git Magager - Native Host Launcher
  *
  * Chrome auto-launches this via Native Messaging when the extension
- * calls chrome.runtime.connectNative('com.git-magager.host').
+ * calls chrome.runtime.connectNative('com.git_magager.host').
  *
  * This launcher:
  *   1. Spawns the HTTP server (server.js) on port 9456
@@ -12,36 +12,44 @@
 
 const { spawn } = require('child_process');
 const path = require('path');
+const http = require('http');
 
 const SCRIPT_DIR = __dirname;
 let httpServer = null;
 let serverStarted = false;
 
-// --- Start HTTP server (always spawn, if already running the new one just fails) ---
-function startHttpServer() {
-  const serverPath = path.join(SCRIPT_DIR, 'server.js');
+function checkHealth() {
+  return new Promise(resolve => {
+    const request = http.get('http://127.0.0.1:9456/health', response => {
+      let body = '';
+      response.on('data', chunk => { body += chunk; });
+      response.on('end', () => {
+        try { resolve(response.statusCode === 200 && JSON.parse(body).status === 'ok'); }
+        catch { resolve(false); }
+      });
+      response.on('error', () => resolve(false));
+    });
+    request.setTimeout(500, () => request.destroy());
+    request.on('error', () => resolve(false));
+  });
+}
 
-  httpServer = spawn('node', [serverPath], {
+async function startHttpServer() {
+  if (await checkHealth()) return true;
+  httpServer = spawn(process.execPath, [path.join(SCRIPT_DIR, 'server.js')], {
     detached: true,
     stdio: 'ignore',
     env: { ...process.env }
   });
-
-  // NOTE: Do NOT call unref() — it causes the child to be killed when parent exits.
-  // Instead, we explicitly process.exit(0) when Chrome closes stdin.
-  // detached: true ensures the child survives parent exit.
-
-  httpServer.on('error', (err) => {
+  httpServer.on('error', err => {
     process.stderr.write(`[launcher] Failed to start server: ${err.message}\n`);
   });
-
-  httpServer.on('close', (code) => {
-    process.stderr.write(`[launcher] HTTP server exited with code ${code}\n`);
-    httpServer = null;
-  });
-
-  serverStarted = true;
-  process.stderr.write('[launcher] HTTP server spawned on port 9456\n');
+  httpServer.unref();
+  for (let attempt = 0; attempt < 30; attempt++) {
+    if (await checkHealth()) return true;
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  return false;
 }
 
 // --- Native Messaging protocol ---
@@ -74,9 +82,10 @@ process.stdin.on('data', (chunk) => {
   }
 });
 
-function handleNativeMessage(message) {
+async function handleNativeMessage(message) {
   switch (message.type) {
     case 'health':
+      serverStarted = await startup;
       sendNativeMessage({
         type: 'health',
         status: 'ok',
@@ -103,7 +112,7 @@ function handleNativeMessage(message) {
 
 // --- Startup ---
 process.stderr.write('[launcher] Git Magager Native Host starting...\n');
-startHttpServer();
+const startup = startHttpServer();
 
 // When Chrome disconnects (closes stdin), exit cleanly.
 // The HTTP server is detached and will keep running independently.

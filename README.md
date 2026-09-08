@@ -108,10 +108,11 @@ You can modify this file manually, or use the extension's options page.
 
 ## 🛠️ Architecture
 
-This extension uses **Chrome Native Messaging** to communicate with a local Node.js process:
+This extension uses **Chrome Native Messaging** to start a local Node.js HTTP server. Clone and configuration requests then use `http://127.0.0.1:9456`:
 
 ```
-Chrome Extension ←→ Native Messaging Host ←→ Git Commands
+Chrome Extension → Native Messaging Launcher → Local HTTP Server → Git
+Chrome Extension ←──────── HTTP :9456 ────────→ Local HTTP Server
 ```
 
 **Benefits:**
@@ -178,3 +179,18 @@ MIT License
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit issues and pull requests.
+
+### Native Host troubleshooting
+
+If Chrome reports `Specified native messaging host not found`, run:
+
+```bash
+bash native-host/install-native-host.sh YOUR_EXTENSION_ID
+```
+
+Use the ID of the loaded extension shown in `chrome://extensions`, then reload
+that extension. The installer registers `com.git_magager.host` and copies the
+server into `~/Library/Application Support/Git Magager`. It records the current
+Node.js executable path, so Chrome does not depend on your shell's PATH. Rerun
+the installer after updating the helper code or moving/removing that Node.js
+installation. The extension needs permission to access `http://127.0.0.1:9456/*`.

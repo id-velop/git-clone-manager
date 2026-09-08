@@ -24,7 +24,7 @@ async function checkServerHealth() {
 // Helper: fetch with timeout
 async function fetchWithTimeout(url, options = {}, timeout = 10000) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeout);
+  const timer = timeout > 0 ? setTimeout(() => controller.abort(), timeout) : null;
   try {
     const response = await fetch(url, { ...options, signal: controller.signal });
     clearTimeout(timer);
@@ -58,7 +58,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
               if (msg.type === 'health' && msg.serverRunning) {
                 sendResponse({ success: true, alreadyRunning: false });
               } else {
-                sendResponse({ success: true, message: 'Server launched, status: ' + msg.type });
+                sendResponse({ success: false, error: 'Local server failed to start. Run the Native Host installer again.' });
               }
               port.disconnect();
             }
@@ -110,9 +110,24 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ defaultPath: message.defaultPath })
-        });
+        }, 0);
         const data = await response.json();
         sendResponse(data);
+        return;
+      }
+
+      if (message.type === 'START_CLONE' || message.type === 'CLONE_STATUS') {
+        const starting = message.type === 'START_CLONE';
+        const response = await fetchWithTimeout(
+          `${SERVER_URL}/clone-jobs${starting ? '' : '/' + encodeURIComponent(message.id)}`,
+          starting ? {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url: message.url, directory: message.directory })
+          } : {}
+        );
+        const data = await response.json();
+        sendResponse({ ...data, success: response.ok });
         return;
       }
 

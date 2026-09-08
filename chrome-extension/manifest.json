@@ -15,7 +15,8 @@
     "https://*.gitlab.com/*",
     "https://*.gitlab.org/*",
     "https://git.example.com/*",
-    "https://*.example.com/*"
+    "https://*.example.com/*",
+    "http://127.0.0.1:9456/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -38,8 +39,12 @@
         "https://git.example.com/*",
         "https://*.example.com/*"
       ],
-      "js": ["content.js"],
-      "css": ["content.css"],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
       "run_at": "document_idle"
     }
   ],

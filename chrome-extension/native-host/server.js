@@ -1,5 +1,7 @@
 const http = require('http');
-const { exec } = require('child_process');
+const { exec, execFile } = require('child_process');
+const { randomUUID } = require('crypto');
+const cloneJobs = new Map();
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -49,9 +51,11 @@ function cloneRepo(url, config) {
 
     console.log(`Cloning ${url} into ${cloneDir}...`);
 
-    const command = `cd "${cloneDir}" && git clone ${url}`;
-
-    exec(command, (error, stdout, stderr) => {
+    execFile('git', ['clone', '--', url], {
+      cwd: cloneDir,
+      env: { ...process.env, GIT_TERMINAL_PROMPT: '0' },
+      maxBuffer: 16 * 1024 * 1024
+    }, (error, stdout, stderr) => {
       if (error) {
         console.error(`Clone failed: ${error.message}`);
         reject({ success: false, error: error.message, stderr: stderr });
@@ -218,6 +222,44 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ success: false, error: e.message }));
       }
     });
+    return;
+  }
+
+  // Short requests let the extension poll without a long-lived HTTP connection.
+  if (req.method === 'POST' && req.url === '/clone-jobs') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const { url, directory } = JSON.parse(body);
+        if (typeof url !== 'string' || !url.trim()) throw new Error('URL is required');
+        const config = loadConfig();
+        if (directory) config.cloneDirectory = directory;
+        const id = randomUUID();
+        const job = { id, status: 'running' };
+        cloneJobs.set(id, job);
+        cloneRepo(url, config).then(() => {
+          job.status = 'complete';
+        }, error => {
+          job.status = 'failed';
+          job.error = error.error || error.message || 'Clone failed';
+        }).finally(() => {
+          setTimeout(() => cloneJobs.delete(id), 60 * 60 * 1000).unref();
+        });
+        res.writeHead(202, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(job));
+      } catch (error) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: error.message }));
+      }
+    });
+    return;
+  }
+
+  if (req.method === 'GET' && req.url.startsWith('/clone-jobs/')) {
+    const job = cloneJobs.get(req.url.slice('/clone-jobs/'.length));
+    res.writeHead(job ? 200 : 404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(job || { error: 'Clone status unavailable. The local server may have restarted.' }));
     return;
   }
 

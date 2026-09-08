@@ -10,111 +10,16 @@
   --gm-border: #45475a;
 }
 
-#git-magager-container {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 999999;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-.gm-clone-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
-  background: var(--gm-primary);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.gm-clone-btn:hover {
-  background: var(--gm-primary-hover);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
-}
-
-.gm-clone-btn:active {
-  transform: translateY(0);
-}
-
-.gm-clone-btn.gm-success {
-  background: var(--gm-success);
-  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.4);
-}
-
-.gm-clone-btn.gm-error {
-  background: var(--gm-error);
-  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
-}
-
-.gm-clone-btn.gm-cloning {
-  opacity: 0.8;
-  cursor: wait;
-}
-
-.gm-clone-btn:disabled {
-  pointer-events: none;
-}
-
 /* Spin animation */
 .gm-spin {
-  animation: gm-spin 1s linear infinite;
+  animation: gm-spin 0.8s linear infinite;
+  transform-origin: center;
+  flex-shrink: 0;
 }
 
 @keyframes gm-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-/* Dropdown */
-.gm-dropdown {
-  position: absolute;
-  bottom: calc(100% + 8px);
-  right: 0;
-  background: var(--gm-bg);
-  border: 1px solid var(--gm-border);
-  border-radius: 10px;
-  padding: 6px;
-  min-width: 200px;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(8px);
-  transition: all 0.2s ease;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-}
-
-.gm-dropdown.gm-dropdown-show {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.gm-dropdown-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 10px 14px;
-  background: none;
-  border: none;
-  border-radius: 6px;
-  color: var(--gm-text);
-  font-size: 13px;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.gm-dropdown-item:hover {
-  background: rgba(139, 92, 246, 0.15);
-  color: white;
 }
 
 /* Page-integrated button (GitHub) */
@@ -171,4 +76,20 @@
 
 .gm-notification-info {
   background: var(--gm-primary);
+}
+
+.gm-page-btn.gm-cloning {
+  cursor: wait;
+}
+
+.gm-page-btn:disabled {
+  opacity: 0.85;
+}
+
+.gm-page-btn.gm-success {
+  background: var(--gm-success);
+}
+
+.gm-page-btn.gm-error {
+  background: var(--gm-error);
 }
