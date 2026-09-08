@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Git Magager",
-  "version": "2.1.0",
+  "version": "1.0",
   "description": "One-click git clone on GitHub, GitLab, and more. No terminal needed.",
   "permissions": [
     "storage",
@@ -46,6 +46,12 @@
         "content.css"
       ],
       "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/icon48.png"],
+      "matches": ["https://github.com/*"]
     }
   ],
   "options_page": "options.html",

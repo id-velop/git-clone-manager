@@ -1,0 +1,12 @@
+# Local editor-generated documentation
+.qoder/
+
+# macOS metadata
+.DS_Store
+
+# Dependencies and local logs
+node_modules/
+*.log
+
+# Generated extension archive
+/git-magager.zip

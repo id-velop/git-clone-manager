@@ -273,9 +273,7 @@
       btn.id = 'git-magager-page-btn';
       btn.className = 'gm-page-btn';
       btn.innerHTML = `
-        <svg viewBox="0 0 24 24" width="16" height="16">
-          <path fill="currentColor" d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2z"/>
-        </svg>
+        <img class="gm-gift-icon" src="${chrome.runtime.getURL('icons/icon48.png')}" width="16" height="16" alt="" aria-hidden="true" />
         Instant Clone
       `;
 
