@@ -1,12 +1,12 @@
 :root {
   color-scheme: light;
-  --ink: #171714;
-  --muted: #68655d;
-  --paper: #f5f1e8;
-  --surface: #fffdf8;
-  --line: #d8d2c5;
-  --accent: #ff6b2c;
-  --accent-dark: #d94612;
+  --ink: #172033;
+  --muted: #64748b;
+  --paper: #f4f7fb;
+  --surface: #ffffff;
+  --line: #d8e1ee;
+  --accent: #2563eb;
+  --accent-dark: #1d4ed8;
   --success: #147a4b;
   --danger: #b42318;
 }
@@ -42,10 +42,10 @@ button, select { cursor: pointer; }
   width: 42px;
   height: 42px;
   place-items: center;
-  border: 1.5px solid var(--ink);
+  border: 1px solid #b9cdfa;
   border-radius: 12px;
   background: var(--accent);
-  box-shadow: 3px 3px 0 var(--ink);
+  color: white;
 }
 
 .brand-copy { min-width: 0; }
@@ -89,7 +89,7 @@ h2 { margin-bottom: 0; font-size: 0.9375rem; line-height: 1.25; letter-spacing: 
   margin-bottom: 12px;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: rgba(255, 253, 248, 0.62);
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .preference-card p { margin: 2px 0 0; color: var(--muted); font-size: 0.6875rem; }
@@ -97,7 +97,7 @@ h2 { margin-bottom: 0; font-size: 0.9375rem; line-height: 1.25; letter-spacing: 
 select {
   min-width: 90px;
   padding: 7px 28px 7px 10px;
-  border: 1px solid var(--ink);
+  border: 1px solid #b8c7dc;
   border-radius: 8px;
   background: var(--surface);
   color: var(--ink);
@@ -106,10 +106,10 @@ select {
 }
 
 .clone-workspace, .connection-card, .loading-card {
-  border: 1.5px solid var(--ink);
+  border: 1px solid var(--line);
   border-radius: 16px;
   background: var(--surface);
-  box-shadow: 4px 4px 0 var(--ink);
+  box-shadow: 0 8px 24px rgba(39, 63, 102, 0.06);
 }
 
 .clone-workspace { padding: 16px; }
@@ -123,7 +123,7 @@ select {
   padding: 4px;
   margin-bottom: 14px;
   border-radius: 10px;
-  background: #e8e2d6;
+  background: #e8eef7;
 }
 
 .protocol-tab {
@@ -136,7 +136,7 @@ select {
   font-weight: 800;
 }
 
-.protocol-tab.active { background: var(--ink); color: white; box-shadow: 0 1px 3px #17171433; }
+.protocol-tab.active { background: var(--accent); color: white; box-shadow: 0 1px 3px rgba(37, 99, 235, 0.18); }
 .clone-method { display: grid; gap: 8px; }
 .clone-method label { color: var(--muted); font-size: 0.6875rem; font-weight: 750; }
 
@@ -146,14 +146,14 @@ select {
   padding: 11px 12px;
   border: 1px solid var(--line);
   border-radius: 9px;
-  background: #f8f5ee;
+  background: #f8fafc;
   color: var(--ink);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   font-size: 0.75rem;
   outline: none;
 }
 
-.clone-method input::placeholder { color: #969083; }
+.clone-method input::placeholder { color: #94a3b8; }
 .clone-method input.invalid { border-color: var(--danger); box-shadow: 0 0 0 3px #b4231818; }
 
 .clone-btn, .connect-btn {
@@ -162,17 +162,17 @@ select {
   align-items: center;
   justify-content: space-between;
   padding: 11px 12px 11px 14px;
-  border: 1.5px solid var(--ink);
+  border: 0;
   border-radius: 9px;
   background: var(--accent);
-  color: var(--ink);
+  color: white;
   font-weight: 800;
-  box-shadow: 2px 2px 0 var(--ink);
-  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+  box-shadow: 0 1px 2px rgba(30, 64, 175, 0.16);
+  transition: background 120ms ease, box-shadow 120ms ease;
 }
 
-.clone-btn:hover:not(:disabled), .connect-btn:hover:not(:disabled) { background: #ff8550; }
-.clone-btn:active:not(:disabled), .connect-btn:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: none; }
+.clone-btn:hover:not(:disabled), .connect-btn:hover:not(:disabled) { background: var(--accent-dark); box-shadow: 0 3px 8px rgba(30, 64, 175, 0.18); }
+.clone-btn:active:not(:disabled), .connect-btn:active:not(:disabled) { background: #1e40af; }
 .clone-btn:disabled, .connect-btn:disabled { cursor: wait; opacity: 0.7; }
 .clone-btn.success { background: #b9ebcf; color: #0d5e39; }
 .clone-btn.error { background: #ffd3cf; color: var(--danger); }
@@ -193,14 +193,14 @@ select {
 .terminal-option small { margin-top: 1px; color: var(--muted); font-size: 0.6875rem; }
 .switch { position: relative; display: block; width: 38px; height: 22px; flex: 0 0 auto; }
 .switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
-.switch-track { position: absolute; inset: 0; border: 1.5px solid var(--ink); border-radius: 999px; background: #d8d2c5; transition: background 150ms ease; }
-.switch-track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 13px; height: 13px; border: 1px solid var(--ink); border-radius: 50%; background: white; transition: transform 150ms ease; }
+.switch-track { position: absolute; inset: 0; border: 1px solid #aebdd0; border-radius: 999px; background: #dce4ef; transition: background 150ms ease; }
+.switch-track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: white; box-shadow: 0 1px 2px rgba(15, 23, 42, .18); transition: transform 150ms ease; }
 .switch input:checked + .switch-track { background: var(--accent); }
 .switch input:checked + .switch-track::after { transform: translateX(16px); }
-.switch input:focus-visible + .switch-track { outline: 3px solid #ffb08d; outline-offset: 3px; }
+.switch input:focus-visible + .switch-track { outline: 3px solid #93b4fb; outline-offset: 3px; }
 
 .connection-card { display: grid; grid-template-columns: 42px 1fr; gap: 12px; padding: 16px; }
-.connection-icon { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 10px; background: #ffe0d1; color: var(--accent-dark); }
+.connection-icon { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 10px; background: #e7efff; color: var(--accent-dark); }
 .connection-copy { margin: 6px 0 13px; color: var(--muted); font-size: 0.75rem; }
 .start-error { margin: 11px 0 0; color: var(--danger); font-size: 0.75rem; }
 
@@ -215,7 +215,7 @@ select {
 .settings-link:hover { color: var(--ink); }
 .version { color: #8c877c; font: 0.6875rem ui-monospace, SFMono-Regular, Menlo, monospace; }
 
-:where(button, input, select):focus-visible { outline: 3px solid #ffb08d; outline-offset: 2px; }
+:where(button, input, select):focus-visible { outline: 3px solid #93b4fb; outline-offset: 2px; }
 .visually-hidden:where(:not(:focus-within, :active)) { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip-path: inset(50%) !important; white-space: nowrap !important; border: 0 !important; }
 
 @media (prefers-reduced-motion: reduce) {
