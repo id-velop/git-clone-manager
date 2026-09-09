@@ -154,8 +154,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return;
       }
 
-      if (message.type === 'CLONE') {
-        const response = await fetchWithTimeout(`${SERVER_URL}/clone`, {
+      if (message.type === 'CLONE' || message.type === 'CLONE_WITH_PICKER') {
+        const withPicker = message.type === 'CLONE_WITH_PICKER';
+        const response = await fetchWithTimeout(`${SERVER_URL}/${withPicker ? 'clone-with-picker' : 'clone'}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -163,7 +164,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             openTerminal: message.openTerminal,
             directory: message.directory
           })
-        });
+        }, 0);
+        if (withPicker && response.status === 404) {
+          throw new Error('Update the local companion using the setup command, then retry.');
+        }
         const data = await readServerResponse(response);
         sendResponse(data);
         return;

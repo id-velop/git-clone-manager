@@ -272,7 +272,7 @@ const server = http.createServer((req, res) => {
   }
 
   // Clone endpoint
-  if (req.method === 'POST' && req.url === '/clone') {
+  if (req.method === 'POST' && (req.url === '/clone' || req.url === '/clone-with-picker')) {
     let body = '';
     req.on('data', chunk => { body += chunk; });
     req.on('end', async () => {
@@ -285,8 +285,19 @@ const server = http.createServer((req, res) => {
         }
 
         const config = loadConfig();
+        // Keep selection and cloning in the companion: opening the system picker
+        // can dismiss Chrome's popup and disconnect its message response channel.
+        if (req.url === '/clone-with-picker') {
+          const selectedFolder = await chooseFolder(config.cloneDirectory);
+          if (!selectedFolder) {
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, cancelled: true }));
+            return;
+          }
+          config.cloneDirectory = selectedFolder;
+        }
         // Override clone directory if specified in request
-        if (directory) {
+        if (directory && req.url !== '/clone-with-picker') {
           config.cloneDirectory = directory;
         }
         const shouldOpenTerminal = openTerminal !== undefined ? openTerminal : config.openInTerminal;

@@ -195,10 +195,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       cloneActions.forEach(([button]) => { button.disabled = true; });
       actionButton.setAttribute('aria-busy', 'true');
-      actionButton.innerHTML = '<span class="spin" aria-hidden="true">↻</span><span>Cloning repository…</span>';
+      actionButton.innerHTML = '<span class="spin" aria-hidden="true">↻</span><span>Choose a folder…</span>';
 
       try {
-        const result = await chrome.runtime.sendMessage({ type: 'CLONE', url, openTerminal: openTerminalToggle.checked });
+        const result = await chrome.runtime.sendMessage({ type: 'CLONE_WITH_PICKER', url, openTerminal: openTerminalToggle.checked });
+        if (result?.cancelled) {
+          cloneActions.forEach(([button]) => { button.disabled = false; });
+          actionButton.removeAttribute('aria-busy');
+          actionButton.innerHTML = idleHtml;
+          return;
+        }
         if (!result?.success) throw new Error(result?.error || 'Clone failed');
         actionButton.classList.add('success');
         actionButton.textContent = 'Repository cloned';
