@@ -3,7 +3,7 @@ const copyButton = document.getElementById('copy-command');
 const copyStatus = document.getElementById('copy-status');
 const extensionId = globalThis.chrome?.runtime?.id;
 if (/^[a-p]{32}$/.test(extensionId || '')) {
-  command.textContent = `bash native-host/install-native-host.sh ${extensionId}`;
+  command.textContent = `curl -fsSL https://raw.githubusercontent.com/id-velop/git-clone-manager/main/scripts/install-companion.sh | bash -s -- ${extensionId}`;
   copyButton.disabled = false;
 } else {
   command.textContent = 'Open this guide from the installed extension to get your install command.';
