@@ -43,7 +43,7 @@ button, select { cursor: pointer; }
   height: 42px;
   place-items: center;
   border: 1px solid #171717;
-  border-radius: 20px;
+  border-radius: 10px;
   background: var(--accent);
   color: white;
 }
@@ -88,7 +88,7 @@ h2 { margin-bottom: 0; font-size: 0.9375rem; line-height: 1.25; letter-spacing: 
   padding: 16px;
   margin-bottom: 12px;
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 10px;
   background: rgba(255, 255, 255, 0.72);
 }
 
@@ -98,7 +98,7 @@ select {
   min-width: 90px;
   padding: 7px 28px 7px 10px;
   border: 1px solid #d4d4d4;
-  border-radius: 20px;
+  border-radius: 10px;
   background: var(--surface);
   color: var(--ink);
   font-size: 0.75rem;
@@ -107,7 +107,7 @@ select {
 
 .clone-workspace, .connection-card, .loading-card {
   border: 1px solid var(--line);
-  border-radius: 28px;
+  border-radius: 16px;
   background: var(--surface);
   box-shadow: none;
 }
@@ -122,14 +122,14 @@ select {
   gap: 4px;
   padding: 4px;
   margin-bottom: 14px;
-  border-radius: 20px;
+  border-radius: 10px;
   background: #f0f0f0;
 }
 
 .protocol-tab {
   padding: 10px;
   border: 0;
-  border-radius: 20px;
+  border-radius: 10px;
   background: transparent;
   color: var(--muted);
   font-size: 0.75rem;
@@ -145,7 +145,7 @@ select {
   min-width: 0;
   padding: 14px;
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 10px;
   background: #fafafa;
   color: var(--ink);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -163,7 +163,7 @@ select {
   justify-content: space-between;
   padding: 15px 18px;
   border: 0;
-  border-radius: 20px;
+  border-radius: 10px;
   background: var(--accent);
   color: white;
   font-weight: 800;
@@ -200,7 +200,7 @@ select {
 .switch input:focus-visible + .switch-track { outline: 3px solid #737373; outline-offset: 3px; }
 
 .connection-card { display: grid; grid-template-columns: 42px 1fr; gap: 12px; padding: 16px; }
-.connection-icon { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 20px; background: #eeeeee; color: var(--accent-dark); }
+.connection-icon { display: grid; width: 42px; height: 42px; place-items: center; border-radius: 10px; background: #eeeeee; color: var(--accent-dark); }
 .connection-copy { margin: 6px 0 13px; color: var(--muted); font-size: 0.75rem; }
 .start-error { margin: 11px 0 0; color: var(--danger); font-size: 0.75rem; }
 
@@ -223,7 +223,7 @@ select {
 }
 
 .brand-mark { background: transparent; border: 0; }
-.brand-mark img { display: block; border-radius: 14px; }
+.brand-mark img { display: block; border-radius: 8px; }
 
 /* Setup is the primary task until the companion is connected. */
 body { background: #f5f8f8; }
@@ -232,11 +232,11 @@ body { background: #f5f8f8; }
 .status-chip { font-weight: 500; }
 .status-dot.connected { background: #06847f; }
 .connection-card { display: block; padding: 24px; }
-.connection-icon { width: 46px; height: 46px; margin-bottom: 22px; background: #dcf7f3; color: #075c58; border-radius: 16px; }
+.connection-icon { width: 46px; height: 46px; margin-bottom: 22px; background: #dcf7f3; color: #075c58; border-radius: 10px; }
 .connection-card .step-label { font-size: .6875rem; font-weight: 600; margin-bottom: 8px; }
 .connection-card h2 { font-size: 1.5rem; line-height: 1.2; letter-spacing: -.04em; }
 .connection-copy { margin: 14px 0 22px; line-height: 1.6; font-size: .8125rem; }
-.install-link { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 15px 18px; border-radius: 999px; background: #07BEB8; color: #073b38; text-decoration: none; font-weight: 650; font-size: .8125rem; }
+.install-link { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 15px 18px; border-radius: 10px; background: #07BEB8; color: #073b38; text-decoration: none; font-weight: 650; font-size: .8125rem; }
 .install-link:hover { background: #06aba6; }
 .install-link:focus-visible, .settings-link:focus-visible { outline: 2px solid #075c58; outline-offset: 3px; }
 .retry-label { display: inline-block; margin: 18px 8px 0 0; color: var(--muted); font-size: .75rem; }
@@ -245,7 +245,7 @@ body { background: #f5f8f8; }
 .preference-card { margin: 18px 0 0; padding: 12px 4px; background: transparent; border: 0; }
 .preference-card h2 { font-size: .8125rem; font-weight: 600; }
 .preference-card p { font-size: .6875rem; }
-.clone-btn { color: #073b38; font-weight: 650; border-radius: 999px; }
+.clone-btn { color: #073b38; font-weight: 650; border-radius: 10px; }
 .clone-btn:hover:not(:disabled) { background: #06aba6; }
 .clone-btn:active:not(:disabled) { background: #059b96; }
 .protocol-tabs { background: #f1f5f4; }
@@ -262,7 +262,7 @@ body { background: #f5f8f8; }
 #inline-setup summary { cursor: pointer; font-size: .875rem; font-weight: 650; }
 #inline-setup summary:focus-visible { outline: 2px solid #075c58; outline-offset: 4px; border-radius: 4px; }
 #inline-setup .connection-copy { margin: 12px 0; font-size: .75rem; }
-#inline-setup pre { max-height: 108px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 12px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: #f5f8f8; font: .6875rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+#inline-setup pre { max-height: 108px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 12px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #f5f8f8; font: .6875rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
 #inline-setup .install-link { border: 0; width: 100%; justify-content: center; cursor: pointer; font: inherit; font-size: .8125rem; font-weight: 650; }
 #inline-setup .install-link:disabled { opacity: .5; cursor: default; }
 .setup-note { margin: 10px 0 0; color: var(--muted); font-size: .6875rem; line-height: 1.5; }

@@ -167,12 +167,12 @@
       root.innerHTML = `
         <style>
           * { box-sizing: border-box; }
-          .popup { width: min(300px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; padding: 16px; border: 1px solid #e5e5e5; border-radius: 28px; background: #fff; color: #171717; font: 13px/1.45 Inter, ui-sans-serif, system-ui, sans-serif; box-shadow: none; }
+          .popup { width: min(300px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; padding: 16px; border: 1px solid #e5e5e5; border-radius: 16px; background: #fff; color: #171717; font: 13px/1.45 Inter, ui-sans-serif, system-ui, sans-serif; box-shadow: none; }
           .eyebrow { margin: 0 0 3px; color: #333333; font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
           h2 { margin: 0 0 14px; font-size: 15px; letter-spacing: -.01em; }
           p { margin: 0; color: #737373; }
           .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-          button { padding: 11px 12px; border: 1px solid #d4d4d4; border-radius: 20px; background: #f5f5f5; color: #171717; font: inherit; font-weight: 800; cursor: pointer; }
+          button { padding: 11px 12px; border: 1px solid #d4d4d4; border-radius: 10px; background: #f5f5f5; color: #171717; font: inherit; font-weight: 800; cursor: pointer; }
           button:hover:not(:disabled) { border-color: #171717; background: #dff7f3; color: #075c58; }
           button:active:not(:disabled) { background: #e5e5e5; }
           button:focus-visible { outline: 3px solid #737373; outline-offset: 3px; }

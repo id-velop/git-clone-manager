@@ -1,4 +1,4 @@
-"""Generate antialiased monochrome folder icons using only Python's standard library."""
+"""Generate antialiased theme-green folder icons using Python's standard library."""
 from pathlib import Path
 import struct
 import zlib
@@ -19,11 +19,11 @@ def inside(x, y, polygon):
 
 
 def pixel(x, y):
-    dx, dy = max(30 - x, 0, x - 98), max(30 - y, 0, y - 98)
-    if dx * dx + dy * dy > 28 * 28:
+    dx, dy = max(20 - x, 0, x - 108), max(20 - y, 0, y - 108)
+    if dx * dx + dy * dy > 18 * 18:
         return (0, 0, 0, 0)
-    shade = 255 if (inside(x, y, FOLDER) and not inside(x, y, INNER)) or inside(x, y, ARROW) else 23
-    return (shade, shade, shade, 255)
+    foreground = (inside(x, y, FOLDER) and not inside(x, y, INNER)) or inside(x, y, ARROW)
+    return (255, 255, 255, 255) if foreground else (7, 190, 184, 255)
 
 
 def chunk(kind, data):
