@@ -39,6 +39,23 @@
   white-space: nowrap;
 }
 
+/* Match neighboring GitLab controls without stretching to the header height. */
+#git-magager-page-btn.gm-page-btn-gitlab {
+  box-sizing: border-box;
+  align-self: flex-start;
+  flex: 0 0 auto;
+  height: var(--gm-button-height, 32px);
+  min-height: var(--gm-button-height, 32px);
+  max-height: var(--gm-button-height, 32px);
+  margin: 0 0 0 8px;
+  padding: 0 12px;
+  line-height: 20px;
+  font-family: inherit;
+  font-size: var(--gm-button-font-size, 14px);
+  font-weight: var(--gm-button-font-weight, 400);
+  border-radius: var(--gm-button-radius, 4px);
+}
+
 .gm-page-btn .gm-gift-icon {
   width: 16px;
   height: 16px;

@@ -1,12 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Git Magager",
-  "version": "1.0",
+  "name": "Clone Manager",
+  "version": "1.1.4",
   "description": "One-click git clone on GitHub, GitLab, and more. No terminal needed.",
   "permissions": [
     "storage",
     "activeTab",
-    "scripting",
     "nativeMessaging"
   ],
   "host_permissions": [
@@ -50,8 +49,17 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["icons/icon48.png"],
-      "matches": ["https://github.com/*"]
+      "resources": [
+        "icons/icon48.png"
+      ],
+      "matches": [
+        "https://github.com/*",
+        "https://gitlab.com/*",
+        "https://*.gitlab.com/*",
+        "https://*.gitlab.org/*",
+        "https://git.example.com/*",
+        "https://*.example.com/*"
+      ]
     }
   ],
   "options_page": "options.html",

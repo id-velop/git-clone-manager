@@ -1,16 +1,22 @@
-# Git Magager
+# Clone Manager
 
-Simplify Git-related operations with one-click clone on GitHub, GitLab, and more. No terminal needed.
+Clone GitHub and GitLab repositories to a chosen local folder with one click.
 
 ## ✨ Features
 
-- 🚀 One-click git clone from GitHub/GitLab pages
+- 🚀 Instant Clone action on GitHub and GitLab repository pages
+- 🔀 HTTPS and SSH clone methods with a remembered preference
+- ⏳ Visible progress for long-running clones
 - 📁 Native folder picker for selecting clone location
 - 💻 Automatic terminal opening (optional)
 - ⚙️ Configurable clone directory and terminal app
-- 🔒 Secure local execution via Chrome Native Messaging
+- 🔒 Local execution through a registered Chrome companion
 
 ## 📦 Installation
+
+Install the extension from Chrome Web Store when the listing is published, then install the separate Clone Manager local companion.
+
+The steps below are for local development builds.
 
 ### Prerequisites
 
@@ -18,7 +24,7 @@ Simplify Git-related operations with one-click clone on GitHub, GitLab, and more
 - **Google Chrome** browser
 - **Git** installed on your system
 
-### Quick Start
+### Development Quick Start
 
 **The easiest way:** Run the interactive setup script!
 
@@ -93,7 +99,7 @@ Configuration is stored in `~/.git-magager.json`:
 ```json
 {
   "cloneDirectory": "~/Projects",
-  "openInTerminal": true,
+  "openInTerminal": false,
   "terminalApp": "Terminal"
 }
 ```
@@ -101,7 +107,7 @@ Configuration is stored in `~/.git-magager.json`:
 ### Options
 
 - **cloneDirectory**: Default directory for cloning repositories
-- **openInTerminal**: Whether to open terminal after clone (default: true)
+- **openInTerminal**: Whether to open terminal after clone (default: false)
 - **terminalApp**: Terminal application to use (`Terminal`, `iTerm`, or `Warp`)
 
 You can modify this file manually, or use the extension's options page.
@@ -190,7 +196,7 @@ bash native-host/install-native-host.sh YOUR_EXTENSION_ID
 
 Use the ID of the loaded extension shown in `chrome://extensions`, then reload
 that extension. The installer registers `com.git_magager.host` and copies the
-server into `~/Library/Application Support/Git Magager`. It records the current
+server into `~/Library/Application Support/Clone Manager`. It records the current
 Node.js executable path, so Chrome does not depend on your shell's PATH. Rerun
 the installer after updating the helper code or moving/removing that Node.js
 installation. The extension needs permission to access `http://127.0.0.1:9456/*`.

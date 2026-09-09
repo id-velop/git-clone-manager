@@ -1,4 +1,4 @@
-// Git Magager - Content Script
+// Clone Manager - Content Script
 // Detects clone URLs on GitHub and GitLab pages and injects Clone button
 
 (function () {
@@ -72,12 +72,12 @@
     if (!urls.https) {
       const path = window.location.pathname;
       // Remove trailing /- or /tree/... etc
-      const cleanPath = path.replace(/\/(-|tree|blob|raw|blame|commits|pipelines).*$/, '');
+      const cleanPath = path.split('/-/')[0].replace(/\/+$/, '').replace(/\.git$/, '');
       urls.https = `${window.location.origin}${cleanPath}.git`;
     }
     if (!urls.ssh) {
       const path = window.location.pathname;
-      const cleanPath = path.replace(/\/(-|tree|blob|raw|blame|commits|pipelines).*$/, '');
+      const cleanPath = path.split('/-/')[0].replace(/\/+$/, '').replace(/\.git$/, '');
       const namespace = cleanPath.startsWith('/') ? cleanPath.slice(1) : cleanPath;
       urls.ssh = `git@${window.location.hostname}:${namespace}.git`;
     }
@@ -103,7 +103,10 @@
     }
     if (platform === 'gitlab') {
       const parts = window.location.pathname.split('/').filter(Boolean);
-      return parts.length >= 2;
+      if (['users', 'groups', 'dashboard', 'explore', 'admin', '-', 'search', 'help', 'profile'].includes(parts[0])) return false;
+      return parts.length >= 2 && Boolean(document.querySelector(
+        '[data-project-id], [data-project-full-path], #project_clone_http, #js-repo-code-dropdown, .project-repo-buttons, .repository-content'
+      ));
     }
     return false;
   }
@@ -114,7 +117,8 @@
     return new Promise((resolve, reject) => {
       chrome.runtime.sendMessage(message, (response) => {
         if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message));
+          reject(new Error(/context invalidated|Receiving end does not exist|message port closed/i.test(chrome.runtime.lastError.message)
+            ? '扩展已更新，请刷新当前页面后重试。' : chrome.runtime.lastError.message));
         } else {
           resolve(response);
         }
@@ -127,7 +131,7 @@
       const result = await sendMessageToBackground({ type: 'CHECK_SERVER' });
       return result === true;
     } catch (e) {
-      return false;
+      throw new Error('无法连接扩展，请刷新当前页面后重试。');
     }
   }
 
@@ -153,6 +157,118 @@
 
   // ─── Clone Execution ──────────────────────────────────────
 
+  function chooseCloneProtocol(urls) {
+    return new Promise(resolve => {
+      const anchor = document.getElementById('git-magager-page-btn');
+      if (!anchor) return resolve(null);
+      const host = document.createElement('div');
+      host.style.cssText = 'position:fixed;z-index:2147483647;display:block;';
+      const root = host.attachShadow({ mode: 'closed' });
+      root.innerHTML = `
+        <style>
+          .popup { box-sizing: border-box; width: min(280px, calc(100vw - 24px)); padding: 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: white; color: #182230; font: 13px/1.5 system-ui, sans-serif; box-shadow: 0 8px 24px #10182826; max-height: calc(100vh - 24px); overflow: auto; }
+          h2 { margin: 0 0 12px; font-size: 14px; font-weight: 600; }
+          p { margin: 0; color: #667085; }
+          .choices { display: flex; gap: 8px; margin-bottom: 14px; }
+          button { font: inherit; cursor: pointer; border-radius: 8px; padding: 10px 16px; }
+          .choices button { flex: 1; border: 1px solid #8b5cf6; color: #7040d7; background: #f5f0ff; font-weight: 600; }
+          button:focus-visible { outline: 3px solid #c4b5fd; outline-offset: 3px; }
+          button:disabled { opacity: .4; cursor: not-allowed; }
+          label { display: flex; gap: 8px; align-items: center; }
+          input { accent-color: #8b5cf6; }
+        </style>
+        <div class="popup" role="dialog" aria-modal="false" aria-labelledby="title">
+          <h2 id="title">Choose clone method</h2>
+          <div class="choices"><button type="button" data-protocol="https">HTTPS</button><button type="button" data-protocol="ssh">SSH</button></div>
+          <label><input id="remember" type="checkbox"> Always use this method</label>
+          <p style="font-size:12px;margin:8px 0 0">You can change this in the extension popup.</p>
+        </div>`;
+      const previousFocus = document.activeElement;
+      let finished = false;
+      function finish(result, restoreFocus = true) {
+        if (finished) return;
+        finished = true;
+        document.removeEventListener('pointerdown', onOutside, true);
+        document.removeEventListener('keydown', onKeydown, true);
+        document.removeEventListener('focusin', onFocusOutside);
+        window.removeEventListener('scroll', position, true);
+        window.removeEventListener('resize', position);
+        anchor.removeAttribute('aria-expanded');
+        anchor.removeAttribute('aria-haspopup');
+        host.remove();
+        if (restoreFocus) previousFocus?.focus();
+        resolve(result);
+      }
+      function onOutside(event) {
+        if (!event.composedPath().includes(host) && !anchor.contains(event.target)) finish(null, false);
+      }
+      function onFocusOutside(event) {
+        if (!event.composedPath().includes(host) && !anchor.contains(event.target)) finish(null, false);
+      }
+      function onKeydown(event) {
+        if (event.key === 'Escape') {
+          event.preventDefault();
+          event.stopPropagation();
+          finish(null);
+        }
+      }
+      function position() {
+        if (!anchor.isConnected) return finish(null, false);
+        const rect = anchor.getBoundingClientRect();
+        const panel = root.querySelector('.popup').getBoundingClientRect();
+        const left = Math.max(12, Math.min(rect.left, window.innerWidth - panel.width - 12));
+        const below = rect.bottom + 8;
+        const top = below + panel.height <= window.innerHeight - 12
+          ? below : Math.max(12, rect.top - panel.height - 8);
+        host.style.left = `${left}px`;
+        host.style.top = `${top}px`;
+      }
+      root.querySelectorAll('[data-protocol]').forEach(button => {
+        button.disabled = !urls[button.dataset.protocol];
+        button.addEventListener('click', () => finish({
+          protocol: button.dataset.protocol,
+          remember: root.querySelector('#remember').checked
+        }));
+      });
+      document.body.appendChild(host);
+      anchor.setAttribute('aria-haspopup', 'dialog');
+      anchor.setAttribute('aria-expanded', 'true');
+      position();
+      document.addEventListener('pointerdown', onOutside, true);
+      document.addEventListener('keydown', onKeydown, true);
+      document.addEventListener('focusin', onFocusOutside);
+      window.addEventListener('scroll', position, true);
+      window.addEventListener('resize', position);
+      root.querySelector('[data-protocol]:not(:disabled)')?.focus();
+    });
+  }
+
+  let choosingProtocol = false;
+  async function startCloneWithPreference() {
+    if (choosingProtocol || document.getElementById('git-magager-page-btn')?.disabled) return;
+    choosingProtocol = true;
+    const pageUrl = window.location.href;
+    try {
+      if (!await checkServer()) throw new Error('Local companion unavailable. Open Clone Manager and reconnect it.');
+      const urls = getCloneUrls();
+      const { cloneProtocol } = await chrome.storage.local.get('cloneProtocol');
+      let protocol = cloneProtocol;
+      if (!['https', 'ssh'].includes(protocol)) {
+        const choice = await chooseCloneProtocol(urls);
+        if (!choice || window.location.href !== pageUrl) return;
+        protocol = choice.protocol;
+        if (choice.remember) await chrome.storage.local.set({ cloneProtocol: protocol });
+      }
+      if (window.location.href !== pageUrl) return;
+      if (!urls[protocol]) throw new Error(`No ${protocol.toUpperCase()} clone URL is available for this repository.`);
+      await doClone(urls[protocol]);
+    } catch (error) {
+      showNotification(error.message || 'Could not select clone method. Please reload the extension.', 'error');
+    } finally {
+      choosingProtocol = false;
+    }
+  }
+
   async function doClone(url) {
     const btn = document.getElementById('git-magager-page-btn');
     if (!btn || btn.disabled) return;
@@ -171,7 +287,7 @@
         btn.disabled = false;
         btn.classList.remove('gm-cloning');
         btn.removeAttribute('aria-busy');
-        showNotification('Server not running. Click the extension icon and press "Start Server".', 'error');
+        showNotification('Local companion unavailable. Open Clone Manager and reconnect it.', 'error');
         return;
       }
 
@@ -217,7 +333,7 @@
         throw new Error((result && result.error) || 'Clone failed');
       }
     } catch (err) {
-      console.error('Git Magager clone error:', err);
+      console.error('Clone Manager clone error:', err);
       btn.classList.remove('gm-cloning');
       btn.removeAttribute('aria-busy');
       btn.classList.add('gm-error');
@@ -255,33 +371,47 @@
     }, 3000);
   }
 
-  // ─── GitHub-specific: Inject into page UI ─────────────────
+  // ─── Inject into repository page UI ──────────────────────
 
-  function injectGitHubPageButton() {
-    if (detectPlatform() !== 'github') return;
-    if (!isRepoPage()) return;
+  function injectPageButton() {
+    if (!isRepoPage()) {
+      document.getElementById('git-magager-page-btn')?.remove();
+      return;
+    }
     if (document.getElementById('git-magager-page-btn')) return;
 
     const urls = getCloneUrls();
     if (!urls.https && !urls.ssh) return;
 
     // Try to find the "Code" button area and add our button next to it
-    const actionBar = document.querySelector('.file-navigation .d-flex, .react-directory-header-name-and-utils, [data-testid="repo-header-actions"]');
+    const actionBar = detectPlatform() === 'github'
+      ? document.querySelector('.file-navigation .d-flex, .react-directory-header-name-and-utils, [data-testid="repo-header-actions"]')
+      : document.querySelector('.project-repo-buttons, .repo-buttons, .tree-controls, .project-header .project-actions')
+        || document.querySelector('#js-repo-code-dropdown, [data-testid="code-dropdown"]')?.parentElement;
     
     if (actionBar) {
       const btn = document.createElement('button');
       btn.id = 'git-magager-page-btn';
+      btn.type = 'button';
       btn.className = 'gm-page-btn';
+      if (detectPlatform() === 'gitlab') {
+        btn.className += ' gm-page-btn-gitlab';
+        const reference = actionBar.querySelector('button.btn, a.btn, .gl-button, button');
+        if (reference) {
+          const metrics = window.getComputedStyle(reference);
+          const height = reference.getBoundingClientRect().height;
+          if (height > 0) btn.style.setProperty('--gm-button-height', `${height}px`);
+          btn.style.setProperty('--gm-button-font-size', metrics.fontSize);
+          btn.style.setProperty('--gm-button-font-weight', metrics.fontWeight);
+          btn.style.setProperty('--gm-button-radius', metrics.borderRadius);
+        }
+      }
       btn.innerHTML = `
         <img class="gm-gift-icon" src="${chrome.runtime.getURL('icons/icon48.png')}" width="16" height="16" alt="" aria-hidden="true" />
         Instant Clone
       `;
 
-      btn.addEventListener('click', () => {
-        // Default to HTTPS, or SSH if that's what's available
-        const url = urls.https || urls.ssh;
-        if (url) doClone(url);
-      });
+      btn.addEventListener('click', startCloneWithPreference);
 
       actionBar.appendChild(btn);
     }
@@ -290,8 +420,8 @@
   // ─── Init ─────────────────────────────────────────────────
 
   function init() {
-    console.log('[Git Magager] Initializing...');
-    injectGitHubPageButton();
+    console.log('[Clone Manager] Initializing...');
+    injectPageButton();
   }
 
   // Run on load
@@ -306,7 +436,7 @@
   const observer = new MutationObserver(() => {
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(() => {
-      injectGitHubPageButton();
+      injectPageButton();
     }, 500);
   });
 

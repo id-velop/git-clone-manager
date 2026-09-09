@@ -206,6 +206,53 @@ body {
   background: #ef4444;
 }
 
+.clone-methods {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+
+.clone-method {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 6px 8px;
+  align-items: stretch;
+}
+.clone-method .label { grid-column: 1 / -1; margin: 0; }
+.clone-method .input-group { min-width: 0; margin: 0; }
+.clone-method .input-group input { min-width: 0; width: 100%; box-sizing: border-box; }
+.clone-method .clone-btn {
+  width: auto;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid #45475a;
+  color: #cdd6f4;
+  border-radius: 6px;
+}
+.clone-method .clone-btn:hover:not(:disabled) { background: #252536; border-color: #737389; }
+.clone-method .clone-btn.success { color: #4ade80; border-color: #4ade80; }
+.clone-method .clone-btn.error { color: #f87171; border-color: #f87171; }
+
+.protocol-preference select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #45475a;
+  border-radius: 6px;
+  color: #cdd6f4;
+  background: #1e1e2e;
+  font: inherit;
+}
+
+#protocol-save-status {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
 /* Error box */
 .error-box {
   display: flex;
@@ -253,6 +300,15 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
+}
+
+.setup-box {
+  background: rgba(139, 92, 246, 0.08);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.setup-box strong {
+  color: #c4b5fd;
 }
 
 .start-server-btn:hover {

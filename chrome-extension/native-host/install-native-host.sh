@@ -32,11 +32,11 @@ for (const file of ['launcher.js', 'server.js']) {
 }
 const quote = value => "'" + value.replace(/'/g, "'\\''") + "'";
 const launcher = path.join(installDir, 'launcher.sh');
-fs.writeFileSync(launcher, '#!/bin/bash\nexport PATH=' + quote(path.dirname(process.execPath) + ':/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin') + '\nexec ' + quote(process.execPath) + ' ' + quote(path.join(installDir, 'launcher.js')) + '\n', { mode: 0o755 });
+fs.writeFileSync(launcher, '#!/bin/bash\nexport GM_EXTENSION_ID=' + quote(id) + '\nexport PATH=' + quote(path.dirname(process.execPath) + ':/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin') + '\nexec ' + quote(process.execPath) + ' ' + quote(path.join(installDir, 'launcher.js')) + '\n', { mode: 0o755 });
 fs.chmodSync(launcher, 0o755);
 const manifest = {
   name: 'com.git_magager.host',
-  description: 'Git Magager Native Host',
+  description: 'Clone Manager Native Host',
   path: launcher,
   type: 'stdio',
   allowed_origins: ['chrome-extension://' + id + '/']

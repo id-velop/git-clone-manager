@@ -147,7 +147,7 @@ async function handleMessage(message) {
   try {
     switch (message.type) {
       case 'health':
-        sendMessage({ type: 'health', status: 'ok', version: '2.0.0' });
+        sendMessage({ type: 'health', status: 'ok', version: '1.1.4' });
         break;
 
       case 'getConfig':

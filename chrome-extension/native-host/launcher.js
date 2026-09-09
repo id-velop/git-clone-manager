@@ -1,5 +1,5 @@
 /**
- * Git Magager - Native Host Launcher
+ * Clone Manager - Native Host Launcher
  *
  * Chrome auto-launches this via Native Messaging when the extension
  * calls chrome.runtime.connectNative('com.git_magager.host').
@@ -90,7 +90,7 @@ async function handleNativeMessage(message) {
         type: 'health',
         status: 'ok',
         serverRunning: serverStarted,
-        version: '2.1.0'
+        version: '1.1.4'
       });
       break;
 
@@ -111,7 +111,7 @@ async function handleNativeMessage(message) {
 }
 
 // --- Startup ---
-process.stderr.write('[launcher] Git Magager Native Host starting...\n');
+process.stderr.write('[launcher] Clone Manager Native Host starting...\n');
 const startup = startHttpServer();
 
 // When Chrome disconnects (closes stdin), exit cleanly.

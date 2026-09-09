@@ -1,4 +1,4 @@
-// Git Magager - Options Script
+// Clone Manager - Options Script
 
 document.addEventListener('DOMContentLoaded', async () => {
   const cloneDirInput = document.getElementById('clone-dir');
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (config && !config.error) {
       cloneDirInput.value = config.cloneDirectory || '';
       terminalAppSelect.value = config.terminalApp || 'Terminal';
-      openTerminalToggle.checked = config.openInTerminal !== false;
+      openTerminalToggle.checked = config.openInTerminal === true;
     }
   } catch (e) {
     // Use defaults

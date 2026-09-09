@@ -7,12 +7,14 @@ const path = require('path');
 const os = require('os');
 
 const PORT = 9456;
+const EXTENSION_ID = process.env.GM_EXTENSION_ID || '';
+if (EXTENSION_ID && !/^[a-p]{32}$/.test(EXTENSION_ID)) throw new Error('Invalid extension ID');
 const CONFIG_FILE = path.join(os.homedir(), '.git-magager.json');
 
 // Default config
 const DEFAULT_CONFIG = {
   cloneDirectory: path.join(os.homedir(), 'Projects'),
-  openInTerminal: true,
+  openInTerminal: false,
   terminalApp: 'Terminal'
 };
 
@@ -50,7 +52,6 @@ function cloneRepo(url, config) {
     ensureCloneDir(cloneDir);
 
     console.log(`Cloning ${url} into ${cloneDir}...`);
-
     execFile('git', ['clone', '--', url], {
       cwd: cloneDir,
       env: { ...process.env, GIT_TERMINAL_PROMPT: '0' },
@@ -150,9 +151,13 @@ function chooseFolder(defaultPath) {
 }
 
 const server = http.createServer((req, res) => {
-  // CORS headers - allow all origins since we only listen on localhost
-  const origin = req.headers.origin || '*';
-  res.setHeader('Access-Control-Allow-Origin', origin);
+  const origin = req.headers.origin;
+  const allowedOrigin = EXTENSION_ID ? `chrome-extension://${EXTENSION_ID}` : null;
+  const validDevelopmentOrigin = /^chrome-extension:\/\/[a-p]{32}$/.test(origin || '');
+  if (req.headers.host !== `127.0.0.1:${PORT}` || (origin && origin !== allowedOrigin && !(allowedOrigin === null && validDevelopmentOrigin))) {
+    res.writeHead(403); res.end('Forbidden'); return;
+  }
+  if (origin) res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -165,7 +170,7 @@ const server = http.createServer((req, res) => {
   // Health check
   if (req.method === 'GET' && req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ status: 'ok', version: '1.0.0' }));
+    res.end(JSON.stringify({ status: 'ok', version: '1.1.4' }));
     return;
   }
 
@@ -238,14 +243,17 @@ const server = http.createServer((req, res) => {
         const id = randomUUID();
         const job = { id, status: 'running' };
         cloneJobs.set(id, job);
-        cloneRepo(url, config).then(() => {
-          job.status = 'complete';
-        }, error => {
-          job.status = 'failed';
-          job.error = error.error || error.message || 'Clone failed';
-        }).finally(() => {
-          setTimeout(() => cloneJobs.delete(id), 60 * 60 * 1000).unref();
-        });
+        void (async () => {
+          try {
+            await cloneRepo(url, config);
+            job.status = 'complete';
+          } catch (error) {
+            job.status = 'failed';
+            job.error = error.error || error.message || 'Clone failed';
+          } finally {
+            setTimeout(() => cloneJobs.delete(id), 60 * 60 * 1000).unref();
+          }
+        })();
         res.writeHead(202, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify(job));
       } catch (error) {
@@ -309,7 +317,7 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`Git Magager Host running at http://127.0.0.1:${PORT}`);
+  console.log(`Clone Manager Host running at http://127.0.0.1:${PORT}`);
   console.log(`Clone directory: ${loadConfig().cloneDirectory}`);
   console.log('Press Ctrl+C to stop');
 });
