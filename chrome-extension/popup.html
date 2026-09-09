@@ -12,7 +12,6 @@
       <div class="brand-mark" aria-hidden="true"><img src="icons/icon48.png" width="42" height="42" alt="">
       </div>
       <div class="brand-copy">
-        <p>From repository to your Mac</p>
         <h1>Clone to Folder</h1>
       </div>
       <div id="server-status" class="status-chip" aria-live="polite">
@@ -26,8 +25,7 @@
     <section id="clone-section" class="clone-workspace" aria-labelledby="clone-title" hidden>
       <div class="section-heading">
         <div>
-          <p class="step-label">New local copy</p>
-          <h2 id="clone-title">Clone this repository</h2>
+          <h2 id="clone-title">Repository</h2>
         </div>
         <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><path d="M8 9.5h6l2 2h8v13H8z" fill="#171717"/><path d="M8 14h16" fill="none" stroke="#ffffff" stroke-width="1.5"/></svg>
       </div>
@@ -50,33 +48,15 @@
       </div>
 
       <label class="terminal-option" for="open-terminal">
-        <span><strong>Open Terminal after clone</strong><small>Continue from the new repository</small></span>
+        <span><strong>Open Terminal after clone</strong></span>
         <span class="switch"><input type="checkbox" id="open-terminal"><span class="switch-track" aria-hidden="true"></span></span>
       </label>
-    </section>
-
-    <section id="no-server" class="connection-card" aria-labelledby="connection-title" hidden>
-      <div class="connection-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 12h8m-4-4v8M5 4h14v16H5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-      <div>
-        <p class="step-label">One-time setup · macOS</p>
-        <h2 id="connection-title">One small step<br>before your first clone.</h2>
-        <p class="connection-copy">Install the local companion to choose folders and save repositories on your Mac.</p>
-        <a href="setup.html" target="_blank" class="install-link">Set up local companion <span aria-hidden="true">↗</span></a>
-        <p class="retry-label">Already installed?</p>
-        <button id="start-server-btn" class="connect-btn" type="button">Reconnect</button>
-        <p id="start-error" class="start-error" role="alert" hidden></p>
-      </div>
-    </section>
-
-    <section id="starting-server" class="loading-card" aria-live="polite" hidden>
-      <span class="spinner" aria-hidden="true"></span>
-      <div><h2>Connecting companion</h2><p>This usually takes a few seconds.</p></div>
     </section>
 
     <section class="preference-card" aria-labelledby="instant-clone-title">
       <div>
         <h2 id="instant-clone-title">Instant Clone</h2>
-        <p>Action used on repository pages</p>
+        <p>Default protocol</p>
       </div>
       <label class="visually-hidden" for="default-clone-protocol">Default Instant Clone method</label>
       <select id="default-clone-protocol">
@@ -87,12 +67,32 @@
       <p id="protocol-save-status" class="visually-hidden" role="status" aria-live="polite"></p>
     </section>
 
+    <section id="no-server" class="connection-card" hidden>
+      <details id="inline-setup" open>
+        <summary>Set up local companion</summary>
+        <p class="connection-copy">Run this in Terminal, then reconnect.</p>
+        <pre tabindex="0"><code id="install-command">Loading install command…</code></pre>
+        <button id="copy-command" class="install-link" type="button" disabled>Copy command</button>
+        <p id="copy-status" role="status"></p>
+        <p class="setup-note">macOS · Installs Node.js and Git if needed. May ask for your Mac password.</p>
+      </details>
+      <button id="start-server-btn" class="connect-btn" type="button">Reconnect</button>
+      <p id="start-error" class="start-error" role="alert" hidden></p>
+    </section>
+
+    <section id="starting-server" class="loading-card" aria-live="polite" hidden>
+      <span class="spinner" aria-hidden="true"></span>
+      <div><h2>Connecting…</h2></div>
+    </section>
+
+
+
     <footer class="footer">
       <button type="button" id="options-link" class="settings-link"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="10" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2v2m0 12v2M2 10h2m12 0h2M4.3 4.3l1.4 1.4m8.6 8.6 1.4 1.4m0-11.4-1.4 1.4m-8.6 8.6-1.4 1.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Settings</button>
-      <a href="setup.html" target="_blank" class="settings-link">Setup guide ↗</a>
       <span class="version">1.1.5</span>
     </footer>
   </main>
+  <script src="setup.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

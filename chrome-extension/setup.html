@@ -10,11 +10,11 @@
 <body>
   <main class="settings-shell">
     <header class="page-header"><div class="brand"><img src="icons/icon48.png" width="40" height="40" alt="">Clone to Folder</div><span class="version">macOS setup</span></header>
-    <div class="title-block"><p class="eyebrow">Get ready to clone</p><h1>Your repositories.<br>On your Mac.</h1><p>The extension needs a small local companion to select folders and run Git. Install it once, then return to the extension.</p></div>
-    <ol class="setup-steps">
-      <li><h2>One command. You're set.</h2><p>Open Terminal, paste this command, and press Return. It checks your Mac, installs any missing tools, and sets up the companion.</p><pre tabindex="0"><code id="install-command">Loading your extension ID…</code></pre><button id="copy-command" type="button" class="download-link" disabled>Copy install command</button><p id="copy-status" role="status"></p><p class="hint">macOS only. First-time setup may take several minutes. Follow any password or confirmation prompts in Terminal.</p><details><summary>What gets installed?</summary><p>Existing Node.js and Git installations are reused. If either is missing, the command installs it using Homebrew, setting up Homebrew first if needed. macOS may request an administrator password or Command Line Tools.</p><p>Then it downloads the companion into your user Library and registers it for this extension. It does not install or update the browser extension.</p><a href="https://github.com/id-velop/git-clone-manager/blob/main/scripts/install-companion.sh">View the installer source ↗</a></details></li>
-      <li><h2>Return to the extension</h2><p>Open Clone to Folder from the Chrome toolbar and click <strong>Reconnect</strong>. When it says Connected, you're ready to clone.</p><p class="hint">If your extension ID changes, copy and run the command again.</p></li>
-    </ol>
+    <div class="title-block"><h1>Install companion</h1><p>Run this in Terminal, then reconnect from the extension.</p></div>
+    <pre tabindex="0"><code id="install-command">Loading install command…</code></pre>
+    <button id="copy-command" type="button" class="download-link" disabled>Copy command</button>
+    <p id="copy-status" role="status"></p>
+    <p class="hint">macOS · Installs Node.js and Git if needed. May ask for your Mac password.</p>
   </main>
   <script src="setup.js"></script>
 </body>

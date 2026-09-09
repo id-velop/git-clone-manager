@@ -256,3 +256,16 @@ body { background: #f5f8f8; }
 .settings-link { text-decoration: none; font-weight: 500; }
 .start-error { padding: 10px 12px; border-radius: 12px; background: #f2f4f4; line-height: 1.5; }
 #protocol-save-status:not(:empty) { position: static !important; width: auto !important; height: auto !important; clip-path: none !important; white-space: normal !important; grid-column: 1 / -1; }
+
+.preference-card { margin: 0 0 12px; padding: 12px 4px; }
+.connection-card { padding: 20px; }
+#inline-setup summary { cursor: pointer; font-size: .875rem; font-weight: 650; }
+#inline-setup summary:focus-visible { outline: 2px solid #075c58; outline-offset: 4px; border-radius: 4px; }
+#inline-setup .connection-copy { margin: 12px 0; font-size: .75rem; }
+#inline-setup pre { max-height: 108px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 12px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: #f5f8f8; font: .6875rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+#inline-setup .install-link { border: 0; width: 100%; justify-content: center; cursor: pointer; font: inherit; font-size: .8125rem; font-weight: 650; }
+#inline-setup .install-link:disabled { opacity: .5; cursor: default; }
+.setup-note { margin: 10px 0 0; color: var(--muted); font-size: .6875rem; line-height: 1.5; }
+#copy-status { margin: 8px 0 0; font-size: .75rem; color: #075c58; }
+#copy-status:empty { margin: 0; }
+.connection-card > .connect-btn { display: block; margin: 12px auto 0; }

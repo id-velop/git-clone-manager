@@ -80,3 +80,4 @@ code { padding: 2px 5px; border-radius: 4px; background: #f0f0f0; color: var(--i
 .save-btn { background: #07BEB8; color: #073b38; font-weight: 650; }
 .save-btn:hover:not(:disabled) { background: #06aba6; }
 .save-btn:active:not(:disabled) { background: #059b96; }
+.path-field input { padding-left: 12px; }
