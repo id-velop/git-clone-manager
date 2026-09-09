@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const cloneDirInput = document.getElementById('clone-dir');
   const terminalAppSelect = document.getElementById('terminal-app');
   const openTerminalToggle = document.getElementById('open-terminal');
+  const settingsForm = document.getElementById('settings-form');
   const saveBtn = document.getElementById('save-btn');
   const statusDiv = document.getElementById('status');
 
@@ -20,9 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Save config
-  saveBtn.addEventListener('click', async () => {
+  settingsForm.addEventListener('submit', async event => {
+    event.preventDefault();
     saveBtn.disabled = true;
     statusDiv.className = 'status';
+    statusDiv.textContent = 'Saving…';
 
     const config = {
       cloneDirectory: cloneDirInput.value.trim(),
@@ -38,18 +41,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (result && result.success) {
         statusDiv.className = 'status success';
-        statusDiv.textContent = 'Settings saved successfully!';
+        statusDiv.textContent = 'Preferences saved.';
       } else {
         throw new Error(result?.error || 'Failed to save');
       }
     } catch (e) {
       statusDiv.className = 'status error';
-      statusDiv.textContent = `Failed to save: ${e.message}`;
+      statusDiv.textContent = `Could not save: ${e.message}`;
     }
 
     saveBtn.disabled = false;
     setTimeout(() => {
       statusDiv.className = 'status';
+      statusDiv.textContent = '';
     }, 3000);
   });
 });

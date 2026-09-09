@@ -2,220 +2,75 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Clone Manager - Settings</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #0f0f1a;
-      color: #e2e8f0;
-      min-height: 100vh;
-      padding: 40px;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      font-size: 24px;
-      color: #8b5cf6;
-      margin-bottom: 8px;
-    }
-
-    .subtitle {
-      color: #64748b;
-      margin-bottom: 32px;
-      font-size: 14px;
-    }
-
-    .card {
-      background: #1a1a2e;
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-
-    .card h2 {
-      font-size: 16px;
-      color: #94a3b8;
-      margin-bottom: 16px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-weight: 600;
-    }
-
-    .form-group {
-      margin-bottom: 16px;
-    }
-
-    .form-group:last-child {
-      margin-bottom: 0;
-    }
-
-    label {
-      display: block;
-      font-size: 13px;
-      color: #94a3b8;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-
-    input[type="text"], select {
-      width: 100%;
-      padding: 10px 12px;
-      background: #0f0f1a;
-      border: 1px solid #2d2d44;
-      border-radius: 8px;
-      color: #e2e8f0;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    input[type="text"]:focus, select:focus {
-      border-color: #8b5cf6;
-    }
-
-    .toggle-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .toggle {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-    }
-
-    .toggle input { opacity: 0; width: 0; height: 0; }
-
-    .toggle-slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: #2d2d44;
-      border-radius: 24px;
-      transition: 0.3s;
-    }
-
-    .toggle-slider::before {
-      content: '';
-      position: absolute;
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: 0.3s;
-    }
-
-    .toggle input:checked + .toggle-slider {
-      background: #8b5cf6;
-    }
-
-    .toggle input:checked + .toggle-slider::before {
-      transform: translateX(20px);
-    }
-
-    .save-btn {
-      padding: 10px 24px;
-      background: #8b5cf6;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .save-btn:hover { background: #7c3aed; }
-
-    .save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-    .status {
-      margin-top: 12px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      display: none;
-    }
-
-    .status.success {
-      display: block;
-      background: rgba(34, 197, 94, 0.1);
-      color: #22c55e;
-      border: 1px solid rgba(34, 197, 94, 0.2);
-    }
-
-    .status.error {
-      display: block;
-      background: rgba(239, 68, 68, 0.1);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.2);
-    }
-
-    .hint {
-      font-size: 12px;
-      color: #4a5568;
-      margin-top: 4px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | Clone Manager</title>
+  <link rel="stylesheet" href="options.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Clone Manager Settings</h1>
-    <p class="subtitle">Configure your one-click git clone experience</p>
+  <main class="settings-shell">
+    <header class="page-header">
+      <a class="brand" href="https://github.com/id-velop/git-clone-manager" target="_blank" rel="noreferrer">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span>Clone Manager</span>
+      </a>
+      <span class="version">Version 1.1.5</span>
+    </header>
 
-    <div class="card">
-      <h2>Clone Settings</h2>
-      <div class="form-group">
-        <label for="clone-dir">Default Clone Directory</label>
-        <input type="text" id="clone-dir" placeholder="~/Projects" />
-        <p class="hint">Repositories will be cloned into this directory</p>
-      </div>
+    <div class="title-block">
+      <p class="eyebrow">Preferences</p>
+      <h1>Set up your local workflow.</h1>
+      <p>Choose where repositories land and what happens after cloning.</p>
+    </div>
 
-      <div class="form-group">
-        <label for="terminal-app">Terminal Application</label>
-        <select id="terminal-app">
-          <option value="Terminal">macOS Terminal</option>
-          <option value="iTerm">iTerm2</option>
-          <option value="Warp">Warp</option>
-        </select>
-        <p class="hint">Choose which terminal app to open for cloning</p>
-      </div>
+    <form id="settings-form">
+      <section class="settings-card" aria-labelledby="destination-heading">
+        <div class="card-index" aria-hidden="true">01</div>
+        <div class="card-content">
+          <div class="card-heading">
+            <h2 id="destination-heading">Destination</h2>
+            <p>The default folder for new repository copies.</p>
+          </div>
+          <label for="clone-dir">Default clone directory</label>
+          <div class="path-field">
+            <span aria-hidden="true">~/</span>
+            <input type="text" id="clone-dir" placeholder="Projects" spellcheck="false" aria-describedby="clone-dir-hint">
+          </div>
+          <p class="hint" id="clone-dir-hint">You can still choose a different folder from Instant Clone.</p>
+        </div>
+      </section>
 
-      <div class="form-group">
-        <div class="toggle-row">
-          <label for="open-terminal" style="margin-bottom:0">Open in Terminal after clone</label>
-          <label class="toggle">
-            <input type="checkbox" id="open-terminal" />
-            <span class="toggle-slider"></span>
+      <section class="settings-card" aria-labelledby="terminal-heading">
+        <div class="card-index" aria-hidden="true">02</div>
+        <div class="card-content">
+          <div class="card-heading">
+            <h2 id="terminal-heading">Terminal</h2>
+            <p>Continue working after the repository is ready.</p>
+          </div>
+          <label for="terminal-app">Preferred application</label>
+          <select id="terminal-app">
+            <option value="Terminal">macOS Terminal</option>
+            <option value="iTerm">iTerm2</option>
+            <option value="Warp">Warp</option>
+          </select>
+
+          <label class="terminal-toggle" for="open-terminal">
+            <span><strong>Open after clone</strong><small>Launch the selected terminal in the new repository.</small></span>
+            <span class="switch"><input type="checkbox" id="open-terminal"><span class="switch-track" aria-hidden="true"></span></span>
           </label>
         </div>
-        <p class="hint">When enabled, opens Terminal and runs the clone command. When disabled, clone runs in background.</p>
+      </section>
+
+      <aside class="connection-note" aria-labelledby="companion-heading">
+        <span class="connection-indicator" aria-hidden="true"></span>
+        <div><h2 id="companion-heading">Local companion</h2><p>Clone requests stay on this computer at <code>127.0.0.1:9456</code>.</p></div>
+      </aside>
+
+      <div class="form-actions">
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+        <button class="save-btn" id="save-btn" type="submit"><span>Save preferences</span><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="m7 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
-    </div>
-
-    <div class="card">
-      <h2>Server Info</h2>
-      <div class="form-group">
-        <label>Companion Server</label>
-        <p style="font-size: 14px; color: #e2e8f0;">http://127.0.0.1:9456</p>
-        <p class="hint">The local server must be running for cloning to work</p>
-      </div>
-    </div>
-
-    <button class="save-btn" id="save-btn">Save Settings</button>
-    <div class="status" id="status"></div>
-  </div>
-
+    </form>
+  </main>
   <script src="options.js"></script>
 </body>
 </html>

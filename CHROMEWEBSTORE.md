@@ -46,7 +46,7 @@ English
 
 1. Instant Clone action on a GitHub repository page.
 2. HTTPS/SSH selection and remembered preference.
-3. Popup showing both clone addresses and local companion status.
+3. Redesigned popup showing the HTTPS/SSH workspace and local companion status.
 
 ## Permissions Justification
 
@@ -96,6 +96,7 @@ Clone Manager processes the current repository address, selected destination fol
 
 | Version | Date | Changes | Status |
 |---|---|---|---|
+| 1.1.5 | 2026-09-09 | Introduces a new light desktop-tool interface, a focused HTTPS/SSH workspace, clearer connection states, and redesigned repository-page feedback. | Draft |
 | 1.1.4 | 2026-09-09 | Adds reliable GitLab repository detection, HTTPS/SSH choices, saved protocol preference, GitLab page integration, and clone progress. Removes internal update and distribution mechanisms. | Draft |
 
 ## Review Notes

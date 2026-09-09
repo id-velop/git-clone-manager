@@ -166,22 +166,28 @@
       const root = host.attachShadow({ mode: 'closed' });
       root.innerHTML = `
         <style>
-          .popup { box-sizing: border-box; width: min(280px, calc(100vw - 24px)); padding: 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: white; color: #182230; font: 13px/1.5 system-ui, sans-serif; box-shadow: 0 8px 24px #10182826; max-height: calc(100vh - 24px); overflow: auto; }
-          h2 { margin: 0 0 12px; font-size: 14px; font-weight: 600; }
-          p { margin: 0; color: #667085; }
-          .choices { display: flex; gap: 8px; margin-bottom: 14px; }
-          button { font: inherit; cursor: pointer; border-radius: 8px; padding: 10px 16px; }
-          .choices button { flex: 1; border: 1px solid #8b5cf6; color: #7040d7; background: #f5f0ff; font-weight: 600; }
-          button:focus-visible { outline: 3px solid #c4b5fd; outline-offset: 3px; }
+          * { box-sizing: border-box; }
+          .popup { width: min(300px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; padding: 16px; border: 1.5px solid #171714; border-radius: 14px; background: #fffdf8; color: #171714; font: 13px/1.45 Inter, ui-sans-serif, system-ui, sans-serif; box-shadow: 4px 4px 0 #171714; }
+          .eyebrow { margin: 0 0 3px; color: #cc4512; font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+          h2 { margin: 0 0 14px; font-size: 15px; letter-spacing: -.01em; }
+          p { margin: 0; color: #6d695f; }
+          .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+          button { padding: 11px 12px; border: 1.5px solid #171714; border-radius: 8px; background: #f4efe5; color: #171714; font: inherit; font-weight: 800; cursor: pointer; box-shadow: 2px 2px 0 #171714; }
+          button:hover:not(:disabled) { background: #ff6b2c; }
+          button:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: none; }
+          button:focus-visible { outline: 3px solid #ffb08d; outline-offset: 3px; }
           button:disabled { opacity: .4; cursor: not-allowed; }
-          label { display: flex; gap: 8px; align-items: center; }
-          input { accent-color: #8b5cf6; }
+          label { display: flex; gap: 8px; align-items: center; font-size: 12px; font-weight: 650; }
+          input { accent-color: #ff6b2c; }
+          .hint { margin-top: 7px; font-size: 11px; }
+          @media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; } }
         </style>
         <div class="popup" role="dialog" aria-modal="false" aria-labelledby="title">
-          <h2 id="title">Choose clone method</h2>
+          <p class="eyebrow">Instant Clone</p>
+          <h2 id="title">How should we connect?</h2>
           <div class="choices"><button type="button" data-protocol="https">HTTPS</button><button type="button" data-protocol="ssh">SSH</button></div>
-          <label><input id="remember" type="checkbox"> Always use this method</label>
-          <p style="font-size:12px;margin:8px 0 0">You can change this in the extension popup.</p>
+          <label><input id="remember" type="checkbox"> Remember my choice</label>
+          <p class="hint">Change this later from the extension popup.</p>
         </div>`;
       const previousFocus = document.activeElement;
       let finished = false;
@@ -407,7 +413,7 @@
         }
       }
       btn.innerHTML = `
-        <img class="gm-gift-icon" src="${chrome.runtime.getURL('icons/icon48.png')}" width="16" height="16" alt="" aria-hidden="true" />
+        <svg class="gm-clone-icon" viewBox="0 0 18 18" width="16" height="16" aria-hidden="true"><path d="M9 2v9m0 0 3.5-3.5M9 11 5.5 7.5M3.5 15h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Instant Clone
       `;
 

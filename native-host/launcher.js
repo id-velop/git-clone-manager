@@ -90,7 +90,7 @@ async function handleNativeMessage(message) {
         type: 'health',
         status: 'ok',
         serverRunning: serverStarted,
-        version: '1.1.4'
+        version: '1.1.5'
       });
       break;
 

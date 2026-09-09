@@ -14,21 +14,44 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sshCloneBtn = document.getElementById('clone-ssh-btn');
   const openTerminalToggle = document.getElementById('open-terminal');
   const optionsLink = document.getElementById('options-link');
-  // Try to get current tab's URL to pre-fill
+  const protocolSelect = document.getElementById('default-clone-protocol');
+  const protocolStatus = document.getElementById('protocol-save-status');
+  const protocolTabs = [...document.querySelectorAll('[data-protocol-tab]')];
+  const protocolPanels = [...document.querySelectorAll('[data-protocol-panel]')];
+
+  function selectProtocolPanel(protocol, moveFocus = false) {
+    for (const tab of protocolTabs) {
+      const selected = tab.dataset.protocolTab === protocol;
+      tab.classList.toggle('active', selected);
+      tab.setAttribute('aria-selected', String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      if (selected && moveFocus) tab.focus();
+    }
+    for (const panel of protocolPanels) panel.hidden = panel.dataset.protocolPanel !== protocol;
+  }
+
+  protocolTabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => selectProtocolPanel(tab.dataset.protocolTab));
+    tab.addEventListener('keydown', event => {
+      if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
+      event.preventDefault();
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      const nextIndex = (index + direction + protocolTabs.length) % protocolTabs.length;
+      selectProtocolPanel(protocolTabs[nextIndex].dataset.protocolTab, true);
+    });
+  });
+
+  // Prefill clone addresses from the active repository page.
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (tab && tab.url) {
+    if (tab?.url) {
       const url = new URL(tab.url);
-
-      // GitHub
       if (url.hostname === 'github.com' || url.hostname.endsWith('.github.com')) {
         const match = url.pathname.match(/^\/([^/]+)\/([^/]+)/);
         if (match && !['features', 'marketplace', 'explore', 'settings'].includes(match[1])) {
           cloneUrlInput.value = `https://github.com/${match[1]}/${match[2]}.git`;
         }
       }
-
-      // GitLab (including enterprise instances)
       if (url.hostname.includes('gitlab') || url.hostname.includes('git.')) {
         const cleanPath = url.pathname.split('/-/')[0].replace(/\/+$/, '').replace(/\.git$/, '');
         const parts = cleanPath.split('/').filter(Boolean);
@@ -37,116 +60,92 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       }
     }
-  } catch (e) {
-    // Ignore
+  } catch (_) {
+    // The popup remains usable with manually entered addresses.
   }
 
-  // Check server health
+  const initialHttps = cloneUrlInput.value.match(/^https:\/\/([^/]+)\/(.+)$/);
+  if (initialHttps) sshUrlInput.value = `git@${initialHttps[1]}:${initialHttps[2]}`;
+
   async function checkAndShowServerStatus() {
     try {
       const connected = await chrome.runtime.sendMessage({ type: 'CHECK_SERVER' });
       if (connected) {
         statusDot.classList.remove('disconnected');
         statusDot.classList.add('connected');
-        statusText.textContent = 'Server connected';
-        cloneSection.style.display = 'block';
-        noServer.style.display = 'none';
-        startingServer.style.display = 'none';
-
-        // Load config
+        statusText.textContent = 'Connected';
+        cloneSection.hidden = false;
+        noServer.hidden = true;
+        startingServer.hidden = true;
         const config = await chrome.runtime.sendMessage({ type: 'GET_CONFIG' });
-        if (config && !config.error) {
-          openTerminalToggle.checked = config.openInTerminal === true;
-        }
+        if (config && !config.error) openTerminalToggle.checked = config.openInTerminal === true;
         return true;
       }
-    } catch (e) {
-      // Server not reachable
+    } catch (_) {
+      // Connection guidance is shown below.
     }
     return false;
   }
 
-  const isConnected = await checkAndShowServerStatus();
-  if (!isConnected) {
+  function showDisconnected() {
+    statusDot.classList.remove('connected');
     statusDot.classList.add('disconnected');
-    statusText.textContent = 'Server not running';
-    cloneSection.style.display = 'none';
-    noServer.style.display = 'block';
-    startingServer.style.display = 'none';
+    statusText.textContent = 'Offline';
+    cloneSection.hidden = true;
+    noServer.hidden = false;
+    startingServer.hidden = true;
   }
 
-  // Start Server button
+  const isConnected = await checkAndShowServerStatus();
+  if (!isConnected) showDisconnected();
+
+  const idleConnectHtml = startServerBtn.innerHTML;
   startServerBtn.addEventListener('click', async () => {
     startServerBtn.disabled = true;
-    startServerBtn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="16" height="16">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10" class="spin"/>
-      </svg>
-      Starting...
-    `;
-    startError.style.display = 'none';
-
-    // Show loading UI
-    noServer.style.display = 'none';
-    startingServer.style.display = 'block';
-    statusText.textContent = 'Launching...';
+    startServerBtn.setAttribute('aria-busy', 'true');
+    startServerBtn.textContent = 'Connecting…';
+    startError.hidden = true;
+    noServer.hidden = true;
+    startingServer.hidden = false;
+    statusText.textContent = 'Starting';
 
     try {
       const result = await chrome.runtime.sendMessage({ type: 'LAUNCH_SERVER' });
+      if (!result?.success) throw new Error(result?.error || 'Failed to launch server');
 
-      if (result && result.success) {
-        // Poll for HTTP server to be ready
-        let connected = false;
-        for (let i = 0; i < 10; i++) {
-          await new Promise(r => setTimeout(r, 500));
-          const ok = await chrome.runtime.sendMessage({ type: 'CHECK_SERVER' });
-          if (ok) {
-            connected = true;
-            break;
-          }
+      let connected = false;
+      for (let attempt = 0; attempt < 10; attempt += 1) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        if (await chrome.runtime.sendMessage({ type: 'CHECK_SERVER' })) {
+          connected = true;
+          break;
         }
-
-        if (connected) {
-          await checkAndShowServerStatus();
-        } else {
-          throw new Error('Server started but not responding on HTTP. Please check manually.');
-        }
-      } else {
-        throw new Error(result?.error || 'Failed to launch server');
       }
-    } catch (err) {
-      // Show error and revert to no-server view
-      startingServer.style.display = 'none';
-      noServer.style.display = 'block';
-      startError.textContent = /native messaging host not found|access to the specified native messaging host/i.test(err.message || '')
+      if (!connected) throw new Error('The companion started but did not respond.');
+      await checkAndShowServerStatus();
+    } catch (error) {
+      showDisconnected();
+      startError.textContent = /native messaging host not found|access to the specified native messaging host/i.test(error.message || '')
         ? 'Install the Clone Manager companion for this extension, then retry.'
-        : (err.message || 'Failed to start server');
-      startError.style.display = 'block';
-      statusText.textContent = 'Server not running';
+        : (error.message || 'Failed to start the companion.');
+      startError.hidden = false;
+    } finally {
+      startServerBtn.disabled = false;
+      startServerBtn.removeAttribute('aria-busy');
+      startServerBtn.innerHTML = idleConnectHtml;
     }
-
-    // Reset button
-    startServerBtn.disabled = false;
-    startServerBtn.innerHTML = `
-      <svg viewBox="0 0 24 24" width="16" height="16">
-        <path fill="currentColor" d="M8 5v14l11-7z"/>
-      </svg>
-        Connect / Retry
-    `;
   });
 
-  // The popup may close while the user runs the installer. Retry on every open
-  // and poll while visible, so setup also completes without another button click.
   let connecting = false;
   async function autoConnect() {
-    if (connecting || startServerBtn.disabled || cloneSection.style.display === 'block') return;
+    if (connecting || startServerBtn.disabled || !cloneSection.hidden) return;
     connecting = true;
     try {
       if (await checkAndShowServerStatus()) return;
       const result = await chrome.runtime.sendMessage({ type: 'LAUNCH_SERVER' });
       if (result?.success) await checkAndShowServerStatus();
     } catch (_) {
-      // Installation guidance remains visible until the service is available.
+      // Keep the connection guidance visible.
     } finally {
       connecting = false;
     }
@@ -155,27 +154,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   const connectionTimer = setInterval(autoConnect, 5000);
   window.addEventListener('unload', () => clearInterval(connectionTimer));
 
-  // Show both clone URLs at once; manual edits remain independent.
-  const initialHttps = cloneUrlInput.value.match(/^https:\/\/([^/]+)\/(.+)$/);
-  if (initialHttps) sshUrlInput.value = `git@${initialHttps[1]}:${initialHttps[2]}`;
-
-  // Persistent Instant Clone preference; independent of server availability.
-  const protocolSelect = document.getElementById('default-clone-protocol');
-  const protocolStatus = document.getElementById('protocol-save-status');
   let savedProtocol = '';
   try {
     const stored = await chrome.storage.local.get('cloneProtocol');
     savedProtocol = ['https', 'ssh'].includes(stored.cloneProtocol) ? stored.cloneProtocol : '';
     protocolSelect.value = savedProtocol;
+    selectProtocolPanel(savedProtocol || 'https');
   } catch (_) {
     protocolStatus.textContent = 'Could not read your preference. Reopen the extension to retry.';
   }
+
   protocolSelect.addEventListener('change', async () => {
     protocolSelect.disabled = true;
     try {
       const protocol = protocolSelect.value;
       await chrome.storage.local.set({ cloneProtocol: protocol });
       savedProtocol = protocol;
+      if (protocol) selectProtocolPanel(protocol);
       protocolStatus.textContent = protocol ? `Saved. Instant Clone will use ${protocol.toUpperCase()}.` : 'Saved. Instant Clone will ask every time.';
     } catch (_) {
       protocolSelect.value = savedProtocol;
@@ -185,68 +180,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  // Each action uses its own address, regardless of the Instant Clone default.
   const cloneActions = [[cloneBtn, cloneUrlInput], [sshCloneBtn, sshUrlInput]];
-  for (const [cloneBtn, cloneUrlInput] of cloneActions) {
-    const idleHTML = cloneBtn.innerHTML;
-    cloneBtn.addEventListener('click', async () => {
+  for (const [actionButton, addressInput] of cloneActions) {
+    const idleHtml = actionButton.innerHTML;
+    actionButton.addEventListener('click', async () => {
       if (cloneActions.some(([button]) => button.disabled)) return;
-      const url = cloneUrlInput.value.trim();
+      const url = addressInput.value.trim();
       if (!url) {
-        cloneUrlInput.style.borderColor = '#ef4444';
-        setTimeout(() => { cloneUrlInput.style.borderColor = ''; }, 2000);
+        addressInput.classList.add('invalid');
+        addressInput.focus();
+        setTimeout(() => addressInput.classList.remove('invalid'), 2000);
         return;
       }
 
-      const openTerminal = openTerminalToggle.checked;
       cloneActions.forEach(([button]) => { button.disabled = true; });
-      cloneBtn.innerHTML = `
-        <svg class="spin" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/>
-        </svg>
-        Cloning...
-      `;
+      actionButton.setAttribute('aria-busy', 'true');
+      actionButton.innerHTML = '<span class="spin" aria-hidden="true">↻</span><span>Cloning repository…</span>';
 
       try {
-        const result = await chrome.runtime.sendMessage({
-          type: 'CLONE',
-          url,
-          openTerminal
-        });
-
-        if (result && result.success) {
-          cloneBtn.classList.add('success');
-          cloneBtn.innerHTML = idleHTML;
-        } else {
-          throw new Error(result?.error || 'Clone failed');
-        }
-      } catch (err) {
-        cloneBtn.classList.add('error');
-        cloneBtn.textContent = `Failed: ${err.message}`;
+        const result = await chrome.runtime.sendMessage({ type: 'CLONE', url, openTerminal: openTerminalToggle.checked });
+        if (!result?.success) throw new Error(result?.error || 'Clone failed');
+        actionButton.classList.add('success');
+        actionButton.textContent = 'Repository cloned';
+      } catch (error) {
+        actionButton.classList.add('error');
+        actionButton.textContent = `Clone failed: ${error.message}`;
       }
 
       setTimeout(() => {
         cloneActions.forEach(([button]) => { button.disabled = false; });
-        cloneBtn.classList.remove('success', 'error');
-        cloneBtn.innerHTML = idleHTML;
+        actionButton.classList.remove('success', 'error');
+        actionButton.removeAttribute('aria-busy');
+        actionButton.innerHTML = idleHtml;
       }, 3000);
     });
   }
 
-  // Options link
-  optionsLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    chrome.runtime.openOptionsPage();
-  });
+  optionsLink.addEventListener('click', () => chrome.runtime.openOptionsPage());
 });
-
-// Spin animation
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  .spin { animation: spin 1s linear infinite; }
-`;
-document.head.appendChild(style);
