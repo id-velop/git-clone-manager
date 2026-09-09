@@ -26,13 +26,7 @@
 
 
     <div id="home-view">
-    <section class="clone-workspace" aria-labelledby="clone-title">
-      <div class="section-heading">
-        <div>
-          <h2 id="clone-title">Instant Clone</h2>
-        </div>
-        <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><path d="M8 9.5h6l2 2h8v13H8z" fill="#171717"/><path d="M8 14h16" fill="none" stroke="#ffffff" stroke-width="1.5"/></svg>
-      </div>
+    <section class="clone-workspace" aria-label="Clone repository">
 
       <div class="protocol-tabs" role="tablist" aria-label="Clone protocol">
         <button id="protocol-tab-https" class="protocol-tab active" type="button" role="tab" aria-selected="true" aria-controls="https-panel" data-protocol-tab="https" disabled>HTTPS</button>
@@ -43,14 +37,12 @@
       <p id="protocol-save-status" role="status" aria-live="polite"></p>
       <div id="clone-section" hidden>
       <div id="https-panel" class="clone-method" role="tabpanel" aria-labelledby="protocol-tab-https" data-protocol-panel="https">
-        <label for="clone-url">Repository address</label>
-        <input type="text" id="clone-url" spellcheck="false" placeholder="https://host/team/repo.git">
+        <input type="text" id="clone-url" aria-label="Repository address (HTTPS)" spellcheck="false" placeholder="https://host/team/repo.git">
         <button id="clone-btn" class="clone-btn" type="button"><span>Clone repository</span><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="m7 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
 
       <div id="ssh-panel" class="clone-method" role="tabpanel" aria-labelledby="protocol-tab-ssh" data-protocol-panel="ssh" hidden>
-        <label for="clone-ssh-url">Repository address</label>
-        <input type="text" id="clone-ssh-url" spellcheck="false" placeholder="git@host:team/repo.git">
+        <input type="text" id="clone-ssh-url" aria-label="Repository address (SSH)" spellcheck="false" placeholder="git@host:team/repo.git">
         <button id="clone-ssh-btn" class="clone-btn" type="button"><span>Clone repository</span><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="m7 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
 

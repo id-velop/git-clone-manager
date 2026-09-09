@@ -44,6 +44,8 @@ English
 
 ### Screenshot Notes
 
+- Refresh popup screenshots for the flat layout: no workspace title or address labels; header settings icon and version inside settings.
+
 Settings now opens inside the extension popup with a Back button; refresh the settings screenshot accordingly.
 
 1. Instant Clone action on a GitHub repository page.

@@ -106,13 +106,13 @@ select {
 }
 
 .clone-workspace, .connection-card, .loading-card {
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--surface);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   box-shadow: none;
 }
 
-.clone-workspace { padding: 22px 18px; }
+.clone-workspace { padding: 0; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .section-heading .step-label, .connection-card .step-label { color: var(--accent-dark); }
 
@@ -258,7 +258,7 @@ body { background: #f5f8f8; }
 #protocol-save-status:not(:empty) { position: static !important; width: auto !important; height: auto !important; clip-path: none !important; white-space: normal !important; grid-column: 1 / -1; }
 
 .preference-card { margin: 0 0 12px; padding: 12px 4px; }
-.connection-card { padding: 20px; }
+.connection-card { padding: 20px 0 0; border-top: 1px solid var(--line); }
 #inline-setup summary { cursor: pointer; font-size: .875rem; font-weight: 650; }
 #inline-setup summary:focus-visible { outline: 2px solid #075c58; outline-offset: 4px; border-radius: 4px; }
 #inline-setup .connection-copy { margin: 12px 0; font-size: .75rem; }
