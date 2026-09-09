@@ -233,5 +233,66 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  optionsLink.addEventListener('click', () => chrome.runtime.openOptionsPage());
+  const homeView = document.getElementById('home-view');
+  const settingsView = document.getElementById('settings-view');
+  const backButton = document.getElementById('settings-back');
+  const directoryInput = document.getElementById('settings-directory');
+  const terminalSelect = document.getElementById('settings-terminal');
+  const settingsTerminalToggle = document.getElementById('settings-open-terminal');
+  const saveButton = document.getElementById('settings-save');
+  const settingsStatus = document.getElementById('settings-status');
+  const settingsControls = [directoryInput, terminalSelect, settingsTerminalToggle, saveButton];
+  let loadingSettings = false;
+  let savingSettings = false;
+
+  backButton.addEventListener('click', () => {
+    settingsView.hidden = true;
+    homeView.hidden = false;
+    optionsLink.focus();
+  });
+  optionsLink.addEventListener('click', async () => {
+    homeView.hidden = true;
+    settingsView.hidden = false;
+    backButton.focus();
+    if (loadingSettings || savingSettings) return;
+    loadingSettings = true;
+    settingsControls.forEach(control => { control.disabled = true; });
+    settingsStatus.textContent = 'Loading…';
+    try {
+      const config = await chrome.runtime.sendMessage({ type: 'GET_CONFIG' });
+      if (!config || config.error || config.success === false) throw new Error('Connect the companion to edit settings.');
+      directoryInput.value = config.cloneDirectory || '';
+      terminalSelect.value = config.terminalApp || 'Terminal';
+      settingsTerminalToggle.checked = config.openInTerminal === true;
+      settingsStatus.textContent = '';
+      settingsControls.forEach(control => { control.disabled = false; });
+    } catch (_) {
+      settingsStatus.textContent = 'Go back and connect the companion, then reopen Settings.';
+    } finally {
+      loadingSettings = false;
+    }
+  });
+  document.getElementById('popup-settings-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    if (saveButton.disabled) return;
+    savingSettings = true;
+    settingsControls.forEach(control => { control.disabled = true; });
+    settingsStatus.textContent = 'Saving…';
+    const config = {
+      cloneDirectory: directoryInput.value.trim(),
+      terminalApp: terminalSelect.value,
+      openInTerminal: settingsTerminalToggle.checked
+    };
+    try {
+      const result = await chrome.runtime.sendMessage({ type: 'SET_CONFIG', config });
+      if (!result?.success) throw new Error(result?.error || 'Try again.');
+      openTerminalToggle.checked = config.openInTerminal;
+      settingsStatus.textContent = 'Saved.';
+    } catch (error) {
+      settingsStatus.textContent = `Could not save: ${error.message}`;
+    } finally {
+      savingSettings = false;
+      settingsControls.forEach(control => { control.disabled = false; });
+    }
+  });
 });

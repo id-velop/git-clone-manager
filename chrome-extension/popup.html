@@ -22,6 +22,7 @@
 
 
 
+    <div id="home-view">
     <section class="clone-workspace" aria-labelledby="clone-title">
       <div class="section-heading">
         <div>
@@ -83,6 +84,29 @@
       <button type="button" id="options-link" class="settings-link"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="10" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2v2m0 12v2M2 10h2m12 0h2M4.3 4.3l1.4 1.4m8.6 8.6 1.4 1.4m0-11.4-1.4 1.4m-8.6 8.6-1.4 1.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Settings</button>
       <span class="version">1.1.5</span>
     </footer>
+    </div>
+    <section id="settings-view" hidden aria-labelledby="settings-title">
+      <div class="settings-heading">
+        <button id="settings-back" type="button" class="settings-link">← Back</button>
+        <h2 id="settings-title">Settings</h2>
+      </div>
+      <form id="popup-settings-form" class="clone-workspace settings-form">
+        <label for="settings-directory">Default folder</label>
+        <input id="settings-directory" type="text" placeholder="~/Projects" spellcheck="false" disabled>
+        <label for="settings-terminal">Terminal app</label>
+        <select id="settings-terminal" disabled>
+          <option value="Terminal">macOS Terminal</option>
+          <option value="iTerm">iTerm2</option>
+          <option value="Warp">Warp</option>
+        </select>
+        <label class="terminal-option" for="settings-open-terminal">
+          <span>Open Terminal after clone</span>
+          <span class="switch"><input id="settings-open-terminal" type="checkbox" disabled><span class="switch-track" aria-hidden="true"></span></span>
+        </label>
+        <button id="settings-save" type="submit" class="clone-btn" disabled>Save changes</button>
+        <p id="settings-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
   </main>
   <script src="setup.js"></script>
   <script src="popup.js"></script>

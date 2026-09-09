@@ -44,6 +44,8 @@ English
 
 ### Screenshot Notes
 
+Settings now opens inside the extension popup with a Back button; refresh the settings screenshot accordingly.
+
 1. Instant Clone action on a GitHub repository page.
 2. HTTPS/SSH selection and remembered preference.
 3. Teal (#07BEB8) popup with a setup-first offline state and an inline one-command companion setup below Instant Clone. The command installs missing Node.js and Git through Homebrew. Refresh popup and settings screenshots for this visual revision; the icon now uses #07BEB8 and controls use smaller corner radii.
