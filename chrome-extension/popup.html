@@ -18,6 +18,9 @@
         <span class="status-dot" id="status-dot" aria-hidden="true"></span>
         <span id="status-text">Checking</span>
       </div>
+      <button type="button" id="options-link" class="settings-icon" aria-label="Settings">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-.5 2-2 1L4.5 5.5 2 10l1.5 1.5v1L2 14l2.5 4.5 2-.5 2 1 .5 2h6l.5-2 2-1 2 .5L22 14l-1.5-1.5v-1L22 10l-2.5-4.5-2 .5-2-1-.5-2z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
     </header>
 
 
@@ -80,10 +83,7 @@
 
 
 
-    <footer class="footer">
-      <button type="button" id="options-link" class="settings-link"><svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><circle cx="10" cy="10" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 2v2m0 12v2M2 10h2m12 0h2M4.3 4.3l1.4 1.4m8.6 8.6 1.4 1.4m0-11.4-1.4 1.4m-8.6 8.6-1.4 1.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Settings</button>
-      <span class="version">1.1.5</span>
-    </footer>
+
     </div>
     <section id="settings-view" hidden aria-labelledby="settings-title">
       <div class="settings-heading">
@@ -106,6 +106,7 @@
         <button id="settings-save" type="submit" class="clone-btn" disabled>Save changes</button>
         <p id="settings-status" role="status" aria-live="polite"></p>
       </form>
+      <p class="settings-version version">Version 1.1.5</p>
     </section>
   </main>
   <script src="setup.js"></script>
