@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 
 function harness(preference, choice, failSave = false) {
-  const state = { preference, prompts: 0, cloned: [], errors: [], ready: true };
+  const state = { preference, prompts: 0, cloned: [], errors: [], ready: true, messages: [], canOpen: true };
   const context = vm.createContext({
     window: { location: { href: 'https://git.example.com/team/repo' } },
     document: { getElementById: () => ({ disabled: false }) },
@@ -16,6 +16,7 @@ function harness(preference, choice, failSave = false) {
       }
     } } },
     testHealth: async () => state.ready,
+    testMessage: async message => { state.messages.push(message.type); return { success: state.canOpen }; },
     testChoose: async () => { state.prompts++; return choice; },
     testClone: async url => { state.cloned.push(url); },
     testNotify: message => { state.errors.push(message); }
@@ -25,6 +26,7 @@ function harness(preference, choice, failSave = false) {
     getCloneUrls = () => ({ https: 'https://git.example.com/team/repo.git', ssh: 'git@git.example.com:team/repo.git' });
     chooseCloneProtocol = testChoose;
     checkServer = testHealth;
+    sendMessageToBackground = testMessage;
     doClone = testClone;
     showNotification = testNotify;
     globalThis.start = startCloneWithPreference;
@@ -74,11 +76,21 @@ test('storage failure reports error without cloning or locking later clicks', as
   assert.equal(h.state.prompts, 2);
 });
 
-test('unavailable service reports an error before protocol selection', async () => {
+test('unavailable service opens setup before protocol selection', async () => {
   const h = harness(undefined, { protocol: 'https', remember: false });
   h.state.ready = false;
   await h.start();
   assert.equal(h.state.prompts, 0);
   assert.equal(h.state.cloned.length, 0);
-  assert.equal(h.state.errors.length, 1);
+  assert.equal(h.state.errors.length, 0);
+  assert.deepEqual(h.state.messages, ['OPEN_SETUP']);
+});
+
+test('popup opening failure tells the user where to find setup', async () => {
+  const h = harness(undefined, null);
+  h.state.ready = false;
+  h.state.canOpen = false;
+  await h.start();
+  assert.match(h.state.errors[0], /Chrome toolbar/);
+  assert.equal(h.state.cloned.length, 0);
 });

@@ -255,7 +255,11 @@
     choosingProtocol = true;
     const pageUrl = window.location.href;
     try {
-      if (!await checkServer()) throw new Error('Local companion unavailable. Open Clone to Folder and reconnect it.');
+      if (!await checkServer()) {
+        const opened = await sendMessageToBackground({ type: 'OPEN_SETUP' });
+        if (!opened?.success) throw new Error('Click Clone to Folder in the Chrome toolbar to install the companion.');
+        return;
+      }
       const urls = getCloneUrls();
       const { cloneProtocol } = await chrome.storage.local.get('cloneProtocol');
       let protocol = cloneProtocol;
@@ -293,7 +297,8 @@
         btn.disabled = false;
         btn.classList.remove('gm-cloning');
         btn.removeAttribute('aria-busy');
-        showNotification('Local companion unavailable. Open Clone to Folder and reconnect it.', 'error');
+        const opened = await sendMessageToBackground({ type: 'OPEN_SETUP' });
+        if (!opened?.success) showNotification('Click Clone to Folder in the Chrome toolbar to install the companion.', 'error');
         return;
       }
 

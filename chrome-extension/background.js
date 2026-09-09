@@ -55,6 +55,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   // Use async wrapper so we can await fetch
   (async () => {
     try {
+      if (message.type === 'OPEN_SETUP') {
+        if (!chrome.action?.openPopup) {
+          throw new Error('Click Clone to Folder in the Chrome toolbar to set up the companion.');
+        }
+        await chrome.action.openPopup(sender.tab?.windowId === undefined ? {} : { windowId: sender.tab.windowId });
+        sendResponse({ success: true });
+        return;
+      }
       if (message.type === 'CHECK_SERVER') {
         const ok = await checkServerHealth();
         sendResponse(ok);
