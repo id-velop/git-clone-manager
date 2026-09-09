@@ -1,8 +1,8 @@
 :root {
   --gm-ink: #171717;
   --gm-paper: #ffffff;
-  --gm-accent: #171717;
-  --gm-accent-hover: #333333;
+  --gm-accent: #07BEB8;
+  --gm-accent-hover: #06aba6;
   --gm-success: #262626;
   --gm-error: #404040;
 }
@@ -20,10 +20,10 @@
   align-items: center;
   gap: 7px;
   padding: 6px 13px;
-  border: 1px solid #333333;
+  border: 1px solid #07BEB8;
   border-radius: 20px;
   background: var(--gm-accent);
-  color: white;
+  color: #073b38;
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 13px;
   font-weight: 750;

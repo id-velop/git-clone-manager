@@ -46,7 +46,7 @@ English
 
 1. Instant Clone action on a GitHub repository page.
 2. HTTPS/SSH selection and remembered preference.
-3. Black-and-white popup with large rounded cards, showing the HTTPS/SSH workspace and local companion status. Refresh screenshots for this visual revision.
+3. Teal (#07BEB8) popup with a setup-first offline state and a dedicated companion installation guide. Refresh popup and settings screenshots for this visual revision.
 
 ## Permissions Justification
 
@@ -96,6 +96,7 @@ Clone to Folder processes the current repository address, selected destination f
 
 | Version | Date | Changes | Status |
 |---|---|---|---|
+| 1.1.5 UI revision | 2026-09-09 | Adds a companion setup guide with the current extension ID and a copyable install command. Prioritizes installation and reconnection in the offline state; introduces teal primary actions. | Draft |
 | 1.1.5 | 2026-09-09 | Introduces a new light desktop-tool interface, a focused HTTPS/SSH workspace, clearer connection states, and redesigned repository-page feedback. | Draft |
 | 1.1.4 | 2026-09-09 | Adds reliable GitLab repository detection, HTTPS/SSH choices, saved protocol preference, GitLab page integration, and clone progress. Removes internal update and distribution mechanisms. | Draft |
 

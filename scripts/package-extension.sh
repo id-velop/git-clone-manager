@@ -8,7 +8,7 @@ OUTPUT="$PROJECT_DIR/clone-manager-v$VERSION.zip"
 STAGING_DIR="$(mktemp -d)"
 trap 'rm -rf "$STAGING_DIR"' EXIT
 
-for file in manifest.json background.js content.js content.css popup.html popup.js popup.css options.html options.js options.css; do
+for file in manifest.json background.js content.js content.css popup.html popup.js popup.css options.html options.js options.css setup.html setup.js setup.css; do
   cp "$SOURCE_DIR/$file" "$STAGING_DIR/$file"
 done
 mkdir -p "$STAGING_DIR/icons"

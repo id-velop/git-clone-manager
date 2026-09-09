@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Set up your Mac | Clone to Folder</title>
+  <link rel="stylesheet" href="options.css">
+  <link rel="stylesheet" href="setup.css">
+</head>
+<body>
+  <main class="settings-shell">
+    <header class="page-header"><div class="brand"><img src="icons/icon48.png" width="40" height="40" alt="">Clone to Folder</div><span class="version">macOS setup</span></header>
+    <div class="title-block"><p class="eyebrow">Get ready to clone</p><h1>Your repositories.<br>On your Mac.</h1><p>The extension needs a small local companion to select folders and run Git. Install it once, then return to the extension.</p></div>
+    <ol class="setup-steps">
+      <li><h2>Download the companion source</h2><p>Download the project ZIP from GitHub, then double-click it to extract. Keep the extracted folder until setup is complete.</p><a class="download-link" href="https://github.com/id-velop/git-clone-manager/archive/refs/heads/main.zip">Download for macOS ↗</a><p class="hint">Requires Node.js and Git. The installer checks both before making changes.</p><details><summary>Don't have Node.js or Git?</summary><p>Install the macOS LTS version from <a href="https://nodejs.org/en/download">Node.js</a>. To install Git, run <code>xcode-select --install</code> in Terminal and follow the macOS prompts. Then reopen Terminal and continue below.</p></details></li>
+      <li><h2>Open Terminal in the extracted folder</h2><p>Open Terminal, type <code>cd </code> with a trailing space, drag the extracted folder into the window, then press Return.</p><p>Copy and run this command. It registers the companion for this specific extension.</p><pre tabindex="0"><code id="install-command">Loading your extension ID…</code></pre><button id="copy-command" type="button" class="download-link" disabled>Copy install command</button><p id="copy-status" role="status"></p><details><summary>What does the installer do?</summary><p>It copies the companion into your user Library and registers a Chrome Native Messaging host. It does not install or update the browser extension.</p></details></li>
+      <li><h2>Return to the extension</h2><p>Open Clone to Folder from the Chrome toolbar and click <strong>Reconnect</strong>. When it says Connected, you're ready to clone.</p><p class="hint">If you change the extension ID or reinstall it under a different ID, run step 2 again.</p></li>
+    </ol>
+  </main>
+  <script src="setup.js"></script>
+</body>
+</html>

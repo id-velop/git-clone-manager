@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
       showDisconnected();
       startError.textContent = /native messaging host not found|access to the specified native messaging host/i.test(error.message || '')
-        ? 'Install the Clone to Folder companion for this extension, then retry.'
+        ? 'Companion not found. Select “Set up local companion” above, then reconnect.'
         : (error.message || 'Failed to start the companion.');
       startError.hidden = false;
     } finally {

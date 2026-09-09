@@ -173,12 +173,12 @@
           p { margin: 0; color: #737373; }
           .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
           button { padding: 11px 12px; border: 1px solid #d4d4d4; border-radius: 20px; background: #f5f5f5; color: #171717; font: inherit; font-weight: 800; cursor: pointer; }
-          button:hover:not(:disabled) { border-color: #171717; background: #eeeeee; color: #333333; }
+          button:hover:not(:disabled) { border-color: #171717; background: #dff7f3; color: #075c58; }
           button:active:not(:disabled) { background: #e5e5e5; }
           button:focus-visible { outline: 3px solid #737373; outline-offset: 3px; }
           button:disabled { opacity: .4; cursor: not-allowed; }
           label { display: flex; gap: 8px; align-items: center; font-size: 12px; font-weight: 650; }
-          input { accent-color: #171717; }
+          input { accent-color: #07BEB8; }
           .hint { margin-top: 7px; font-size: 11px; }
           @media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; } }
         </style>

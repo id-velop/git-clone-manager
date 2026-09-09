@@ -1,0 +1,18 @@
+const command = document.getElementById('install-command');
+const copyButton = document.getElementById('copy-command');
+const copyStatus = document.getElementById('copy-status');
+const extensionId = globalThis.chrome?.runtime?.id;
+if (/^[a-p]{32}$/.test(extensionId || '')) {
+  command.textContent = `bash native-host/install-native-host.sh ${extensionId}`;
+  copyButton.disabled = false;
+} else {
+  command.textContent = 'Open this guide from the installed extension to get your install command.';
+}
+copyButton.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(command.textContent);
+    copyStatus.textContent = 'Copied. Paste into Terminal and press Return.';
+  } catch (_) {
+    copyStatus.textContent = 'Select the command above and copy it manually.';
+  }
+});
