@@ -3,6 +3,21 @@
 
 const SERVER_URL = 'http://127.0.0.1:9456';
 
+async function readServerResponse(response) {
+  if (response.status === 403) {
+    throw new Error('The local companion does not allow this extension. Register the companion with this extension ID and restart it.');
+  }
+  const body = await response.text();
+  let data;
+  try {
+    data = JSON.parse(body);
+  } catch (_) {
+    throw new Error(`The local companion returned an invalid response (HTTP ${response.status}). Restart the companion and retry.`);
+  }
+  if (!response.ok) throw new Error(data.error || `Local companion request failed (HTTP ${response.status}).`);
+  return data;
+}
+
 // Check server health on install
 chrome.runtime.onInstalled.addListener(() => {
   console.log('[Clone to Folder] Extension installed');
@@ -12,7 +27,7 @@ chrome.runtime.onInstalled.addListener(() => {
 async function checkServerHealth() {
   try {
     const response = await fetch(`${SERVER_URL}/health`);
-    const data = await response.json();
+    const data = await readServerResponse(response);
     console.log('[Clone to Folder] Server connected:', data);
     return data.status === 'ok';
   } catch (e) {
@@ -88,7 +103,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       if (message.type === 'GET_CONFIG') {
         const response = await fetchWithTimeout(`${SERVER_URL}/config`);
-        const data = await response.json();
+        const data = await readServerResponse(response);
         // Return config directly (server returns the config object)
         sendResponse(data);
         return;
@@ -100,7 +115,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(message.config)
         });
-        const data = await response.json();
+        const data = await readServerResponse(response);
         sendResponse(data);
         return;
       }
@@ -111,7 +126,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ defaultPath: message.defaultPath })
         }, 0);
-        const data = await response.json();
+        const data = await readServerResponse(response);
         sendResponse(data);
         return;
       }
@@ -126,7 +141,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             body: JSON.stringify({ url: message.url, directory: message.directory })
           } : {}
         );
-        const data = await response.json();
+        const data = await readServerResponse(response);
         sendResponse({ ...data, success: response.ok });
         return;
       }
@@ -141,7 +156,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             directory: message.directory
           })
         });
-        const data = await response.json();
+        const data = await readServerResponse(response);
         sendResponse(data);
         return;
       }
