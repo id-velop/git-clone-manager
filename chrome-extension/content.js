@@ -167,18 +167,18 @@
       root.innerHTML = `
         <style>
           * { box-sizing: border-box; }
-          .popup { width: min(300px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; padding: 16px; border: 1px solid #d8e1ee; border-radius: 14px; background: #fff; color: #172033; font: 13px/1.45 Inter, ui-sans-serif, system-ui, sans-serif; box-shadow: 0 12px 32px rgba(39, 63, 102, .14); }
-          .eyebrow { margin: 0 0 3px; color: #1d4ed8; font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+          .popup { width: min(300px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; padding: 16px; border: 1px solid #e5e5e5; border-radius: 28px; background: #fff; color: #171717; font: 13px/1.45 Inter, ui-sans-serif, system-ui, sans-serif; box-shadow: none; }
+          .eyebrow { margin: 0 0 3px; color: #333333; font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
           h2 { margin: 0 0 14px; font-size: 15px; letter-spacing: -.01em; }
-          p { margin: 0; color: #64748b; }
+          p { margin: 0; color: #737373; }
           .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-          button { padding: 11px 12px; border: 1px solid #b8c7dc; border-radius: 8px; background: #f4f7fb; color: #172033; font: inherit; font-weight: 800; cursor: pointer; }
-          button:hover:not(:disabled) { border-color: #2563eb; background: #e8efff; color: #1d4ed8; }
-          button:active:not(:disabled) { background: #dce7ff; }
-          button:focus-visible { outline: 3px solid #93b4fb; outline-offset: 3px; }
+          button { padding: 11px 12px; border: 1px solid #d4d4d4; border-radius: 20px; background: #f5f5f5; color: #171717; font: inherit; font-weight: 800; cursor: pointer; }
+          button:hover:not(:disabled) { border-color: #171717; background: #eeeeee; color: #333333; }
+          button:active:not(:disabled) { background: #e5e5e5; }
+          button:focus-visible { outline: 3px solid #737373; outline-offset: 3px; }
           button:disabled { opacity: .4; cursor: not-allowed; }
           label { display: flex; gap: 8px; align-items: center; font-size: 12px; font-weight: 650; }
-          input { accent-color: #2563eb; }
+          input { accent-color: #171717; }
           .hint { margin-top: 7px; font-size: 11px; }
           @media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; } }
         </style>

@@ -46,7 +46,7 @@ English
 
 1. Instant Clone action on a GitHub repository page.
 2. HTTPS/SSH selection and remembered preference.
-3. Redesigned popup showing the HTTPS/SSH workspace and local companion status.
+3. Black-and-white popup with large rounded cards, showing the HTTPS/SSH workspace and local companion status. Refresh screenshots for this visual revision.
 
 ## Permissions Justification
 
