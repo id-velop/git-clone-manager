@@ -1,7 +1,7 @@
 {
   "name": "git-magager-host",
   "version": "1.1.5",
-  "description": "Local companion server for Clone to Folder Chrome extension",
+  "description": "Local companion server for Quick Clone Chrome extension",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

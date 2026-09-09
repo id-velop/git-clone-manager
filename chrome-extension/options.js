@@ -1,4 +1,4 @@
-// Clone to Folder - Options Script
+// Quick Clone - Options Script
 
 document.addEventListener('DOMContentLoaded', async () => {
   const cloneDirInput = document.getElementById('clone-dir');

@@ -1,4 +1,4 @@
-# Chrome Web Store Listing — Clone to Folder
+# Chrome Web Store Listing — Quick Clone
 
 > Last Updated: 2026-09-09
 
@@ -6,7 +6,7 @@
 
 **Extension Name**
 
-Clone to Folder
+Quick Clone
 
 **Short Description**
 
@@ -14,11 +14,11 @@ Clone GitHub and GitLab repositories to a chosen local folder with HTTPS or SSH.
 
 **Detailed Description**
 
-Clone to Folder adds an Instant Clone action to supported GitHub and GitLab repository pages.
+Quick Clone adds an Instant Clone action to supported GitHub and GitLab repository pages.
 
 Choose HTTPS or SSH, remember your preferred method, select a destination folder, and follow clone progress without manually copying repository addresses. The popup also lets you edit either clone URL and choose whether to open the cloned repository in Terminal.
 
-Install the Clone to Folder local companion before cloning. Repository addresses, destination folders, and preferences stay on your device. Clone to Folder does not use analytics, advertising, or tracking services.
+Install the Quick Clone local companion before cloning. Repository addresses, destination folders, and preferences stay on your device. Quick Clone does not use analytics, advertising, or tracking services.
 
 **Category**
 
@@ -44,6 +44,8 @@ English
 
 ### Screenshot Notes
 
+- Branding is now Quick Clone, with two overlapping white rounded squares on a #07BEB8 icon. Refresh all store screenshots to use this name and icon.
+
 - Refresh popup screenshots for the flat layout: no workspace title or address labels; header settings icon and version inside settings.
 
 Settings now opens inside the extension popup with a Back button; refresh the settings screenshot accordingly.
@@ -58,9 +60,9 @@ Settings now opens inside the extension popup with a Back button; refresh the se
 |---|---|---|
 | `storage` | permissions | Saves the user's preferred Instant Clone method locally. |
 | `activeTab` | permissions | Reads the repository page opened when the user clicks the extension so the popup can prefill its HTTPS and SSH clone addresses. |
-| `nativeMessaging` | permissions | Starts and communicates with the locally installed Clone to Folder companion that selects folders and runs Git. |
+| `nativeMessaging` | permissions | Starts and communicates with the locally installed Quick Clone companion that selects folders and runs Git. |
 | Supported GitHub and GitLab origins | host_permissions | Detects repository pages and adds the user-invoked Instant Clone action on those pages. |
-| `http://127.0.0.1:9456/*` | host_permissions | Sends clone, folder-selection, and settings requests to the Clone to Folder companion on the same computer. |
+| `http://127.0.0.1:9456/*` | host_permissions | Sends clone, folder-selection, and settings requests to the Quick Clone companion on the same computer. |
 
 ## Privacy & Data Use
 
@@ -68,7 +70,7 @@ Settings now opens inside the extension popup with a Back button; refresh the se
 
 **Does the extension collect user data?** No.
 
-Clone to Folder processes the current repository address, selected destination folder, clone settings, and preferred protocol locally. It does not transmit this information off the user's device or share it with third parties.
+Quick Clone processes the current repository address, selected destination folder, clone settings, and preferred protocol locally. It does not transmit this information off the user's device or share it with third parties.
 
 ### Data Use Certification
 

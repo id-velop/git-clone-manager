@@ -1,4 +1,4 @@
-// Clone to Folder - Content Script
+// Quick Clone - Content Script
 // Detects clone URLs on GitHub and GitLab pages and injects Clone button
 
 (function () {
@@ -257,7 +257,7 @@
     try {
       if (!await checkServer()) {
         const opened = await sendMessageToBackground({ type: 'OPEN_SETUP' });
-        if (!opened?.success) throw new Error('Click Clone to Folder in the Chrome toolbar to install the companion.');
+        if (!opened?.success) throw new Error('Click Quick Clone in the Chrome toolbar to install the companion.');
         return;
       }
       const urls = getCloneUrls();
@@ -298,7 +298,7 @@
         btn.classList.remove('gm-cloning');
         btn.removeAttribute('aria-busy');
         const opened = await sendMessageToBackground({ type: 'OPEN_SETUP' });
-        if (!opened?.success) showNotification('Click Clone to Folder in the Chrome toolbar to install the companion.', 'error');
+        if (!opened?.success) showNotification('Click Quick Clone in the Chrome toolbar to install the companion.', 'error');
         return;
       }
 
@@ -344,7 +344,7 @@
         throw new Error((result && result.error) || 'Clone failed');
       }
     } catch (err) {
-      console.error('Clone to Folder clone error:', err);
+      console.error('Quick Clone clone error:', err);
       btn.classList.remove('gm-cloning');
       btn.removeAttribute('aria-busy');
       btn.classList.add('gm-error');
@@ -431,7 +431,7 @@
   // ─── Init ─────────────────────────────────────────────────
 
   function init() {
-    console.log('[Clone to Folder] Initializing...');
+    console.log('[Quick Clone] Initializing...');
     injectPageButton();
   }
 

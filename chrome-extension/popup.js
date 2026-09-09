@@ -1,4 +1,4 @@
-// Clone to Folder - Popup Script
+// Quick Clone - Popup Script
 
 document.addEventListener('DOMContentLoaded', async () => {
   const statusDot = document.getElementById('status-dot');

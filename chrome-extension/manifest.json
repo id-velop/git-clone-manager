@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Clone to Folder",
+  "name": "Quick Clone",
   "version": "1.1.5",
   "description": "One-click git clone on GitHub, GitLab, and more. No terminal needed.",
   "permissions": [

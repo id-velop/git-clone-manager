@@ -1,28 +1,26 @@
-"""Generate antialiased theme-green folder icons using Python's standard library."""
+"""Generate antialiased Quick Clone icons using Python's standard library."""
 from pathlib import Path
 import struct
 import zlib
 
 OUTPUT = Path(__file__).resolve().parents[1] / 'chrome-extension' / 'icons'
-FOLDER = [(25, 39), (49, 39), (56, 47), (103, 47), (103, 91), (25, 91)]
-INNER = [(31, 45), (46, 45), (53, 53), (97, 53), (97, 85), (31, 85)]
-ARROW = [(60, 55), (68, 55), (68, 70), (76, 70), (64, 82), (52, 70), (60, 70)]
 
 
-def inside(x, y, polygon):
-    result = False
-    for i, (ax, ay) in enumerate(polygon):
-        bx, by = polygon[i - 1]
-        if (ay > y) != (by > y) and x < (bx - ax) * (y - ay) / (by - ay) + ax:
-            result = not result
-    return result
+def rounded_square(x, y, left, top, size, radius):
+    dx = max(left + radius - x, 0, x - (left + size - radius))
+    dy = max(top + radius - y, 0, y - (top + size - radius))
+    return dx * dx + dy * dy <= radius * radius
 
 
 def pixel(x, y):
     dx, dy = max(20 - x, 0, x - 108), max(20 - y, 0, y - 108)
     if dx * dx + dy * dy > 18 * 18:
         return (0, 0, 0, 0)
-    foreground = (inside(x, y, FOLDER) and not inside(x, y, INNER)) or inside(x, y, ARROW)
+    back = rounded_square(x, y, 27, 27, 54, 10)
+    back_inner = rounded_square(x, y, 33, 33, 42, 4)
+    front = rounded_square(x, y, 47, 47, 54, 10)
+    front_inner = rounded_square(x, y, 53, 53, 42, 4)
+    foreground = (front and not front_inner) or (back and not back_inner and not front)
     return (255, 255, 255, 255) if foreground else (7, 190, 184, 255)
 
 

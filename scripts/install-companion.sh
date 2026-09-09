@@ -59,13 +59,13 @@ install_companion() (
   fi
   local base_url='https://raw.githubusercontent.com/id-velop/git-clone-manager/main/native-host'
   local file
-  echo 'Downloading Clone to Folder companion…'
+  echo 'Downloading Quick Clone companion…'
   for file in install-native-host.sh launcher.js server.js; do
     curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
       --connect-timeout 15 --max-time 120 "$base_url/$file" -o "$staging_dir/$file"
   done
   bash "$staging_dir/install-native-host.sh" "$extension_id"
-  echo 'Setup complete. Open Clone to Folder and click Reconnect.'
+  echo 'Setup complete. Open Quick Clone and click Reconnect.'
 )
 
 install_companion "$@"

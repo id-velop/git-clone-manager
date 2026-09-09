@@ -1,5 +1,5 @@
 /**
- * Clone to Folder - Native Host Launcher
+ * Quick Clone - Native Host Launcher
  *
  * Chrome auto-launches this via Native Messaging when the extension
  * calls chrome.runtime.connectNative('com.git_magager.host').
@@ -111,7 +111,7 @@ async function handleNativeMessage(message) {
 }
 
 // --- Startup ---
-process.stderr.write('[launcher] Clone to Folder Native Host starting...\n');
+process.stderr.write('[launcher] Quick Clone Native Host starting...\n');
 const startup = startHttpServer();
 
 // When Chrome disconnects (closes stdin), exit cleanly.
