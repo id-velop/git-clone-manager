@@ -22,19 +22,22 @@
 
 
 
-    <section id="clone-section" class="clone-workspace" aria-labelledby="clone-title" hidden>
+    <section class="clone-workspace" aria-labelledby="clone-title">
       <div class="section-heading">
         <div>
-          <h2 id="clone-title">Repository</h2>
+          <h2 id="clone-title">Instant Clone</h2>
         </div>
         <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><path d="M8 9.5h6l2 2h8v13H8z" fill="#171717"/><path d="M8 14h16" fill="none" stroke="#ffffff" stroke-width="1.5"/></svg>
       </div>
 
       <div class="protocol-tabs" role="tablist" aria-label="Clone protocol">
-        <button id="protocol-tab-https" class="protocol-tab active" type="button" role="tab" aria-selected="true" aria-controls="https-panel" data-protocol-tab="https">HTTPS</button>
-        <button id="protocol-tab-ssh" class="protocol-tab" type="button" role="tab" aria-selected="false" aria-controls="ssh-panel" data-protocol-tab="ssh" tabindex="-1">SSH</button>
+        <button id="protocol-tab-https" class="protocol-tab active" type="button" role="tab" aria-selected="true" aria-controls="https-panel" data-protocol-tab="https" disabled>HTTPS</button>
+        <button id="protocol-tab-ssh" class="protocol-tab" type="button" role="tab" aria-selected="false" aria-controls="ssh-panel" data-protocol-tab="ssh" disabled tabindex="-1">SSH</button>
       </div>
 
+      <label class="ask-protocol"><input id="ask-clone-protocol" type="checkbox" disabled> Ask each time on repository pages</label>
+      <p id="protocol-save-status" role="status" aria-live="polite"></p>
+      <div id="clone-section" hidden>
       <div id="https-panel" class="clone-method" role="tabpanel" aria-labelledby="protocol-tab-https" data-protocol-panel="https">
         <label for="clone-url">Repository address</label>
         <input type="text" id="clone-url" spellcheck="false" placeholder="https://host/team/repo.git">
@@ -51,21 +54,10 @@
         <span><strong>Open Terminal after clone</strong></span>
         <span class="switch"><input type="checkbox" id="open-terminal"><span class="switch-track" aria-hidden="true"></span></span>
       </label>
+      </div>
     </section>
 
-    <section class="preference-card" aria-labelledby="instant-clone-title">
-      <div>
-        <h2 id="instant-clone-title">Instant Clone</h2>
-        <p>Default protocol</p>
-      </div>
-      <label class="visually-hidden" for="default-clone-protocol">Default Instant Clone method</label>
-      <select id="default-clone-protocol">
-        <option value="">Ask me</option>
-        <option value="https">HTTPS</option>
-        <option value="ssh">SSH</option>
-      </select>
-      <p id="protocol-save-status" class="visually-hidden" role="status" aria-live="polite"></p>
-    </section>
+
 
     <section id="no-server" class="connection-card" hidden>
       <details id="inline-setup" open>

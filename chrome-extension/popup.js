@@ -14,12 +14,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sshCloneBtn = document.getElementById('clone-ssh-btn');
   const openTerminalToggle = document.getElementById('open-terminal');
   const optionsLink = document.getElementById('options-link');
-  const protocolSelect = document.getElementById('default-clone-protocol');
+  const askProtocol = document.getElementById('ask-clone-protocol');
+  let savedProtocol = '';
+  let activeProtocol = 'https';
   const protocolStatus = document.getElementById('protocol-save-status');
   const protocolTabs = [...document.querySelectorAll('[data-protocol-tab]')];
   const protocolPanels = [...document.querySelectorAll('[data-protocol-panel]')];
 
   function selectProtocolPanel(protocol, moveFocus = false) {
+    activeProtocol = protocol;
     for (const tab of protocolTabs) {
       const selected = tab.dataset.protocolTab === protocol;
       tab.classList.toggle('active', selected);
@@ -31,13 +34,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   protocolTabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => selectProtocolPanel(tab.dataset.protocolTab));
+    tab.addEventListener('click', () => saveProtocol(tab.dataset.protocolTab));
     tab.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
       event.preventDefault();
       const direction = event.key === 'ArrowRight' ? 1 : -1;
       const nextIndex = (index + direction + protocolTabs.length) % protocolTabs.length;
-      selectProtocolPanel(protocolTabs[nextIndex].dataset.protocolTab, true);
+      void saveProtocol(protocolTabs[nextIndex].dataset.protocolTab, true);
     });
   });
 
@@ -154,31 +157,39 @@ document.addEventListener('DOMContentLoaded', async () => {
   const connectionTimer = setInterval(autoConnect, 5000);
   window.addEventListener('unload', () => clearInterval(connectionTimer));
 
-  let savedProtocol = '';
   try {
     const stored = await chrome.storage.local.get('cloneProtocol');
     savedProtocol = ['https', 'ssh'].includes(stored.cloneProtocol) ? stored.cloneProtocol : '';
-    protocolSelect.value = savedProtocol;
+    askProtocol.checked = !savedProtocol;
     selectProtocolPanel(savedProtocol || 'https');
+    askProtocol.disabled = false;
+    protocolTabs.forEach(tab => { tab.disabled = false; });
   } catch (_) {
-    protocolStatus.textContent = 'Could not read your preference. Reopen the extension to retry.';
+    protocolStatus.textContent = 'Could not load your protocol. Reopen the popup to retry.';
   }
 
-  protocolSelect.addEventListener('change', async () => {
-    protocolSelect.disabled = true;
+  async function saveProtocol(protocol, moveFocus = false) {
+    if (protocolTabs.some(tab => tab.disabled)) return;
+    const previousPanel = activeProtocol;
+    askProtocol.disabled = true;
+    protocolTabs.forEach(tab => { tab.disabled = true; });
     try {
-      const protocol = protocolSelect.value;
       await chrome.storage.local.set({ cloneProtocol: protocol });
       savedProtocol = protocol;
       if (protocol) selectProtocolPanel(protocol);
-      protocolStatus.textContent = protocol ? `Saved. Instant Clone will use ${protocol.toUpperCase()}.` : 'Saved. Instant Clone will ask every time.';
+      askProtocol.checked = !protocol;
+      protocolStatus.textContent = '';
     } catch (_) {
-      protocolSelect.value = savedProtocol;
-      protocolStatus.textContent = 'Could not save. Please try again.';
+      askProtocol.checked = !savedProtocol;
+      selectProtocolPanel(previousPanel);
+      protocolStatus.textContent = 'Could not save. Try again.';
     } finally {
-      protocolSelect.disabled = false;
+      askProtocol.disabled = false;
+      protocolTabs.forEach(tab => { tab.disabled = false; });
+      if (moveFocus) protocolTabs.find(tab => tab.dataset.protocolTab === activeProtocol)?.focus();
     }
-  });
+  }
+  askProtocol.addEventListener('change', () => saveProtocol(askProtocol.checked ? '' : activeProtocol));
 
   const cloneActions = [[cloneBtn, cloneUrlInput], [sshCloneBtn, sshUrlInput]];
   for (const [actionButton, addressInput] of cloneActions) {
