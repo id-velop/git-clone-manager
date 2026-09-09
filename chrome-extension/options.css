@@ -71,3 +71,6 @@ code { padding: 2px 5px; border-radius: 4px; background: #f0f0f0; color: var(--i
   .status { text-align: start; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+
+.brand-mark { background: transparent; border: 0; }
+.brand-mark img { display: block; border-radius: 14px; }

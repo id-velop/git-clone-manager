@@ -1,4 +1,4 @@
-// Clone Manager - Content Script
+// Clone to Folder - Content Script
 // Detects clone URLs on GitHub and GitLab pages and injects Clone button
 
 (function () {
@@ -255,7 +255,7 @@
     choosingProtocol = true;
     const pageUrl = window.location.href;
     try {
-      if (!await checkServer()) throw new Error('Local companion unavailable. Open Clone Manager and reconnect it.');
+      if (!await checkServer()) throw new Error('Local companion unavailable. Open Clone to Folder and reconnect it.');
       const urls = getCloneUrls();
       const { cloneProtocol } = await chrome.storage.local.get('cloneProtocol');
       let protocol = cloneProtocol;
@@ -293,7 +293,7 @@
         btn.disabled = false;
         btn.classList.remove('gm-cloning');
         btn.removeAttribute('aria-busy');
-        showNotification('Local companion unavailable. Open Clone Manager and reconnect it.', 'error');
+        showNotification('Local companion unavailable. Open Clone to Folder and reconnect it.', 'error');
         return;
       }
 
@@ -339,7 +339,7 @@
         throw new Error((result && result.error) || 'Clone failed');
       }
     } catch (err) {
-      console.error('Clone Manager clone error:', err);
+      console.error('Clone to Folder clone error:', err);
       btn.classList.remove('gm-cloning');
       btn.removeAttribute('aria-busy');
       btn.classList.add('gm-error');
@@ -426,7 +426,7 @@
   // ─── Init ─────────────────────────────────────────────────
 
   function init() {
-    console.log('[Clone Manager] Initializing...');
+    console.log('[Clone to Folder] Initializing...');
     injectPageButton();
   }
 

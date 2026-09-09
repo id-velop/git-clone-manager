@@ -1,11 +1,11 @@
-// Clone Manager - Background Service Worker
+// Clone to Folder - Background Service Worker
 // Communicates with the local companion server (native-host/server.js)
 
 const SERVER_URL = 'http://127.0.0.1:9456';
 
 // Check server health on install
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('[Clone Manager] Extension installed');
+  console.log('[Clone to Folder] Extension installed');
   checkServerHealth();
 });
 
@@ -13,10 +13,10 @@ async function checkServerHealth() {
   try {
     const response = await fetch(`${SERVER_URL}/health`);
     const data = await response.json();
-    console.log('[Clone Manager] Server connected:', data);
+    console.log('[Clone to Folder] Server connected:', data);
     return data.status === 'ok';
   } catch (e) {
-    console.warn('[Clone Manager] Server not running:', e.message);
+    console.warn('[Clone to Folder] Server not running:', e.message);
     return false;
   }
 }
@@ -68,7 +68,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             if (!resolved) {
               resolved = true;
               const lastError = chrome.runtime.lastError;
-              console.error('[Clone Manager] Native host disconnected:', lastError?.message || 'unknown');
+              console.error('[Clone to Folder] Native host disconnected:', lastError?.message || 'unknown');
               // Give it a moment for the HTTP server to start, then check
               setTimeout(async () => {
                 const ok = await checkServerHealth();
@@ -80,7 +80,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           // Send a health check to the native host
           port.postMessage({ type: 'health' });
         } catch (err) {
-          console.error('[Clone Manager] Failed to launch native host:', err.message);
+          console.error('[Clone to Folder] Failed to launch native host:', err.message);
           sendResponse({ success: false, error: err.message });
         }
         return;
@@ -149,7 +149,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       // Unknown message type
       sendResponse({ success: false, error: 'Unknown message type: ' + message.type });
     } catch (err) {
-      console.error('[Clone Manager] Error handling message:', message.type, err.message);
+      console.error('[Clone to Folder] Error handling message:', message.type, err.message);
       if (message.type === 'CHECK_SERVER') {
         sendResponse(false);
       } else {

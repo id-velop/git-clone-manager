@@ -36,7 +36,7 @@ fs.writeFileSync(launcher, '#!/bin/bash\nexport GM_EXTENSION_ID=' + quote(id) + 
 fs.chmodSync(launcher, 0o755);
 const manifest = {
   name: 'com.git_magager.host',
-  description: 'Clone Manager Native Host',
+  description: 'Clone to Folder Native Host',
   path: launcher,
   type: 'stdio',
   allowed_origins: ['chrome-extension://' + id + '/']

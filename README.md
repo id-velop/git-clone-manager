@@ -1,4 +1,4 @@
-# Clone Manager
+# Clone to Folder
 
 Clone GitHub and GitLab repositories to a chosen local folder with one click.
 
@@ -14,7 +14,7 @@ Clone GitHub and GitLab repositories to a chosen local folder with one click.
 
 ## 📦 Installation
 
-Install the extension from Chrome Web Store when the listing is published, then install the separate Clone Manager local companion.
+Install the extension from Chrome Web Store when the listing is published, then install the separate Clone to Folder local companion.
 
 The steps below are for local development builds.
 
@@ -196,7 +196,7 @@ bash native-host/install-native-host.sh YOUR_EXTENSION_ID
 
 Use the ID of the loaded extension shown in `chrome://extensions`, then reload
 that extension. The installer registers `com.git_magager.host` and copies the
-server into `~/Library/Application Support/Clone Manager`. It records the current
+server into `~/Library/Application Support/Clone to Folder`. It records the current
 Node.js executable path, so Chrome does not depend on your shell's PATH. Rerun
 the installer after updating the helper code or moving/removing that Node.js
 installation. The extension needs permission to access `http://127.0.0.1:9456/*`.

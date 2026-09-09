@@ -221,3 +221,6 @@ select {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
 }
+
+.brand-mark { background: transparent; border: 0; }
+.brand-mark img { display: block; border-radius: 14px; }

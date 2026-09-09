@@ -1,4 +1,4 @@
-// Clone Manager - Popup Script
+// Clone to Folder - Popup Script
 
 document.addEventListener('DOMContentLoaded', async () => {
   const statusDot = document.getElementById('status-dot');
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
       showDisconnected();
       startError.textContent = /native messaging host not found|access to the specified native messaging host/i.test(error.message || '')
-        ? 'Install the Clone Manager companion for this extension, then retry.'
+        ? 'Install the Clone to Folder companion for this extension, then retry.'
         : (error.message || 'Failed to start the companion.');
       startError.hidden = false;
     } finally {

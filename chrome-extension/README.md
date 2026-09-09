@@ -1,4 +1,4 @@
-# Clone Manager
+# Clone to Folder
 
 Clone GitHub and GitLab repositories to a chosen local folder with one click.
 
@@ -14,7 +14,7 @@ Clone GitHub and GitLab repositories to a chosen local folder with one click.
 
 ## 📦 Installation
 
-Install the extension from Chrome Web Store when the listing is published, then install the separate Clone Manager local companion.
+Install the extension from Chrome Web Store when the listing is published, then install the separate Clone to Folder local companion.
 
 The steps below are for local development builds.
 

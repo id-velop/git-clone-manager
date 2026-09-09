@@ -1,4 +1,4 @@
-// Clone Manager - Options Script
+// Clone to Folder - Options Script
 
 document.addEventListener('DOMContentLoaded', async () => {
   const cloneDirInput = document.getElementById('clone-dir');
