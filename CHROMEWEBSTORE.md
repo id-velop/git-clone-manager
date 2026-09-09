@@ -46,7 +46,7 @@ English
 
 1. Instant Clone action on a GitHub repository page.
 2. HTTPS/SSH selection and remembered preference.
-3. Teal (#07BEB8) popup with a setup-first offline state and a one-command companion installation guide. Refresh popup and settings screenshots for this visual revision.
+3. Teal (#07BEB8) popup with a setup-first offline state and a one-command companion installation guide. The command installs missing Node.js and Git through Homebrew. Refresh popup and settings screenshots for this visual revision.
 
 ## Permissions Justification
 
