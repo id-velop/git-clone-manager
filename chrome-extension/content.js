@@ -14,7 +14,7 @@
     const host = window.location.hostname;
     if (host === 'github.com' || host.endsWith('.github.com')) return 'github';
     if (host === 'gitlab.com' || host.includes('gitlab')) return 'gitlab';
-    // Support enterprise GitLab instances (e.g., git.example.com)
+    // Support enterprise GitLab instances.
     if (host.includes('git.') || host.includes('gitlab')) return 'gitlab';
     return null;
   }

@@ -8,5 +8,6 @@
 node_modules/
 *.log
 
-# Generated extension archive
-/git-magager.zip
+# Generated extension archives
+/*.zip
+/*.crx
