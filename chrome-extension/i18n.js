@@ -23,7 +23,7 @@
   "Open Command.": "打开 Command。",
   "Copy the command below, paste it into Terminal, then press Enter.": "复制下方命令，粘贴到终端，然后按 Enter。",
   "Copy the command below, paste it into Command, then press Enter.": "复制下方命令，粘贴到Command，然后按 Enter。",
-  "Return to Quick Clone and click Reconnect.": "返回 Quick Clone，然后点击重新连接。",
+  "Return here and click Reconnect.": "返回 Quick Clone，然后点击重新连接。",
   "Run this in PowerShell, then reconnect.": "在 PowerShell 运行以下命令，然后重新连接。",
   "Loading install command…": "正在生成安装命令…",
   "Copy command": "复制命令",
