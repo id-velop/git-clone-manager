@@ -282,19 +282,20 @@ body { background: #f6f8fa; }
 .settings-form .terminal-option { margin: 6px 0 12px; }
 .settings-form .clone-btn { justify-content: center; }
 #settings-status { margin: 0; font-size: .75rem; line-height: 1.5; color: var(--muted); }
-.header { grid-template-columns: 42px minmax(0, 1fr) 36px; gap: 4px 11px; }
+.header { grid-template-columns: 42px minmax(0, 1fr) auto; gap: 4px 11px; }
 .header .brand-mark { grid-column: 1; grid-row: 1 / 3; }
 .brand-copy { grid-column: 2; grid-row: 1; }
 .status-chip { grid-column: 2; grid-row: 2; justify-self: start; border: 0; background: transparent; padding: 0; font-size: .6875rem; }
-.settings-icon { grid-column: 3; grid-row: 1 / 3; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 10px; background: transparent; color: var(--muted); cursor: pointer; }
+.header-actions { grid-column: 3; grid-row: 1 / 3; display: flex; align-items: center; gap: 5px; }
+.settings-icon { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 9px; background: transparent; color: var(--muted); cursor: pointer; }
 .settings-icon:hover { background: #ddf4ff; color: #0550AE; }
 .settings-version { margin: 16px 0 0; text-align: center; }
 
-.language-segment { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 100%; margin: 0 0 16px; padding: 3px; border-radius: 10px; background: #f0f2f4; }
-.language-segment button { min-height: 32px; padding: 5px 12px; border: 0; border-radius: 7px; background: transparent; color: var(--muted); font: inherit; font-size: .75rem; font-weight: 650; cursor: pointer; }
+.language-segment { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; width: 58px; padding: 2px; border-radius: 8px; background: #f0f2f4; }
+.language-segment button { min-width: 0; height: 28px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--muted); font: inherit; font-size: .6875rem; font-weight: 650; cursor: pointer; }
 .language-segment button:hover:not(.active) { color: var(--ink); background: #e7ebef; }
 .language-segment button.active { color: #0550AE; background: #fff; box-shadow: 0 1px 2px rgba(31, 35, 40, .12); }
 .language-segment button:focus-visible { outline: 2px solid #54AEFF; outline-offset: 1px; }
 .language-segment button:disabled { cursor: wait; }
-#language-status { margin: -8px 0 12px; font-size: .75rem; color: var(--danger); }
+#language-status { margin: 0 0 12px; font-size: .75rem; color: var(--danger); }
 #language-status:empty { display: none; }

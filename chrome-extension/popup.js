@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const cloneBtn = document.getElementById('clone-btn');
   const sshUrlInput = document.getElementById('clone-ssh-url');
   const sshCloneBtn = document.getElementById('clone-ssh-btn');
-  const openTerminalToggle = document.getElementById('open-terminal');
   const optionsLink = document.getElementById('options-link');
+  let openTerminalAfterClone = false;
   let activeProtocol = 'https';
   const protocolStatus = document.getElementById('protocol-save-status');
   const protocolTabs = [...document.querySelectorAll('[data-protocol-tab]')];
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         noServer.hidden = true;
         startingServer.hidden = true;
         const config = await chrome.runtime.sendMessage({ type: 'GET_CONFIG' });
-        if (config && !config.error) openTerminalToggle.checked = config.openInTerminal === true;
+        if (config && !config.error) openTerminalAfterClone = config.openInTerminal === true;
         return true;
       }
     } catch (_) {
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       actionButton.innerHTML = '<span class="spin" aria-hidden="true">↻</span><span>Choose a folder…</span>';
 
       try {
-        const result = await chrome.runtime.sendMessage({ type: 'CLONE_WITH_PICKER', url, openTerminal: openTerminalToggle.checked });
+        const result = await chrome.runtime.sendMessage({ type: 'CLONE_WITH_PICKER', url, openTerminal: openTerminalAfterClone });
         if (result?.cancelled) {
           cloneActions.forEach(([button]) => { button.disabled = false; });
           actionButton.removeAttribute('aria-busy');
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const result = await chrome.runtime.sendMessage({ type: 'SET_CONFIG', config });
       if (!result?.success) throw new Error(result?.error || 'Try again.');
-      openTerminalToggle.checked = config.openInTerminal;
+      openTerminalAfterClone = config.openInTerminal;
       settingsStatus.textContent = 'Saved.';
     } catch (error) {
       settingsStatus.textContent = `Could not save: ${error.message}`;
