@@ -44,6 +44,8 @@ English
 
 ### Screenshot Notes
 
+- The repository-page Quick Clone button now uses GitHub blue (`#0969DA`) with white text, while the popup keeps the teal product theme.
+
 - Settings includes an English / 简体中文 selector. Language is stored locally and applies to extension pages and repository-page controls. Capture both language variants.
 
 - Branding is now Quick Clone, with a white folder and downward download arrow on a #07BEB8 background. Refresh all store screenshots to use this name and icon.
