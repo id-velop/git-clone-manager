@@ -317,7 +317,6 @@
         const height = reference.getBoundingClientRect().height;
         if (height > 0) btn.style.setProperty('--gm-button-height', `${height}px`);
         btn.style.setProperty('--gm-button-font-size', metrics.fontSize);
-        btn.style.setProperty('--gm-button-font-weight', metrics.fontWeight);
         btn.style.setProperty('--gm-button-radius', metrics.borderRadius);
       }
       const iconUrl = chrome.runtime.getURL?.('icons/icon48.png') || '';
