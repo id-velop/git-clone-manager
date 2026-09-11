@@ -1,8 +1,8 @@
 #!/bin/bash
-# Git Magager - Test Installation
+# Quick Clone - Test Installation
 # Verify that everything is set up correctly
 
-echo "🧪 Git Magager - Installation Test"
+echo "🧪 Quick Clone - Installation Test"
 echo "==================================="
 echo ""
 
@@ -32,7 +32,7 @@ fi
 # Test 3: Chrome Native Messaging Host directory
 echo ""
 echo "Test 3: Checking Native Messaging Host registration..."
-NATIVE_HOST_FILE="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.git-magager.host.json"
+NATIVE_HOST_FILE="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.quick_clone.host.json"
 if [ -f "$NATIVE_HOST_FILE" ]; then
     echo "✅ Native host manifest found"
     
@@ -74,7 +74,7 @@ fi
 # Test 5: Configuration file
 echo ""
 echo "Test 5: Checking configuration..."
-CONFIG_FILE="$HOME/.git-magager.json"
+CONFIG_FILE="$HOME/.quick-clone.json"
 if [ -f "$CONFIG_FILE" ]; then
     echo "✅ Configuration file exists"
     
@@ -130,13 +130,13 @@ echo ""
 if [ $ERRORS -eq 0 ]; then
     echo "🎉 All tests passed!"
     echo ""
-    echo "Your Git Magager installation looks good."
+    echo "Your Quick Clone installation looks good."
     echo ""
     echo "Next steps:"
     echo "1. Make sure Chrome is running"
     echo "2. Load the extension from: $EXTENSION_DIR"
     echo "3. Visit a GitHub/GitLab repository"
-    echo "4. Click the Clone button!"
+    echo "4. Click the Quick Clone button!"
 else
     echo "⚠️  Found $ERRORS issue(s)"
     echo ""

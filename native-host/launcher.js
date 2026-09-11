@@ -2,7 +2,7 @@
  * Quick Clone - Native Host Launcher
  *
  * Chrome auto-launches this via Native Messaging when the extension
- * calls chrome.runtime.connectNative('com.git_magager.host').
+ * calls chrome.runtime.connectNative('com.quick_clone.host').
  *
  * This launcher:
  *   1. Spawns the HTTP server (server.js) on port 9456

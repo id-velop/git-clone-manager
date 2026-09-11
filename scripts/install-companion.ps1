@@ -33,12 +33,12 @@ if ($env:OS -ne 'Windows_NT') { throw 'This installer is for Windows. Use the ma
 Install-QuickCloneTool -Command 'node.exe' -Package 'OpenJS.NodeJS.LTS'
 Install-QuickCloneTool -Command 'git.exe' -Package 'Git.Git'
 
-# Replace an older Quick Clone/Git Magager server that may be bound to another extension ID.
+# Replace an older Quick Clone server that may be bound to another extension ID.
 try {
   Get-NetTCPConnection -LocalPort 9456 -State Listen -ErrorAction Stop | ForEach-Object {
     $processInfo = Get-CimInstance Win32_Process -Filter "ProcessId = $($_.OwningProcess)"
     if ($processInfo.Name -eq 'node.exe' -and $processInfo.CommandLine -match 'server\.js' -and
-        $processInfo.CommandLine -match 'Quick Clone|Git Magager') {
+        $processInfo.CommandLine -match 'Quick Clone') {
       Stop-Process -Id $_.OwningProcess -Force
     }
   }
@@ -49,11 +49,11 @@ try {
 $nodePath = (Get-Command node.exe).Source
 $gitPath = (Get-Command git.exe).Source
 $installDir = Join-Path $env:LOCALAPPDATA 'Quick Clone'
-$manifestPath = Join-Path $installDir 'com.git_magager.host.json'
+$manifestPath = Join-Path $installDir 'com.quick_clone.host.json'
 $hostPath = Join-Path $installDir 'QuickCloneHost.exe'
 New-Item -ItemType Directory -Path $installDir -Force | Out-Null
 
-$baseUrl = 'https://raw.githubusercontent.com/id-velop/git-clone-manager/main/native-host'
+$baseUrl = 'https://raw.githubusercontent.com/id-velop/quick-clone/main/native-host'
 Invoke-WebRequest "$baseUrl/server.js" -OutFile (Join-Path $installDir 'server.js') -UseBasicParsing
 
 $nodeLiteral = $nodePath.Replace('\', '\\').Replace('"', '\"')
@@ -113,7 +113,7 @@ if (Test-Path $hostPath) { [IO.File]::Delete($hostPath) }
 Add-Type -TypeDefinition $source -Language CSharp -OutputAssembly $hostPath -OutputType WindowsApplication
 
 $manifest = @{
-  name = 'com.git_magager.host'
+  name = 'com.quick_clone.host'
   description = 'Quick Clone Native Host'
   path = $hostPath
   type = 'stdio'
@@ -122,7 +122,7 @@ $manifest = @{
 $manifestJson = $manifest | ConvertTo-Json -Depth 3
 [IO.File]::WriteAllText($manifestPath, $manifestJson, (New-Object Text.UTF8Encoding($false)))
 
-$registryPath = 'HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.git_magager.host'
+$registryPath = 'HKCU:\Software\Google\Chrome\NativeMessagingHosts\com.quick_clone.host'
 New-Item -Path $registryPath -Force | Out-Null
 Set-Item -Path $registryPath -Value $manifestPath
 

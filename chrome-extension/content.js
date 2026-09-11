@@ -1,12 +1,12 @@
 // Quick Clone - Content Script
-// Detects clone URLs on GitHub and GitLab pages and injects Clone button
+// Detects clone URLs on GitHub and GitLab pages and injects Quick Clone button
 
 (function () {
   'use strict';
 
   // Prevent double injection
-  if (window.__gitMagagerInjected) return;
-  window.__gitMagagerInjected = true;
+  if (window.__quickCloneInjected) return;
+  window.__quickCloneInjected = true;
 
   // ─── URL Detection ────────────────────────────────────────
 
@@ -22,7 +22,7 @@
   function getGitHubCloneUrls() {
     const urls = { https: null, ssh: null };
 
-    // Method 1: From the clone buttons on the page
+    // Method 1: From the Quick Clone buttons on the page
     const httpsInput = document.querySelector('#clone-https-input, input[aria-label*="HTTPS"], input[aria-label*="https"]');
     const sshInput = document.querySelector('#clone-ssh-input, input[aria-label*="SSH"]');
 
@@ -159,7 +159,7 @@
 
   let startingClone = false;
   async function startCloneWithPreference() {
-    if (startingClone || document.getElementById('git-magager-page-btn')?.disabled) return;
+    if (startingClone || document.getElementById('quick-clone-page-btn')?.disabled) return;
     startingClone = true;
     const pageUrl = window.location.href;
     try {
@@ -182,14 +182,14 @@
   }
 
   async function doClone(url) {
-    const btn = document.getElementById('git-magager-page-btn');
+    const btn = document.getElementById('quick-clone-page-btn');
     if (!btn || btn.disabled) return;
     const originalHTML = btn.innerHTML;
 
     // Step 0: Check server is running
-    btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Connecting...';
+    btn.innerHTML = '<svg class="qc-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Connecting...';
     btn.disabled = true;
-    btn.classList.add('gm-cloning');
+    btn.classList.add('qc-cloning');
     btn.setAttribute('aria-busy', 'true');
 
     try {
@@ -197,7 +197,7 @@
       if (!serverOk) {
         btn.innerHTML = originalHTML;
         btn.disabled = false;
-        btn.classList.remove('gm-cloning');
+        btn.classList.remove('qc-cloning');
         btn.removeAttribute('aria-busy');
         const opened = await sendMessageToBackground({ type: 'OPEN_SETUP' });
         if (!opened?.success) showNotification('Click Quick Clone in the Chrome toolbar to install the companion.', 'error');
@@ -205,14 +205,14 @@
       }
 
       // Step 1: Show folder picker
-      btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Choose folder...';
+      btn.innerHTML = '<svg class="qc-spin" viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Choose folder...';
 
       const folderResult = await sendMessageToBackground({ type: 'CHOOSE_FOLDER' });
 
       if (!folderResult || !folderResult.success || folderResult.cancelled) {
         btn.innerHTML = originalHTML;
         btn.disabled = false;
-        btn.classList.remove('gm-cloning');
+        btn.classList.remove('qc-cloning');
         btn.removeAttribute('aria-busy');
         if (folderResult && !folderResult.cancelled) {
           showNotification('Folder selection failed: ' + (folderResult.error || 'Unknown error'), 'error');
@@ -223,7 +223,7 @@
       const selectedFolder = folderResult.path;
 
       // Keep the spinner active until Git exits, including for large repositories.
-      btn.innerHTML = '<svg class="gm-spin" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="42 15"/></svg> Cloning…';
+      btn.innerHTML = '<svg class="qc-spin" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="3" fill="none" stroke-dasharray="42 15"/></svg> Cloning…';
       let result = await sendMessageToBackground({
         type: 'START_CLONE', url, directory: selectedFolder
       });
@@ -238,18 +238,18 @@
 
       if (result && result.success) {
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Cloned!';
-        btn.classList.remove('gm-cloning');
+        btn.classList.remove('qc-cloning');
         btn.removeAttribute('aria-busy');
-        btn.classList.add('gm-success');
+        btn.classList.add('qc-success');
         showNotification(`Cloned to ${selectedFolder}`, 'success');
       } else {
         throw new Error((result && result.error) || 'Clone failed');
       }
     } catch (err) {
       console.error('Quick Clone clone error:', err);
-      btn.classList.remove('gm-cloning');
+      btn.classList.remove('qc-cloning');
       btn.removeAttribute('aria-busy');
-      btn.classList.add('gm-error');
+      btn.classList.add('qc-error');
       if (err.message === 'Failed to fetch') {
         btn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg> No Server';
         showNotification('Server not running. Click the extension icon and press "Start Server".', 'error');
@@ -262,7 +262,7 @@
     setTimeout(() => {
       btn.innerHTML = originalHTML;
       btn.disabled = false;
-      btn.classList.remove('gm-cloning', 'gm-success', 'gm-error');
+      btn.classList.remove('qc-cloning', 'qc-success', 'qc-error');
     }, 3000);
   }
 
@@ -270,16 +270,16 @@
 
   function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
-    notification.className = `gm-notification gm-notification-${type}`;
+    notification.className = `qc-notification qc-notification-${type}`;
     notification.textContent = globalThis.QuickCloneI18n?.translate(message) || message;
     document.body.appendChild(notification);
 
     requestAnimationFrame(() => {
-      notification.classList.add('gm-notification-show');
+      notification.classList.add('qc-notification-show');
     });
 
     setTimeout(() => {
-      notification.classList.remove('gm-notification-show');
+      notification.classList.remove('qc-notification-show');
       setTimeout(() => notification.remove(), 300);
     }, 3000);
   }
@@ -288,10 +288,10 @@
 
   function injectPageButton() {
     if (!isRepoPage()) {
-      document.getElementById('git-magager-page-btn')?.remove();
+      document.getElementById('quick-clone-page-btn')?.remove();
       return;
     }
-    if (document.getElementById('git-magager-page-btn')) return;
+    if (document.getElementById('quick-clone-page-btn')) return;
 
     const urls = getCloneUrls();
     if (!urls.https && !urls.ssh) return;
@@ -304,25 +304,25 @@
     
     if (actionBar) {
       const btn = document.createElement('button');
-      btn.id = 'git-magager-page-btn';
+      btn.id = 'quick-clone-page-btn';
       btn.type = 'button';
-      btn.className = 'gm-page-btn';
+      btn.className = 'qc-page-btn';
       const platform = detectPlatform();
-      btn.className += ` gm-page-btn-${platform}`;
+      btn.className += ` qc-page-btn-${platform}`;
       const reference = platform === 'github'
         ? actionBar.querySelector('button.Button, a.Button, button.btn, a.btn, button')
         : actionBar.querySelector('button.btn, a.btn, .gl-button, button');
       if (reference) {
         const metrics = window.getComputedStyle(reference);
         const height = reference.getBoundingClientRect().height;
-        if (height > 0) btn.style.setProperty('--gm-button-height', `${height}px`);
-        btn.style.setProperty('--gm-button-font-size', metrics.fontSize);
-        btn.style.setProperty('--gm-button-radius', metrics.borderRadius);
+        if (height > 0) btn.style.setProperty('--qc-button-height', `${height}px`);
+        btn.style.setProperty('--qc-button-font-size', metrics.fontSize);
+        btn.style.setProperty('--qc-button-radius', metrics.borderRadius);
       }
       const iconUrl = chrome.runtime.getURL?.('icons/icon.svg') || '';
       btn.innerHTML = `
-        <img class="gm-clone-icon" src="${iconUrl}" width="18" height="18" alt="">
-        Instant Clone
+        <img class="qc-clone-icon" src="${iconUrl}" width="18" height="18" alt="">
+        Quick Clone
       `;
 
       btn.addEventListener('click', startCloneWithPreference);

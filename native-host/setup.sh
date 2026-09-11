@@ -1,14 +1,14 @@
 #!/bin/bash
-# Git Magager - Setup Script
+# Quick Clone - Setup Script
 # This script sets up the local companion server
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PLIST_NAME="com.git-magager.host"
+PLIST_NAME="com.quick_clone.host"
 PLIST_PATH="$HOME/Library/LaunchAgents/$PLIST_NAME.plist"
 
-echo "🚀 Git Magager Setup"
+echo "🚀 Quick Clone Setup"
 echo "===================="
 echo ""
 
@@ -21,7 +21,7 @@ fi
 echo "✅ Node.js found: $(node --version)"
 
 # Create default config if not exists
-CONFIG_FILE="$HOME/.git-magager.json"
+CONFIG_FILE="$HOME/.quick-clone.json"
 if [ ! -f "$CONFIG_FILE" ]; then
     echo ""
     echo "📝 Creating default config at $CONFIG_FILE"
@@ -62,9 +62,9 @@ cat > "$PLIST_PATH" << EOF
     <key>KeepAlive</key>
     <true/>
     <key>StandardOutPath</key>
-    <string>$HOME/.git-magager.log</string>
+    <string>$HOME/.quick-clone.log</string>
     <key>StandardErrorPath</key>
-    <string>$HOME/.git-magager-error.log</string>
+    <string>$HOME/.quick-clone-error.log</string>
 </dict>
 </plist>
 EOF
@@ -77,8 +77,8 @@ echo ""
 echo "📋 Commands:"
 echo "   Start:   launchctl load $PLIST_PATH"
 echo "   Stop:    launchctl unload $PLIST_PATH"
-echo "   Logs:    tail -f ~/.git-magager.log"
-echo "   Errors:  tail -f ~/.git-magager-error.log"
+echo "   Logs:    tail -f ~/.quick-clone.log"
+echo "   Errors:  tail -f ~/.quick-clone-error.log"
 echo ""
 
 # Test server
@@ -98,4 +98,4 @@ echo "1. Open Chrome → chrome://extensions"
 echo "2. Enable 'Developer mode' (top right)"
 echo "3. Click 'Load unpacked'"
 echo "4. Select the chrome-extension folder"
-echo "5. Visit any GitHub/GitLab repo and click the Clone button!"
+echo "5. Visit any GitHub/GitLab repo and click the Quick Clone button!"

@@ -14,7 +14,7 @@ Clone GitHub and GitLab repositories to a chosen local folder with HTTPS or SSH.
 
 **Detailed Description**
 
-Quick Clone adds an Instant Clone action to supported GitHub and GitLab repository pages.
+Quick Clone adds a Quick Clone action to supported GitHub and GitLab repository pages.
 
 Quick Clone uses HTTPS by default. Users can switch the saved method to SSH from the extension popup, select a destination folder, and follow clone progress without manually copying repository addresses. Quick Clone supports macOS and Windows and configures its local companion from one setup command.
 
@@ -54,18 +54,18 @@ English
 
 Settings now opens inside the extension popup with a Back button; refresh the settings screenshot accordingly.
 
-1. Instant Clone action on a GitHub repository page.
+1. Quick Clone action on a GitHub repository page.
 2. HTTPS default and the HTTPS/SSH preference in the extension popup.
-3. Blue (`#0969DA`) popup with a setup-first offline state and an inline one-command companion setup below Instant Clone. The command installs missing Node.js and Git on macOS or Windows. Refresh popup and settings screenshots for this visual revision; the icon and actions use the same blue theme.
+3. Blue (`#0969DA`) popup with a setup-first offline state and an inline one-command companion setup below Quick Clone. The command installs missing Node.js and Git on macOS or Windows. Refresh popup and settings screenshots for this visual revision; the icon and actions use the same blue theme.
 
 ## Permissions Justification
 
 | Permission | Type | Justification |
 |---|---|---|
-| `storage` | permissions | Saves the user's preferred Instant Clone method locally. |
+| `storage` | permissions | Saves the user's preferred Quick Clone method locally. |
 | `activeTab` | permissions | Reads the repository page opened when the user clicks the extension so the popup can prefill its HTTPS and SSH clone addresses. |
 | `nativeMessaging` | permissions | Starts and communicates with the locally installed Quick Clone companion that selects folders and runs Git. |
-| Supported GitHub and GitLab origins | host_permissions | Detects repository pages and adds the user-invoked Instant Clone action on those pages. |
+| Supported GitHub and GitLab origins | host_permissions | Detects repository pages and adds the user-invoked Quick Clone action on those pages. |
 | `http://127.0.0.1:9456/*` | host_permissions | Sends clone, folder-selection, and settings requests to the Quick Clone companion on the same computer. |
 
 ## Privacy & Data Use
@@ -98,9 +98,9 @@ Quick Clone processes the current repository address, selected destination folde
 
 **Contact Email**: better0027@gmail.com
 
-**Support URL**: https://github.com/id-velop/git-clone-manager/issues
+**Support URL**: https://github.com/id-velop/quick-clone/issues
 
-**Homepage URL**: https://github.com/id-velop/git-clone-manager
+**Homepage URL**: https://github.com/id-velop/quick-clone
 
 ## Version History
 

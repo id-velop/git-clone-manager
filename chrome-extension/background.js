@@ -75,7 +75,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.type === 'LAUNCH_SERVER') {
         try {
           // Chrome's Native Messaging auto-launches the native host executable
-          const port = chrome.runtime.connectNative('com.git_magager.host');
+          const port = chrome.runtime.connectNative('com.quick_clone.host');
           let resolved = false;
 
           port.onMessage.addListener((msg) => {

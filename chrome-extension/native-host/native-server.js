@@ -3,7 +3,7 @@ const path = require('path');
 const os = require('os');
 const { exec } = require('child_process');
 
-const CONFIG_FILE = path.join(os.homedir(), '.git-magager.json');
+const CONFIG_FILE = path.join(os.homedir(), '.quick-clone.json');
 
 // Default config
 const DEFAULT_CONFIG = {

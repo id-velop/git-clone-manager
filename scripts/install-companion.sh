@@ -57,7 +57,7 @@ install_companion() (
     echo 'Dependency installation did not finish successfully. Resolve the error above and run this command again.' >&2
     exit 1
   fi
-  local base_url='https://raw.githubusercontent.com/id-velop/git-clone-manager/main/native-host'
+  local base_url='https://raw.githubusercontent.com/id-velop/quick-clone/main/native-host'
   local file
   echo 'Downloading Quick Clone companion…'
   for file in install-native-host.sh launcher.js server.js; do

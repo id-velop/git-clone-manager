@@ -1,4 +1,4 @@
-# Git Magager - 架构升级说明
+# Quick Clone - 架构升级说明
 
 ## 🎯 问题
 
@@ -55,7 +55,7 @@ User Action → Chrome Extension → Native Messaging API → Auto-started Node 
 - Bash 包装脚本
 - Chrome 调用此脚本来启动 Node.js 进程
 
-#### `native-host/com.git-magager.host.json`
+#### `native-host/com.quick_clone.host.json`
 - Native Host 注册清单
 - 包含扩展 ID 白名单
 
@@ -86,7 +86,7 @@ User Action → Chrome Extension → Native Messaging API → Auto-started Node 
 fetch('http://127.0.0.1:9456/clone', {...})
 
 // 新代码：Native Messaging
-chrome.runtime.sendNativeMessage('com.git-magager.host', {
+chrome.runtime.sendNativeMessage('com.quick_clone.host', {
   type: 'clone',
   url: message.url
 }, callback)
@@ -157,7 +157,7 @@ process.stdin.on('data', (chunk) => {
 
 1. **扩展 ID 白名单**
    - Native Host 只接受来自特定扩展 ID 的消息
-   - 在 `com.git-magager.host.json` 中配置
+   - 在 `com.quick_clone.host.json` 中配置
 
 2. **本地执行**
    - 所有操作在用户本地机器上执行

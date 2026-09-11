@@ -1,11 +1,11 @@
 #!/bin/bash
-# Git Magager - Get Started Script
+# Quick Clone - Get Started Script
 # 一键检查和引导安装
 
 set -e
 
 echo "╔══════════════════════════════════════════╗"
-echo "║   Git Magager - Quick Start Guide       ║"
+echo "║   Quick Clone - Quick Start Guide       ║"
 echo "╚══════════════════════════════════════════╝"
 echo ""
 
@@ -112,7 +112,7 @@ echo ""
 echo "🎉 You're all set!"
 echo ""
 echo "Next time you visit a GitHub/GitLab repo,"
-echo "just click the Clone button! 🚀"
+echo "just click the Quick Clone button! 🚀"
 echo ""
 echo "For more help, see:"
 echo "  - README.md"

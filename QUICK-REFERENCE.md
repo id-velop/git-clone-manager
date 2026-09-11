@@ -1,4 +1,4 @@
-# Git Magager - 快速参考
+# Quick Clone - 快速参考
 
 ## 🚀 快速开始（3步）
 
@@ -33,10 +33,10 @@ cd native-host && ./quick-install.sh
 
 ```bash
 # 编辑配置文件
-nano ~/.git-magager.json
+nano ~/.quick-clone.json
 
 # 查看当前配置
-cat ~/.git-magager.json
+cat ~/.quick-clone.json
 ```
 
 ### 调试相关
@@ -55,7 +55,7 @@ node native-server.js
 
 ## 🔧 配置文件
 
-位置：`~/.git-magager.json`
+位置：`~/.quick-clone.json`
 
 ```json
 {
@@ -94,16 +94,16 @@ cd native-host && ./quick-install.sh  # 重新安装
 ```bash
 # 1. Chrome 中移除扩展
 # 2. 删除 Native Host
-rm ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.git-magager.host.json
+rm ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.quick_clone.host.json
 
 # 3. 删除配置（可选）
-rm ~/.git-magager.json
+rm ~/.quick-clone.json
 ```
 
 ## 📁 项目结构
 
 ```
-git-magager/
+quick-clone/
 ├── get-started.sh              # 一键开始 ⭐
 ├── test-installation.sh        # 测试安装
 ├── README.md                   # 主文档
@@ -122,7 +122,7 @@ git-magager/
 └── native-host/                # Native Host
     ├── native-server.js        # 主服务
     ├── native-host.sh          # 包装脚本
-    ├── com.git-magager.host.json  # 注册清单
+    ├── com.quick_clone.host.json  # 注册清单
     ├── quick-install.sh        # 快速安装 ⭐
     └── install-native-host.sh  # 完整安装
 ```

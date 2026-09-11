@@ -47,7 +47,7 @@ test('namespace names starting with tree or pipelines are preserved', () => {
   assert.equal(p.api.getCloneUrls().https, 'https://gitlab.com/tree-team/pipelines-tools/project.git');
 });
 
-test('GitLab group and sign-in pages do not get a clone button', () => {
+test('GitLab group and sign-in pages do not get a Quick Clone button', () => {
   for (const path of ['/groups/example-org/team', '/users/sign_in', '/dashboard/projects']) {
     const p = page(`https://git.example.com${path}`, 'gitlab', false);
     p.api.injectPageButton();
@@ -56,10 +56,10 @@ test('GitLab group and sign-in pages do not get a clone button', () => {
 });
 
 test('GitHub button and clone URL still work', () => {
-  const p = page('https://github.com/id-velop/git-clone-manager', 'github');
+  const p = page('https://github.com/id-velop/quick-clone', 'github');
   p.api.injectPageButton();
   assert.equal(p.buttons.size, 1);
-  assert.equal(p.api.getCloneUrls().https, 'https://github.com/id-velop/git-clone-manager.git');
+  assert.equal(p.api.getCloneUrls().https, 'https://github.com/id-velop/quick-clone.git');
 });
 
 test('icon is accessible on all content-script hosts', () => {

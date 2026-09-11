@@ -1,4 +1,4 @@
-# Git Magager - 改进总结
+# Quick Clone - 改进总结
 
 ## 🎯 核心问题
 
@@ -85,7 +85,7 @@ cd native-host
 
 1. `native-host/native-server.js` - Native Messaging 服务器
 2. `native-host/native-host.sh` - Bash 包装脚本
-3. `native-host/com.git-magager.host.json` - Chrome 注册清单
+3. `native-host/com.quick_clone.host.json` - Chrome 注册清单
 4. `native-host/quick-install.sh` - 快速安装脚本
 5. `native-host/install-native-host.sh` - 完整安装脚本
 6. `get-started.sh` - 一键开始脚本

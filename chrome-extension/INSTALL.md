@@ -1,4 +1,4 @@
-# Git Magager - 安装指南
+# Quick Clone - 安装指南
 
 ## 🎯 目标
 
@@ -56,7 +56,7 @@ npm --version
 打开终端，执行：
 
 ```bash
-cd git-clone-manager/native-host
+cd quick-clone/native-host
 chmod +x quick-install.sh
 ./quick-install.sh
 ```
@@ -67,13 +67,13 @@ chmod +x quick-install.sh
 
 安装脚本会：
 - ✅ 注册 Native Messaging Host
-- ✅ 创建默认配置文件 `~/.git-magager.json`
+- ✅ 创建默认配置文件 `~/.quick-clone.json`
 - ✅ 设置正确的权限
 
 ### 第四步：开始使用
 
 1. 回到 `chrome://extensions`
-2. 找到 "Git Magager"，点击 **重新加载** 按钮 ↻
+2. 找到 "Quick Clone"，点击 **重新加载** 按钮 ↻
 3. 访问任意 GitHub 或 GitLab 仓库
 4. 点击页面上的 **Clone** 按钮
 5. 选择克隆目录
@@ -105,7 +105,7 @@ Native Host Process (native-server.js) ← Chrome 自动启动
 
 ## ⚙️ 配置
 
-配置文件位于：`~/.git-magager.json`
+配置文件位于：`~/.quick-clone.json`
 
 ```json
 {
@@ -137,12 +137,12 @@ Native Host Process (native-server.js) ← Chrome 自动启动
 ### Q: 如何查看扩展 ID？
 
 1. 访问 `chrome://extensions`
-2. 找到 "Git Magager"
+2. 找到 "Quick Clone"
 3. 扩展卡片上会显示 ID
 
 ### Q: 可以更改克隆目录吗？
 
-可以！编辑 `~/.git-magager.json` 文件，或者在克隆时通过文件夹选择器选择其他目录。
+可以！编辑 `~/.quick-clone.json` 文件，或者在克隆时通过文件夹选择器选择其他目录。
 
 ### Q: 支持哪些平台？
 
@@ -156,11 +156,11 @@ Native Host Process (native-server.js) ← Chrome 自动启动
 1. 在 Chrome 中移除扩展
 2. 删除 Native Host 注册：
    ```bash
-   rm ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.git-magager.host.json
+   rm ~/Library/Application\ Support/Google/Chrome/NativeMessagingHosts/com.quick_clone.host.json
    ```
 3. 删除配置文件（可选）：
    ```bash
-   rm ~/.git-magager.json
+   rm ~/.quick-clone.json
    ```
 
 ## 🛠️ 开发者说明
@@ -168,7 +168,7 @@ Native Host Process (native-server.js) ← Chrome 自动启动
 ### 项目结构
 
 ```
-git-magager/
+quick-clone/
 ├── chrome-extension/          # Chrome 扩展
 │   ├── manifest.json         # 扩展配置（含 nativeMessaging 权限）
 │   ├── background.js         # 使用 chrome.runtime.sendNativeMessage
@@ -177,7 +177,7 @@ git-magager/
 ├── native-host/              # Native Messaging Host
 │   ├── native-server.js      # 主服务逻辑（stdio 协议）
 │   ├── native-host.sh        # 包装脚本
-│   ├── com.git-magager.host.json  # Chrome 注册清单
+│   ├── com.quick_clone.host.json  # Chrome 注册清单
 │   └── quick-install.sh      # 一键安装脚本
 └── README.md
 ```

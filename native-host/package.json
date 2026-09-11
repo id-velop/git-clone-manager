@@ -1,5 +1,5 @@
 {
-  "name": "git-magager-host",
+  "name": "quick-clone-host",
   "version": "1.1.5",
   "description": "Local companion server for Quick Clone Chrome extension",
   "main": "server.js",

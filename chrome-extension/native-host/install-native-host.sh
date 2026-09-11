@@ -25,7 +25,7 @@ if command -v lsof >/dev/null 2>&1; then
   while IFS= read -r listener_pid; do
     [[ "$listener_pid" =~ ^[0-9]+$ ]] || continue
     listener_command="$(ps -p "$listener_pid" -o command= 2>/dev/null || true)"
-    if [[ "$listener_command" == *node*server.js* && ("$listener_command" == *"Git Magager"* || "$listener_command" == *"Quick Clone"*) ]]; then
+    if [[ "$listener_command" == *node*server.js* && "$listener_command" == *"Quick Clone"* ]]; then
       kill "$listener_pid" 2>/dev/null || true
     fi
   done < <(lsof -tiTCP:9456 -sTCP:LISTEN 2>/dev/null || true)
@@ -35,7 +35,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 const [source, id] = process.argv.slice(2);
-const installDir = path.join(os.homedir(), 'Library/Application Support/Git Magager');
+const installDir = path.join(os.homedir(), 'Library/Application Support/Quick Clone');
 const hostsDir = path.join(os.homedir(), 'Library/Application Support/Google/Chrome/NativeMessagingHosts');
 fs.mkdirSync(installDir, { recursive: true });
 fs.mkdirSync(hostsDir, { recursive: true });
@@ -44,10 +44,10 @@ for (const file of ['launcher.js', 'server.js']) {
 }
 const quote = value => "'" + value.replace(/'/g, "'\\''") + "'";
 const launcher = path.join(installDir, 'launcher.sh');
-fs.writeFileSync(launcher, '#!/bin/bash\nexport GM_EXTENSION_ID=' + quote(id) + '\nexport PATH=' + quote(path.dirname(process.execPath) + ':/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin') + '\nexec ' + quote(process.execPath) + ' ' + quote(path.join(installDir, 'launcher.js')) + '\n', { mode: 0o755 });
+fs.writeFileSync(launcher, '#!/bin/bash\nexport QC_EXTENSION_ID=' + quote(id) + '\nexport PATH=' + quote(path.dirname(process.execPath) + ':/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin') + '\nexec ' + quote(process.execPath) + ' ' + quote(path.join(installDir, 'launcher.js')) + '\n', { mode: 0o755 });
 fs.chmodSync(launcher, 0o755);
 const manifest = {
-  name: 'com.git_magager.host',
+  name: 'com.quick_clone.host',
   description: 'Quick Clone Native Host',
   path: launcher,
   type: 'stdio',

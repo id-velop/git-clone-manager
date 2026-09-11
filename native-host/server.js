@@ -7,10 +7,10 @@ const path = require('path');
 const os = require('os');
 
 const PORT = 9456;
-const EXTENSION_ID = process.env.GM_EXTENSION_ID || process.argv[2] || '';
-const GIT_BIN = process.env.GM_GIT_BIN || process.argv[3] || 'git';
+const EXTENSION_ID = process.env.QC_EXTENSION_ID || process.argv[2] || '';
+const GIT_BIN = process.env.QC_GIT_BIN || process.argv[3] || 'git';
 if (EXTENSION_ID && !/^[a-p]{32}$/.test(EXTENSION_ID)) throw new Error('Invalid extension ID');
-const CONFIG_FILE = path.join(os.homedir(), '.git-magager.json');
+const CONFIG_FILE = path.join(os.homedir(), '.quick-clone.json');
 
 // Default config
 const DEFAULT_CONFIG = {
