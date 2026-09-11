@@ -23,7 +23,7 @@ test('setup shows a self-contained Windows PowerShell command', () => {
 test('Windows installer covers prerequisites, native host registration, and a fixed Git path', () => {
   const script = fs.readFileSync('scripts/install-companion.ps1', 'utf8');
   for (const expected of ['OpenJS.NodeJS.LTS', 'Git.Git', 'NativeMessagingHosts',
-    'QuickCloneHost.exe', 'allowed_origins', '$gitPath']) {
+    'QuickCloneHost.exe', 'allowed_origins', '$gitPath', 'Get-NetTCPConnection', 'Stop-Process']) {
     assert.ok(script.includes(expected), `missing ${expected}`);
   }
 });

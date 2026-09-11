@@ -104,6 +104,7 @@ Quick Clone processes the current repository address, selected destination folde
 
 | Version | Date | Changes | Status |
 |---|---|---|---|
+| 1.1.5 companion revision | 2026-09-11 | Replaces an older local companion during setup so stale extension-ID registrations cannot block folder selection. | Draft |
 | 1.1.5 protocol revision | 2026-09-11 | Uses HTTPS by default and keeps protocol changes inside the extension popup, removing the repository-page chooser. | Draft |
 | 1.1.5 platform revision | 2026-09-11 | Adds one-command Windows setup, native Windows folder selection, Windows Terminal support, and automatic prerequisite installation. | Draft |
 | 1.1.5 UI revision | 2026-09-09 | Adds a companion setup guide with the current extension ID and a copyable install command. Prioritizes installation and reconnection in the offline state; introduces teal primary actions. | Draft |

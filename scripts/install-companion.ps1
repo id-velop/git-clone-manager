@@ -33,6 +33,19 @@ if ($env:OS -ne 'Windows_NT') { throw 'This installer is for Windows. Use the ma
 Install-QuickCloneTool -Command 'node.exe' -Package 'OpenJS.NodeJS.LTS'
 Install-QuickCloneTool -Command 'git.exe' -Package 'Git.Git'
 
+# Replace an older Quick Clone/Git Magager server that may be bound to another extension ID.
+try {
+  Get-NetTCPConnection -LocalPort 9456 -State Listen -ErrorAction Stop | ForEach-Object {
+    $processInfo = Get-CimInstance Win32_Process -Filter "ProcessId = $($_.OwningProcess)"
+    if ($processInfo.Name -eq 'node.exe' -and $processInfo.CommandLine -match 'server\.js' -and
+        $processInfo.CommandLine -match 'Quick Clone|Git Magager') {
+      Stop-Process -Id $_.OwningProcess -Force
+    }
+  }
+} catch {
+  # No old listener is the normal first-install case.
+}
+
 $nodePath = (Get-Command node.exe).Source
 $gitPath = (Get-Command git.exe).Source
 $installDir = Join-Path $env:LOCALAPPDATA 'Quick Clone'

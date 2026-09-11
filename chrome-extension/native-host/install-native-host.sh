@@ -18,6 +18,18 @@ if [[ ! "$EXTENSION_ID" =~ ^[a-p]{32}$ ]]; then
   echo "Invalid Chrome extension ID." >&2
   exit 1
 fi
+
+# A previous extension build may still own the local port with a different ID.
+# Stop only this product's Node server so the newly registered host can start cleanly.
+if command -v lsof >/dev/null 2>&1; then
+  while IFS= read -r listener_pid; do
+    [[ "$listener_pid" =~ ^[0-9]+$ ]] || continue
+    listener_command="$(ps -p "$listener_pid" -o command= 2>/dev/null || true)"
+    if [[ "$listener_command" == *node*server.js* && ("$listener_command" == *"Git Magager"* || "$listener_command" == *"Quick Clone"*) ]]; then
+      kill "$listener_pid" 2>/dev/null || true
+    fi
+  done < <(lsof -tiTCP:9456 -sTCP:LISTEN 2>/dev/null || true)
+fi
 "$NODE_BIN" - "$SCRIPT_DIR" "$EXTENSION_ID" <<'NODE'
 const fs = require('fs');
 const path = require('path');
