@@ -10,14 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const startError = document.getElementById('start-error');
   const cloneUrlInput = document.getElementById('clone-url');
   const cloneBtn = document.getElementById('clone-btn');
-  const sshUrlInput = document.getElementById('clone-ssh-url');
-  const sshCloneBtn = document.getElementById('clone-ssh-btn');
   const optionsLink = document.getElementById('options-link');
   let openTerminalAfterClone = false;
-  let activeProtocol = 'https';
-  const protocolStatus = document.getElementById('protocol-save-status');
-  const protocolTabs = [...document.querySelectorAll('[data-protocol-tab]')];
-  const protocolPanels = [...document.querySelectorAll('[data-protocol-panel]')];
   try {
     const platform = await chrome.runtime.getPlatformInfo();
     if (platform.os === 'win') {
@@ -28,29 +22,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (_) {
     // Keep macOS terminal choices when platform information is unavailable.
   }
-
-  function selectProtocolPanel(protocol, moveFocus = false) {
-    activeProtocol = protocol;
-    for (const tab of protocolTabs) {
-      const selected = tab.dataset.protocolTab === protocol;
-      tab.classList.toggle('active', selected);
-      tab.setAttribute('aria-selected', String(selected));
-      tab.tabIndex = selected ? 0 : -1;
-      if (selected && moveFocus) tab.focus();
-    }
-    for (const panel of protocolPanels) panel.hidden = panel.dataset.protocolPanel !== protocol;
-  }
-
-  protocolTabs.forEach((tab, index) => {
-    tab.addEventListener('click', () => saveProtocol(tab.dataset.protocolTab));
-    tab.addEventListener('keydown', event => {
-      if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-      event.preventDefault();
-      const direction = event.key === 'ArrowRight' ? 1 : -1;
-      const nextIndex = (index + direction + protocolTabs.length) % protocolTabs.length;
-      void saveProtocol(protocolTabs[nextIndex].dataset.protocolTab, true);
-    });
-  });
 
   // Prefill clone addresses from the active repository page.
   try {
@@ -74,9 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch (_) {
     // The popup remains usable with manually entered addresses.
   }
-
-  const initialHttps = cloneUrlInput.value.match(/^https:\/\/([^/]+)\/(.+)$/);
-  if (initialHttps) sshUrlInput.value = `git@${initialHttps[1]}:${initialHttps[2]}`;
 
   async function checkAndShowServerStatus() {
     try {
@@ -165,36 +133,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const connectionTimer = setInterval(autoConnect, 5000);
   window.addEventListener('unload', () => clearInterval(connectionTimer));
 
-  try {
-    const stored = await chrome.storage.local.get('cloneProtocol');
-    const initialProtocol = ['https', 'ssh'].includes(stored.cloneProtocol) ? stored.cloneProtocol : 'https';
-    selectProtocolPanel(initialProtocol);
-    if (stored.cloneProtocol !== initialProtocol) await chrome.storage.local.set({ cloneProtocol: initialProtocol });
-  } catch (_) {
-    selectProtocolPanel('https');
-    protocolStatus.textContent = 'Could not load your protocol. Reopen the popup to retry.';
-  } finally {
-    protocolTabs.forEach(tab => { tab.disabled = false; });
-  }
-
-  async function saveProtocol(protocol, moveFocus = false) {
-    if (protocolTabs.some(tab => tab.disabled)) return;
-    const previousPanel = activeProtocol;
-    protocolTabs.forEach(tab => { tab.disabled = true; });
-    try {
-      await chrome.storage.local.set({ cloneProtocol: protocol });
-      selectProtocolPanel(protocol);
-      protocolStatus.textContent = '';
-    } catch (_) {
-      selectProtocolPanel(previousPanel);
-      protocolStatus.textContent = 'Could not save. Try again.';
-    } finally {
-      protocolTabs.forEach(tab => { tab.disabled = false; });
-      if (moveFocus) protocolTabs.find(tab => tab.dataset.protocolTab === activeProtocol)?.focus();
-    }
-  }
-
-  const cloneActions = [[cloneBtn, cloneUrlInput], [sshCloneBtn, sshUrlInput]];
+  const cloneActions = [[cloneBtn, cloneUrlInput]];
   for (const [actionButton, addressInput] of cloneActions) {
     const idleHtml = actionButton.innerHTML;
     actionButton.addEventListener('click', async () => {

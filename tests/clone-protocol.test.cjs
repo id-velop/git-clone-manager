@@ -3,15 +3,12 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-function harness(preference) {
-  const state = { preference, cloned: [], errors: [], ready: true, messages: [], canOpen: true };
+function harness() {
+  const state = { cloned: [], errors: [], ready: true, messages: [], canOpen: true };
   const context = vm.createContext({
     window: { location: { href: 'https://git.example.com/team/repo' } },
     document: { getElementById: () => ({ disabled: false }) },
-    chrome: { storage: { local: {
-      get: async () => ({ cloneProtocol: state.preference }),
-      async set(value) { state.preference = value.cloneProtocol; }
-    } } },
+    chrome: { storage: { local: {} } },
     testHealth: async () => state.ready,
     testMessage: async message => { state.messages.push(message.type); return { success: state.canOpen }; },
     testClone: async url => { state.cloned.push(url); },
@@ -24,35 +21,19 @@ function harness(preference) {
     sendMessageToBackground = testMessage;
     doClone = testClone;
     showNotification = testNotify;
-    globalThis.start = startCloneWithPreference;
+    globalThis.start = startClone;
   })();`, context);
   return { state, start: context.start };
 }
 
-test('no preference uses HTTPS immediately', async () => {
-  const h = harness(undefined);
+test('repository actions always use HTTPS', async () => {
+  const h = harness();
   await h.start(); await h.start();
   assert.deepEqual(h.state.cloned, Array(2).fill('https://git.example.com/team/repo.git'));
 });
 
-test('saved SSH is used without an on-page chooser', async () => {
-  const h = harness('ssh');
-  await h.start(); await h.start();
-  assert.deepEqual(h.state.cloned, Array(2).fill('git@git.example.com:team/repo.git'));
-});
-
-test('popup changes are read on the next click', async () => {
-  const h = harness('https');
-  await h.start();
-  h.state.preference = 'ssh';
-  await h.start();
-  h.state.preference = '';
-  await h.start();
-  assert.deepEqual(h.state.cloned, ['https://git.example.com/team/repo.git', 'git@git.example.com:team/repo.git', 'https://git.example.com/team/repo.git']);
-});
-
-test('unavailable service opens setup before protocol selection', async () => {
-  const h = harness(undefined);
+test('unavailable service opens setup before cloning', async () => {
+  const h = harness();
   h.state.ready = false;
   await h.start();
   assert.equal(h.state.cloned.length, 0);
@@ -61,7 +42,7 @@ test('unavailable service opens setup before protocol selection', async () => {
 });
 
 test('popup opening failure tells the user where to find setup', async () => {
-  const h = harness(undefined);
+  const h = harness();
   h.state.ready = false;
   h.state.canOpen = false;
   await h.start();

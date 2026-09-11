@@ -7,7 +7,7 @@ Quickly clone GitHub and GitLab repositories with one click—no terminal needed
 - One-click cloning from repository pages
 - Supports GitHub and GitLab
 - Choose a local destination folder
-- HTTPS by default, with optional SSH
+- HTTPS cloning with no protocol setup
 - Optional terminal launch after cloning
 - Runs locally through Chrome Native Messaging
 

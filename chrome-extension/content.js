@@ -158,7 +158,7 @@
   // ─── Clone Execution ──────────────────────────────────────
 
   let startingClone = false;
-  async function startCloneWithPreference() {
+  async function startClone() {
     if (startingClone || document.getElementById('quick-clone-page-btn')?.disabled) return;
     startingClone = true;
     const pageUrl = window.location.href;
@@ -169,13 +169,11 @@
         return;
       }
       const urls = getCloneUrls();
-      const { cloneProtocol } = await chrome.storage.local.get('cloneProtocol');
-      const protocol = ['https', 'ssh'].includes(cloneProtocol) ? cloneProtocol : 'https';
       if (window.location.href !== pageUrl) return;
-      if (!urls[protocol]) throw new Error(`No ${protocol.toUpperCase()} clone URL is available for this repository.`);
-      await doClone(urls[protocol]);
+      if (!urls.https) throw new Error("No HTTPS clone URL is available for this repository.");
+      await doClone(urls.https);
     } catch (error) {
-      showNotification(error.message || 'Could not select clone method. Please reload the extension.', 'error');
+      showNotification(error.message || 'Could not start clone', 'error');
     } finally {
       startingClone = false;
     }
@@ -325,7 +323,7 @@
         Quick Clone
       `;
 
-      btn.addEventListener('click', startCloneWithPreference);
+      btn.addEventListener('click', startClone);
 
       actionBar.appendChild(btn);
       globalThis.QuickCloneI18n?.observe(btn);

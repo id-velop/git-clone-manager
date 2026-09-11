@@ -10,13 +10,13 @@ Quick Clone
 
 **Short Description**
 
-Clone GitHub and GitLab repositories to a chosen local folder with HTTPS or SSH.
+Clone GitHub and GitLab repositories to a chosen local folder with one click.
 
 **Detailed Description**
 
 Quick Clone adds a Quick Clone action to supported GitHub and GitLab repository pages.
 
-Quick Clone uses HTTPS by default. Users can switch the saved method to SSH from the extension popup, select a destination folder, and follow clone progress without manually copying repository addresses. Quick Clone supports macOS and Windows and configures its local companion from one setup command.
+Quick Clone uses HTTPS, lets users select a destination folder, and shows clone progress without manually copying repository addresses. Quick Clone supports macOS and Windows and configures its local companion from one setup command.
 
 Install the Quick Clone local companion before cloning. Repository addresses, destination folders, and preferences stay on your device. Quick Clone does not use analytics, advertising, or tracking services.
 
@@ -55,15 +55,15 @@ English
 Settings now opens inside the extension popup with a Back button; refresh the settings screenshot accordingly.
 
 1. Quick Clone action on a GitHub repository page.
-2. HTTPS default and the HTTPS/SSH preference in the extension popup.
-3. Blue (`#0969DA`) popup with a setup-first offline state and an inline one-command companion setup below Quick Clone. The command installs missing Node.js and Git on macOS or Windows. Refresh popup and settings screenshots for this visual revision; the icon and actions use the same blue theme.
+2. The one-click HTTPS clone form in the extension popup.
+3. Blue (`#0969DA`) popup with a setup-first offline state and an always-visible one-command companion setup below Quick Clone. The command installs missing Node.js and Git on macOS or Windows. Refresh popup and settings screenshots for this visual revision; the icon and actions use the same blue theme.
 
 ## Permissions Justification
 
 | Permission | Type | Justification |
 |---|---|---|
-| `storage` | permissions | Saves the user's preferred Quick Clone method locally. |
-| `activeTab` | permissions | Reads the repository page opened when the user clicks the extension so the popup can prefill its HTTPS and SSH clone addresses. |
+| `storage` | permissions | Saves the user's language and clone settings locally. |
+| `activeTab` | permissions | Reads the repository page opened when the user clicks the extension so the popup can prefill its HTTPS clone address. |
 | `nativeMessaging` | permissions | Starts and communicates with the locally installed Quick Clone companion that selects folders and runs Git. |
 | Supported GitHub and GitLab origins | host_permissions | Detects repository pages and adds the user-invoked Quick Clone action on those pages. |
 | `http://127.0.0.1:9456/*` | host_permissions | Sends clone, folder-selection, and settings requests to the Quick Clone companion on the same computer. |
@@ -74,7 +74,7 @@ Settings now opens inside the extension popup with a Back button; refresh the se
 
 **Does the extension collect user data?** No.
 
-Quick Clone processes the current repository address, selected destination folder, clone settings, and preferred protocol locally. It does not transmit this information off the user's device or share it with third parties.
+Quick Clone processes the current repository address, selected destination folder, clone settings locally. It does not transmit this information off the user's device or share it with third parties.
 
 ### Data Use Certification
 
@@ -106,6 +106,7 @@ Quick Clone processes the current repository address, selected destination folde
 
 | Version | Date | Changes | Status |
 |---|---|---|---|
+| 1.1.5 setup revision | 2026-09-11 | Removes protocol selection and shows the terminal setup command directly without a collapsible heading. | Draft |
 | 1.1.5 companion revision | 2026-09-11 | Replaces an older local companion during setup so stale extension-ID registrations cannot block folder selection. | Draft |
 | 1.1.5 protocol revision | 2026-09-11 | Uses HTTPS by default and keeps protocol changes inside the extension popup, removing the repository-page chooser. | Draft |
 | 1.1.5 platform revision | 2026-09-11 | Adds one-command Windows setup, native Windows folder selection, Windows Terminal support, and automatic prerequisite installation. | Draft |
