@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 
 test('setup shows a self-contained Windows PowerShell command', () => {
-  const elements = new Map(['install-command', 'copy-command', 'copy-status', 'setup-note', 'setup-instruction', 'setup-step-run']
+  const elements = new Map(['install-command', 'copy-command', 'copy-status', 'setup-note', 'setup-instruction', 'setup-step-open', 'setup-step-run']
     .map(id => [id, { textContent: '', disabled: true, addEventListener() {} }]));
   const context = {
     document: { getElementById: id => elements.get(id) },
@@ -17,6 +17,7 @@ test('setup shows a self-contained Windows PowerShell command', () => {
   assert.match(command, /install-companion\.ps1/);
   assert.match(command, /aamnpggmnckbdjbhecooigjddpnjffjl/);
   assert.equal(elements.get('copy-command').disabled, false);
+  assert.equal(elements.get('setup-step-open').textContent, 'Open Command.');
   assert.match(elements.get('setup-step-run').textContent, /paste it into Command/);
   assert.match(elements.get('setup-note').textContent, /No manual configuration required/);
 });

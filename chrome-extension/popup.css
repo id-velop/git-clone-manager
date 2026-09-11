@@ -235,9 +235,7 @@ body { background: #f6f8fa; }
 .setup-steps { display: grid; gap: 18px; margin: 0; padding: 0; list-style: none; counter-reset: setup-step; }
 .setup-steps > li { position: relative; min-width: 0; padding-left: 30px; color: var(--ink); font-size: .75rem; line-height: 1.5; counter-increment: setup-step; }
 .setup-steps > li::before { position: absolute; top: 0; left: 0; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #ddf4ff; color: #0550AE; font-size: .6875rem; font-weight: 700; content: counter(setup-step); }
-.setup-example { margin: 10px 0 0; }
-.setup-example figcaption { margin-bottom: 5px; color: var(--muted); font-size: .6875rem; font-weight: 650; }
-.setup-image { display: block; width: 100%; height: auto; margin-top: 0; border: 1px solid var(--line); border-radius: 8px; }
+.setup-image { display: block; width: 100%; height: auto; margin-top: 10px; border: 1px solid var(--line); border-radius: 8px; }
 #inline-setup pre { max-height: 108px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; margin: 10px 0 12px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #f6f8fa; font: .6875rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
 #inline-setup .install-link { border: 0; width: 100%; justify-content: center; cursor: pointer; font: inherit; font-size: .8125rem; font-weight: 650; }
 #inline-setup .install-link:disabled { opacity: .5; cursor: default; }

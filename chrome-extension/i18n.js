@@ -20,7 +20,6 @@
   "Icon created by Lagot Design from the Noun Project": "图标由 Noun Project 的 Lagot Design 创作",
   "Run this in Terminal, then reconnect.": "在终端运行以下命令，然后重新连接。",
   "Open Terminal.": "打开终端。",
-  "Open Terminal (Mac) or Command (Windows).": "打开终端（Mac）或 Command（Windows）。",
   "Open Command.": "打开 Command。",
   "Copy the command below, paste it into Terminal, then press Enter.": "复制下方命令，粘贴到终端，然后按 Enter。",
   "Copy the command below, paste it into Command, then press Enter.": "复制下方命令，粘贴到Command，然后按 Enter。",
