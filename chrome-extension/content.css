@@ -18,15 +18,18 @@
 .gm-page-btn {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 6px 13px;
+  gap: 8px;
+  height: var(--gm-button-height, 32px);
+  min-height: var(--gm-button-height, 32px);
+  max-height: var(--gm-button-height, 32px);
+  padding: 0 12px;
   border: 1px solid var(--gm-accent);
-  border-radius: 10px;
+  border-radius: var(--gm-button-radius, 6px);
   background: var(--gm-accent);
   color: #ffffff;
   font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  font-size: 13px;
-  font-weight: 750;
+  font-size: var(--gm-button-font-size, 14px);
+  font-weight: var(--gm-button-font-weight, 500);
   line-height: 20px;
   white-space: nowrap;
   box-shadow: none;
@@ -44,10 +47,10 @@
   margin: 0 0 0 8px;
   padding: 0 12px;
   font-size: var(--gm-button-font-size, 14px);
-  border-radius: 10px;
+  border-radius: var(--gm-button-radius, 6px);
 }
 
-.gm-clone-icon { flex: 0 0 auto; }
+.gm-clone-icon { display: block; width: 18px; height: 18px; flex: 0 0 auto; border-radius: 4px; }
 .gm-page-btn:hover:not(:disabled) { background: var(--gm-accent-hover); box-shadow: none; }
 .gm-page-btn:active:not(:disabled) { background: #0757BA; }
 .gm-page-btn:focus-visible { outline: 3px solid #54AEFF; outline-offset: 3px; }

@@ -307,20 +307,22 @@
       btn.id = 'git-magager-page-btn';
       btn.type = 'button';
       btn.className = 'gm-page-btn';
-      if (detectPlatform() === 'gitlab') {
-        btn.className += ' gm-page-btn-gitlab';
-        const reference = actionBar.querySelector('button.btn, a.btn, .gl-button, button');
-        if (reference) {
-          const metrics = window.getComputedStyle(reference);
-          const height = reference.getBoundingClientRect().height;
-          if (height > 0) btn.style.setProperty('--gm-button-height', `${height}px`);
-          btn.style.setProperty('--gm-button-font-size', metrics.fontSize);
-          btn.style.setProperty('--gm-button-font-weight', metrics.fontWeight);
-          btn.style.setProperty('--gm-button-radius', metrics.borderRadius);
-        }
+      const platform = detectPlatform();
+      btn.className += ` gm-page-btn-${platform}`;
+      const reference = platform === 'github'
+        ? actionBar.querySelector('button.Button, a.Button, button.btn, a.btn, button')
+        : actionBar.querySelector('button.btn, a.btn, .gl-button, button');
+      if (reference) {
+        const metrics = window.getComputedStyle(reference);
+        const height = reference.getBoundingClientRect().height;
+        if (height > 0) btn.style.setProperty('--gm-button-height', `${height}px`);
+        btn.style.setProperty('--gm-button-font-size', metrics.fontSize);
+        btn.style.setProperty('--gm-button-font-weight', metrics.fontWeight);
+        btn.style.setProperty('--gm-button-radius', metrics.borderRadius);
       }
+      const iconUrl = chrome.runtime.getURL?.('icons/icon48.png') || '';
       btn.innerHTML = `
-        <svg class="gm-clone-icon" viewBox="0 0 18 18" width="16" height="16" aria-hidden="true"><path d="M9 2v9m0 0 3.5-3.5M9 11 5.5 7.5M3.5 15h11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <img class="gm-clone-icon" src="${iconUrl}" width="18" height="18" alt="">
         Instant Clone
       `;
 
