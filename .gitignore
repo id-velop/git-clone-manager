@@ -11,3 +11,5 @@ node_modules/
 # Generated extension archives
 /*.zip
 /*.crx
+/releases/*.zip
+/releases/*.crx
