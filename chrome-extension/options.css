@@ -81,3 +81,4 @@ code { padding: 2px 5px; border-radius: 4px; background: #f0f0f0; color: var(--i
 .save-btn:hover:not(:disabled) { background: #0860CA; }
 .save-btn:active:not(:disabled) { background: #0757BA; }
 .path-field input { padding-left: 12px; }
+.icon-credit { margin: 18px 0 0; color: var(--muted); font-size: .6875rem; text-align: center; }

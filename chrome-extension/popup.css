@@ -290,6 +290,7 @@ body { background: #f6f8fa; }
 .settings-icon { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 9px; background: transparent; color: var(--muted); cursor: pointer; }
 .settings-icon:hover { background: #ddf4ff; color: #0550AE; }
 .settings-version { margin: 16px 0 0; text-align: center; }
+.icon-credit { margin: 6px 0 0; color: var(--muted); font-size: .625rem; text-align: center; }
 
 .language-segment { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; width: 58px; padding: 2px; border-radius: 8px; background: #f0f2f4; }
 .language-segment button { min-width: 0; height: 28px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: var(--muted); font: inherit; font-size: .6875rem; font-weight: 650; cursor: pointer; }

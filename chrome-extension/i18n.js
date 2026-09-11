@@ -20,6 +20,7 @@
   "macOS Terminal": "macOS 终端",
   "Save changes": "保存设置",
   "Version 1.1.5": "版本 1.1.5",
+  "Icon created by Lagot Design from the Noun Project": "图标由 Noun Project 的 Lagot Design 创作",
   "Set up local companion": "安装本地服务",
   "Run this in Terminal, then reconnect.": "在终端运行以下命令，然后重新连接。",
   "Run this in PowerShell, then reconnect.": "在 PowerShell 运行以下命令，然后重新连接。",
