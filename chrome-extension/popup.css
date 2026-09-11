@@ -5,8 +5,8 @@
   --paper: #f5f5f5;
   --surface: #ffffff;
   --line: #e5e5e5;
-  --accent: #07BEB8;
-  --accent-dark: #06847f;
+  --accent: #0969DA;
+  --accent-dark: #0860CA;
   --success: #262626;
   --danger: #404040;
 }
@@ -226,31 +226,31 @@ select {
 .brand-mark img { display: block; border-radius: 8px; }
 
 /* Setup is the primary task until the companion is connected. */
-body { background: #f5f8f8; }
+body { background: #f6f8fa; }
 .header { margin-bottom: 24px; }
 .brand-copy p { font-size: .625rem; font-weight: 500; }
 .status-chip { font-weight: 500; }
-.status-dot.connected { background: #06847f; }
+.status-dot.connected { background: #0969DA; }
 .connection-card { display: block; padding: 24px; }
-.connection-icon { width: 46px; height: 46px; margin-bottom: 22px; background: #dcf7f3; color: #075c58; border-radius: 10px; }
+.connection-icon { width: 46px; height: 46px; margin-bottom: 22px; background: #ddf4ff; color: #0550ae; border-radius: 10px; }
 .connection-card .step-label { font-size: .6875rem; font-weight: 600; margin-bottom: 8px; }
 .connection-card h2 { font-size: 1.5rem; line-height: 1.2; letter-spacing: -.04em; }
 .connection-copy { margin: 14px 0 22px; line-height: 1.6; font-size: .8125rem; }
-.install-link { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 15px 18px; border-radius: 10px; background: #07BEB8; color: #073b38; text-decoration: none; font-weight: 650; font-size: .8125rem; }
-.install-link:hover { background: #06aba6; }
-.install-link:focus-visible, .settings-link:focus-visible { outline: 2px solid #075c58; outline-offset: 3px; }
+.install-link { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 15px 18px; border-radius: 10px; background: #0969DA; color: #ffffff; text-decoration: none; font-weight: 650; font-size: .8125rem; }
+.install-link:hover { background: #0860CA; }
+.install-link:focus-visible, .settings-link:focus-visible { outline: 2px solid #54AEFF; outline-offset: 3px; }
 .retry-label { display: inline-block; margin: 18px 8px 0 0; color: var(--muted); font-size: .75rem; }
-.connect-btn { display: inline-flex; width: auto; padding: 4px 0; background: transparent; color: #075c58; font-weight: 650; font-size: .75rem; text-decoration: underline; }
-.connect-btn:hover:not(:disabled), .connect-btn:active:not(:disabled) { background: transparent; color: #073b38; }
+.connect-btn { display: inline-flex; width: auto; padding: 4px 0; background: transparent; color: #0969DA; font-weight: 650; font-size: .75rem; text-decoration: underline; }
+.connect-btn:hover:not(:disabled), .connect-btn:active:not(:disabled) { background: transparent; color: #0550AE; }
 .preference-card { margin: 18px 0 0; padding: 12px 4px; background: transparent; border: 0; }
 .preference-card h2 { font-size: .8125rem; font-weight: 600; }
 .preference-card p { font-size: .6875rem; }
-.clone-btn { color: #073b38; font-weight: 650; border-radius: 10px; }
-.clone-btn:hover:not(:disabled) { background: #06aba6; }
-.clone-btn:active:not(:disabled) { background: #059b96; }
-.protocol-tabs { background: #f1f5f4; }
+.clone-btn { color: #ffffff; font-weight: 650; border-radius: 10px; }
+.clone-btn:hover:not(:disabled) { background: #0860CA; }
+.clone-btn:active:not(:disabled) { background: #0757BA; }
+.protocol-tabs { background: #f6f8fa; }
 .protocol-tab { font-weight: 600; }
-.protocol-tab.active { color: #075c58; background: #dff7f3; }
+.protocol-tab.active { color: #0550AE; background: #ddf4ff; }
 .section-heading h2 { font-size: 1.25rem; }
 .footer { border-top: 1px solid var(--line); margin-top: 12px; }
 .settings-link { text-decoration: none; font-weight: 500; }
@@ -260,13 +260,13 @@ body { background: #f5f8f8; }
 .preference-card { margin: 0 0 12px; padding: 12px 4px; }
 .connection-card { padding: 20px 0 0; border-top: 1px solid var(--line); }
 #inline-setup summary { cursor: pointer; font-size: .875rem; font-weight: 650; }
-#inline-setup summary:focus-visible { outline: 2px solid #075c58; outline-offset: 4px; border-radius: 4px; }
+#inline-setup summary:focus-visible { outline: 2px solid #54AEFF; outline-offset: 4px; border-radius: 4px; }
 #inline-setup .connection-copy { margin: 12px 0; font-size: .75rem; }
-#inline-setup pre { max-height: 108px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 12px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #f5f8f8; font: .6875rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+#inline-setup pre { max-height: 108px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 12px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #f6f8fa; font: .6875rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
 #inline-setup .install-link { border: 0; width: 100%; justify-content: center; cursor: pointer; font: inherit; font-size: .8125rem; font-weight: 650; }
 #inline-setup .install-link:disabled { opacity: .5; cursor: default; }
 .setup-note { margin: 10px 0 0; color: var(--muted); font-size: .6875rem; line-height: 1.5; }
-#copy-status { margin: 8px 0 0; font-size: .75rem; color: #075c58; }
+#copy-status { margin: 8px 0 0; font-size: .75rem; color: #0550AE; }
 #copy-status:empty { margin: 0; }
 .connection-card > .connect-btn { display: block; margin: 12px auto 0; }
 .protocol-tab:disabled { opacity: .6; cursor: wait; }
@@ -287,7 +287,7 @@ body { background: #f5f8f8; }
 .brand-copy { grid-column: 2; grid-row: 1; }
 .status-chip { grid-column: 2; grid-row: 2; justify-self: start; border: 0; background: transparent; padding: 0; font-size: .6875rem; }
 .settings-icon { grid-column: 3; grid-row: 1 / 3; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: 10px; background: transparent; color: var(--muted); cursor: pointer; }
-.settings-icon:hover { background: #e6f4f2; color: #075c58; }
+.settings-icon:hover { background: #ddf4ff; color: #0550AE; }
 .settings-version { margin: 16px 0 0; text-align: center; }
 
 .language-setting { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; font-size: .8125rem; }

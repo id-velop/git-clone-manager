@@ -44,11 +44,11 @@ English
 
 ### Screenshot Notes
 
-- The repository-page Quick Clone button now uses GitHub blue (`#0969DA`) with white text, while the popup keeps the teal product theme.
+- Quick Clone now uses GitHub blue (`#0969DA`) with white text across the popup, repository action, setup, settings, and icon.
 
 - Settings includes an English / 简体中文 selector. Language is stored locally and applies to extension pages and repository-page controls. Capture both language variants.
 
-- Branding is now Quick Clone, with a white folder and downward download arrow on a #07BEB8 background. Refresh all store screenshots to use this name and icon.
+- Branding is now Quick Clone, with a white folder and downward download arrow on a `#0969DA` background. Refresh all store screenshots to use this name and icon.
 
 - Refresh popup screenshots for the flat layout: no workspace title or address labels; header settings icon and version inside settings.
 
@@ -56,7 +56,7 @@ Settings now opens inside the extension popup with a Back button; refresh the se
 
 1. Instant Clone action on a GitHub repository page.
 2. HTTPS default and the HTTPS/SSH preference in the extension popup.
-3. Teal (#07BEB8) popup with a setup-first offline state and an inline one-command companion setup below Instant Clone. The command installs missing Node.js and Git on macOS or Windows. Refresh popup and settings screenshots for this visual revision; the icon now uses #07BEB8 and controls use smaller corner radii.
+3. Blue (`#0969DA`) popup with a setup-first offline state and an inline one-command companion setup below Instant Clone. The command installs missing Node.js and Git on macOS or Windows. Refresh popup and settings screenshots for this visual revision; the icon and actions use the same blue theme.
 
 ## Permissions Justification
 
@@ -109,7 +109,7 @@ Quick Clone processes the current repository address, selected destination folde
 | 1.1.5 companion revision | 2026-09-11 | Replaces an older local companion during setup so stale extension-ID registrations cannot block folder selection. | Draft |
 | 1.1.5 protocol revision | 2026-09-11 | Uses HTTPS by default and keeps protocol changes inside the extension popup, removing the repository-page chooser. | Draft |
 | 1.1.5 platform revision | 2026-09-11 | Adds one-command Windows setup, native Windows folder selection, Windows Terminal support, and automatic prerequisite installation. | Draft |
-| 1.1.5 UI revision | 2026-09-09 | Adds a companion setup guide with the current extension ID and a copyable install command. Prioritizes installation and reconnection in the offline state; introduces teal primary actions. | Draft |
+| 1.1.5 UI revision | 2026-09-09 | Adds a companion setup guide with the current extension ID and a copyable install command. Prioritizes installation and reconnection in the offline state; introduces consistent blue primary actions. | Draft |
 | 1.1.5 | 2026-09-09 | Introduces a new light desktop-tool interface, a focused HTTPS/SSH workspace, clearer connection states, and redesigned repository-page feedback. | Draft |
 | 1.1.4 | 2026-09-09 | Adds reliable GitLab repository detection, HTTPS/SSH choices, saved protocol preference, GitLab page integration, and clone progress. Removes internal update and distribution mechanisms. | Draft |
 

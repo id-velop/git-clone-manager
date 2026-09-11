@@ -23,7 +23,7 @@ def pixel(x, y):
     if dx * dx + dy * dy > 18 * 18:
         return (0, 0, 0, 0)
     foreground = (inside(x, y, FOLDER) and not inside(x, y, INNER)) or inside(x, y, ARROW)
-    return (255, 255, 255, 255) if foreground else (7, 190, 184, 255)
+    return (255, 255, 255, 255) if foreground else (9, 105, 218, 255)
 
 
 def chunk(kind, data):
