@@ -16,7 +16,7 @@ Clone GitHub and GitLab repositories to a chosen local folder with HTTPS or SSH.
 
 Quick Clone adds an Instant Clone action to supported GitHub and GitLab repository pages.
 
-Choose HTTPS or SSH, remember your preferred method, select a destination folder, and follow clone progress without manually copying repository addresses. Quick Clone supports macOS and Windows and configures its local companion from one setup command.
+Quick Clone uses HTTPS by default. Users can switch the saved method to SSH from the extension popup, select a destination folder, and follow clone progress without manually copying repository addresses. Quick Clone supports macOS and Windows and configures its local companion from one setup command.
 
 Install the Quick Clone local companion before cloning. Repository addresses, destination folders, and preferences stay on your device. Quick Clone does not use analytics, advertising, or tracking services.
 
@@ -53,7 +53,7 @@ English
 Settings now opens inside the extension popup with a Back button; refresh the settings screenshot accordingly.
 
 1. Instant Clone action on a GitHub repository page.
-2. HTTPS/SSH selection and remembered preference.
+2. HTTPS default and the HTTPS/SSH preference in the extension popup.
 3. Teal (#07BEB8) popup with a setup-first offline state and an inline one-command companion setup below Instant Clone. The command installs missing Node.js and Git on macOS or Windows. Refresh popup and settings screenshots for this visual revision; the icon now uses #07BEB8 and controls use smaller corner radii.
 
 ## Permissions Justification
@@ -104,6 +104,7 @@ Quick Clone processes the current repository address, selected destination folde
 
 | Version | Date | Changes | Status |
 |---|---|---|---|
+| 1.1.5 protocol revision | 2026-09-11 | Uses HTTPS by default and keeps protocol changes inside the extension popup, removing the repository-page chooser. | Draft |
 | 1.1.5 platform revision | 2026-09-11 | Adds one-command Windows setup, native Windows folder selection, Windows Terminal support, and automatic prerequisite installation. | Draft |
 | 1.1.5 UI revision | 2026-09-09 | Adds a companion setup guide with the current extension ID and a copyable install command. Prioritizes installation and reconnection in the offline state; introduces teal primary actions. | Draft |
 | 1.1.5 | 2026-09-09 | Introduces a new light desktop-tool interface, a focused HTTPS/SSH workspace, clearer connection states, and redesigned repository-page feedback. | Draft |

@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sshCloneBtn = document.getElementById('clone-ssh-btn');
   const openTerminalToggle = document.getElementById('open-terminal');
   const optionsLink = document.getElementById('options-link');
-  const askProtocol = document.getElementById('ask-clone-protocol');
-  let savedProtocol = '';
   let activeProtocol = 'https';
   const protocolStatus = document.getElementById('protocol-save-status');
   const protocolTabs = [...document.querySelectorAll('[data-protocol-tab]')];
@@ -169,37 +167,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     const stored = await chrome.storage.local.get('cloneProtocol');
-    savedProtocol = ['https', 'ssh'].includes(stored.cloneProtocol) ? stored.cloneProtocol : '';
-    askProtocol.checked = !savedProtocol;
-    selectProtocolPanel(savedProtocol || 'https');
-    askProtocol.disabled = false;
-    protocolTabs.forEach(tab => { tab.disabled = false; });
+    const initialProtocol = ['https', 'ssh'].includes(stored.cloneProtocol) ? stored.cloneProtocol : 'https';
+    selectProtocolPanel(initialProtocol);
+    if (stored.cloneProtocol !== initialProtocol) await chrome.storage.local.set({ cloneProtocol: initialProtocol });
   } catch (_) {
+    selectProtocolPanel('https');
     protocolStatus.textContent = 'Could not load your protocol. Reopen the popup to retry.';
+  } finally {
+    protocolTabs.forEach(tab => { tab.disabled = false; });
   }
 
   async function saveProtocol(protocol, moveFocus = false) {
     if (protocolTabs.some(tab => tab.disabled)) return;
     const previousPanel = activeProtocol;
-    askProtocol.disabled = true;
     protocolTabs.forEach(tab => { tab.disabled = true; });
     try {
       await chrome.storage.local.set({ cloneProtocol: protocol });
-      savedProtocol = protocol;
-      if (protocol) selectProtocolPanel(protocol);
-      askProtocol.checked = !protocol;
+      selectProtocolPanel(protocol);
       protocolStatus.textContent = '';
     } catch (_) {
-      askProtocol.checked = !savedProtocol;
       selectProtocolPanel(previousPanel);
       protocolStatus.textContent = 'Could not save. Try again.';
     } finally {
-      askProtocol.disabled = false;
       protocolTabs.forEach(tab => { tab.disabled = false; });
       if (moveFocus) protocolTabs.find(tab => tab.dataset.protocolTab === activeProtocol)?.focus();
     }
   }
-  askProtocol.addEventListener('change', () => saveProtocol(askProtocol.checked ? '' : activeProtocol));
 
   const cloneActions = [[cloneBtn, cloneUrlInput], [sshCloneBtn, sshUrlInput]];
   for (const [actionButton, addressInput] of cloneActions) {

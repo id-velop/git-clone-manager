@@ -5,7 +5,7 @@ Clone GitHub and GitLab repositories to a chosen local folder with one click.
 ## ✨ Features
 
 - 🚀 Instant Clone action on GitHub and GitLab repository pages
-- 🔀 HTTPS and SSH clone methods with a remembered preference
+- 🔀 HTTPS by default, with an optional saved SSH preference in the extension popup
 - ⏳ Visible progress for long-running clones
 - 📁 Native folder picker for selecting clone location
 - 💻 Automatic terminal opening (optional)

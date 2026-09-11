@@ -157,104 +157,10 @@
 
   // ─── Clone Execution ──────────────────────────────────────
 
-  function chooseCloneProtocol(urls) {
-    return new Promise(resolve => {
-      const anchor = document.getElementById('git-magager-page-btn');
-      if (!anchor) return resolve(null);
-      const host = document.createElement('div');
-      host.style.cssText = 'position:fixed;z-index:2147483647;display:block;';
-      const root = host.attachShadow({ mode: 'closed' });
-      root.innerHTML = `
-        <style>
-          * { box-sizing: border-box; }
-          .popup { width: min(300px, calc(100vw - 24px)); max-height: calc(100vh - 24px); overflow: auto; padding: 16px; border: 1px solid #e5e5e5; border-radius: 16px; background: #fff; color: #171717; font: 13px/1.45 Inter, ui-sans-serif, system-ui, sans-serif; box-shadow: none; }
-          .eyebrow { margin: 0 0 3px; color: #333333; font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-          h2 { margin: 0 0 14px; font-size: 15px; letter-spacing: -.01em; }
-          p { margin: 0; color: #737373; }
-          .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
-          button { padding: 11px 12px; border: 1px solid #d4d4d4; border-radius: 10px; background: #f5f5f5; color: #171717; font: inherit; font-weight: 800; cursor: pointer; }
-          button:hover:not(:disabled) { border-color: #171717; background: #dff7f3; color: #075c58; }
-          button:active:not(:disabled) { background: #e5e5e5; }
-          button:focus-visible { outline: 3px solid #737373; outline-offset: 3px; }
-          button:disabled { opacity: .4; cursor: not-allowed; }
-          label { display: flex; gap: 8px; align-items: center; font-size: 12px; font-weight: 650; }
-          input { accent-color: #07BEB8; }
-          .hint { margin-top: 7px; font-size: 11px; }
-          @media (prefers-reduced-motion: reduce) { * { transition-duration: .01ms !important; } }
-        </style>
-        <div class="popup" role="dialog" aria-modal="false" aria-labelledby="title">
-          <p class="eyebrow">Instant Clone</p>
-          <h2 id="title">How should we connect?</h2>
-          <div class="choices"><button type="button" data-protocol="https">HTTPS</button><button type="button" data-protocol="ssh">SSH</button></div>
-          <label><input id="remember" type="checkbox"> Remember my choice</label>
-          <p class="hint">Change this later from the extension popup.</p>
-        </div>`;
-      const stopTranslation = globalThis.QuickCloneI18n?.observe(root);
-      const previousFocus = document.activeElement;
-      let finished = false;
-      function finish(result, restoreFocus = true) {
-        if (finished) return;
-        finished = true;
-        document.removeEventListener('pointerdown', onOutside, true);
-        document.removeEventListener('keydown', onKeydown, true);
-        document.removeEventListener('focusin', onFocusOutside);
-        window.removeEventListener('scroll', position, true);
-        window.removeEventListener('resize', position);
-        anchor.removeAttribute('aria-expanded');
-        anchor.removeAttribute('aria-haspopup');
-        stopTranslation?.();
-        host.remove();
-        if (restoreFocus) previousFocus?.focus();
-        resolve(result);
-      }
-      function onOutside(event) {
-        if (!event.composedPath().includes(host) && !anchor.contains(event.target)) finish(null, false);
-      }
-      function onFocusOutside(event) {
-        if (!event.composedPath().includes(host) && !anchor.contains(event.target)) finish(null, false);
-      }
-      function onKeydown(event) {
-        if (event.key === 'Escape') {
-          event.preventDefault();
-          event.stopPropagation();
-          finish(null);
-        }
-      }
-      function position() {
-        if (!anchor.isConnected) return finish(null, false);
-        const rect = anchor.getBoundingClientRect();
-        const panel = root.querySelector('.popup').getBoundingClientRect();
-        const left = Math.max(12, Math.min(rect.left, window.innerWidth - panel.width - 12));
-        const below = rect.bottom + 8;
-        const top = below + panel.height <= window.innerHeight - 12
-          ? below : Math.max(12, rect.top - panel.height - 8);
-        host.style.left = `${left}px`;
-        host.style.top = `${top}px`;
-      }
-      root.querySelectorAll('[data-protocol]').forEach(button => {
-        button.disabled = !urls[button.dataset.protocol];
-        button.addEventListener('click', () => finish({
-          protocol: button.dataset.protocol,
-          remember: root.querySelector('#remember').checked
-        }));
-      });
-      document.body.appendChild(host);
-      anchor.setAttribute('aria-haspopup', 'dialog');
-      anchor.setAttribute('aria-expanded', 'true');
-      position();
-      document.addEventListener('pointerdown', onOutside, true);
-      document.addEventListener('keydown', onKeydown, true);
-      document.addEventListener('focusin', onFocusOutside);
-      window.addEventListener('scroll', position, true);
-      window.addEventListener('resize', position);
-      root.querySelector('[data-protocol]:not(:disabled)')?.focus();
-    });
-  }
-
-  let choosingProtocol = false;
+  let startingClone = false;
   async function startCloneWithPreference() {
-    if (choosingProtocol || document.getElementById('git-magager-page-btn')?.disabled) return;
-    choosingProtocol = true;
+    if (startingClone || document.getElementById('git-magager-page-btn')?.disabled) return;
+    startingClone = true;
     const pageUrl = window.location.href;
     try {
       if (!await checkServer()) {
@@ -264,20 +170,14 @@
       }
       const urls = getCloneUrls();
       const { cloneProtocol } = await chrome.storage.local.get('cloneProtocol');
-      let protocol = cloneProtocol;
-      if (!['https', 'ssh'].includes(protocol)) {
-        const choice = await chooseCloneProtocol(urls);
-        if (!choice || window.location.href !== pageUrl) return;
-        protocol = choice.protocol;
-        if (choice.remember) await chrome.storage.local.set({ cloneProtocol: protocol });
-      }
+      const protocol = ['https', 'ssh'].includes(cloneProtocol) ? cloneProtocol : 'https';
       if (window.location.href !== pageUrl) return;
       if (!urls[protocol]) throw new Error(`No ${protocol.toUpperCase()} clone URL is available for this repository.`);
       await doClone(urls[protocol]);
     } catch (error) {
       showNotification(error.message || 'Could not select clone method. Please reload the extension.', 'error');
     } finally {
-      choosingProtocol = false;
+      startingClone = false;
     }
   }
 

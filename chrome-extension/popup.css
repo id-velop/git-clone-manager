@@ -269,8 +269,6 @@ body { background: #f5f8f8; }
 #copy-status { margin: 8px 0 0; font-size: .75rem; color: #075c58; }
 #copy-status:empty { margin: 0; }
 .connection-card > .connect-btn { display: block; margin: 12px auto 0; }
-.ask-protocol { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: .6875rem; margin-bottom: 16px; cursor: pointer; }
-.ask-protocol input { margin: 0; accent-color: #06847f; }
 .protocol-tab:disabled { opacity: .6; cursor: wait; }
 #protocol-save-status { margin: 0; color: var(--danger); font-size: .75rem; }
 #protocol-save-status:not(:empty) { margin-bottom: 12px !important; }
