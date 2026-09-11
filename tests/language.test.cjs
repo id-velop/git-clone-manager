@@ -25,9 +25,9 @@ test('stored language wins over browser language after reopening', async () => {
   assert.equal(translate('设置'), 'Settings');
 });
 
-test('first use follows Chinese browser language', async () => {
+test('first use defaults to English regardless of browser language', async () => {
   const { translate } = await load(undefined, 'zh-CN');
-  assert.equal(translate('Clone repository'), '克隆仓库');
+  assert.equal(translate('克隆仓库'), 'Clone repository');
 });
 
 test('language changes reach existing contexts and preserve error details and paths', async () => {

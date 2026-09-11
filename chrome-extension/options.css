@@ -81,7 +81,3 @@ code { padding: 2px 5px; border-radius: 4px; background: #f0f0f0; color: var(--i
 .save-btn:hover:not(:disabled) { background: #0860CA; }
 .save-btn:active:not(:disabled) { background: #0757BA; }
 .path-field input { padding-left: 12px; }
-
-.language-setting { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; font-size: .8125rem; }
-#language-status { flex-basis: 100%; margin: 0; }
-#language-status:empty { display: none; }

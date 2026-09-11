@@ -77,7 +77,7 @@
 };
   const reverse = new Map(Object.entries(messages).map(([en, zh]) => [zh, en]));
   const prefixes = [['Clone failed: ', '克隆失败：'], ['Could not save: ', '保存失败：'], ['Folder selection failed: ', '文件夹选择失败：'], ['Cloned to ', '已克隆到 ']];
-  let language = (globalThis.navigator?.language || 'en').startsWith('zh') ? 'zh' : 'en';
+  let language = 'en';
   const roots = new Set();
   function translate(text) {
     const trimmed = text.trim();
@@ -96,7 +96,7 @@
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     while (walker.nextNode()) {
       const node = walker.currentNode;
-      if (node.parentElement?.closest('script, style, code, pre, textarea, [data-language-select]')) continue;
+      if (node.parentElement?.closest('script, style, code, pre, textarea, [data-language-option]')) continue;
       const value = translate(node.nodeValue);
       if (value !== node.nodeValue) node.nodeValue = value;
     }
@@ -110,10 +110,12 @@
   }
   function refresh() {
     for (const root of roots) render(root);
-    if (document.querySelector('[data-language-select]')) {
-      document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
-      document.querySelectorAll('[data-language-select]').forEach(select => { select.value = language; });
-    }
+    if (document.documentElement) document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
+    document.querySelectorAll?.('[data-language-option]').forEach(button => {
+      const selected = button.dataset.languageOption === language;
+      button.setAttribute('aria-pressed', String(selected));
+      button.classList.toggle('active', selected);
+    });
   }
   function observe(root) {
     roots.add(root);
@@ -126,7 +128,7 @@
     try {
       const stored = await chrome.storage.local.get('language');
       if (['en', 'zh'].includes(stored.language)) language = stored.language;
-    } catch (_) { /* Browser language is the fallback. */ }
+    } catch (_) { /* English is the default. */ }
     refresh();
   })();
   chrome.storage.onChanged?.addListener((changes, area) => {
@@ -137,22 +139,24 @@
   });
   globalThis.QuickCloneI18n = {translate, observe, ready};
   document.addEventListener('DOMContentLoaded', async () => {
-    if (!document.querySelector('[data-language-select]')) return;
+    if (!document.querySelector('[data-language-option]')) return;
     await ready;
     observe(document.documentElement);
     refresh();
-    document.querySelectorAll('[data-language-select]').forEach(select => {
-      select.addEventListener('change', async () => {
-        select.disabled = true;
+    document.querySelectorAll('[data-language-option]').forEach(button => {
+      button.addEventListener('click', async () => {
+        const nextLanguage = button.dataset.languageOption;
+        document.querySelectorAll('[data-language-option]').forEach(option => { option.disabled = true; });
         try {
-          await chrome.storage.local.set({language: select.value});
-          language = select.value;
+          await chrome.storage.local.set({language: nextLanguage});
+          language = nextLanguage;
           refresh();
         } catch (_) {
-          select.value = language;
           const status = document.getElementById('language-status');
           if (status) status.textContent = translate('Could not save. Try again.');
-        } finally { select.disabled = false; }
+        } finally {
+          document.querySelectorAll('[data-language-option]').forEach(option => { option.disabled = false; });
+        }
       });
     });
   });

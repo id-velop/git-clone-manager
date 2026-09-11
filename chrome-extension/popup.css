@@ -290,6 +290,11 @@ body { background: #f6f8fa; }
 .settings-icon:hover { background: #ddf4ff; color: #0550AE; }
 .settings-version { margin: 16px 0 0; text-align: center; }
 
-.language-setting { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; font-size: .8125rem; }
-#language-status { flex-basis: 100%; margin: 0; }
+.language-segment { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 100%; margin: 0 0 16px; padding: 3px; border-radius: 10px; background: #f0f2f4; }
+.language-segment button { min-height: 32px; padding: 5px 12px; border: 0; border-radius: 7px; background: transparent; color: var(--muted); font: inherit; font-size: .75rem; font-weight: 650; cursor: pointer; }
+.language-segment button:hover:not(.active) { color: var(--ink); background: #e7ebef; }
+.language-segment button.active { color: #0550AE; background: #fff; box-shadow: 0 1px 2px rgba(31, 35, 40, .12); }
+.language-segment button:focus-visible { outline: 2px solid #54AEFF; outline-offset: 1px; }
+.language-segment button:disabled { cursor: wait; }
+#language-status { margin: -8px 0 12px; font-size: .75rem; color: var(--danger); }
 #language-status:empty { display: none; }

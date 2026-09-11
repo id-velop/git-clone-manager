@@ -26,6 +26,11 @@
 
 
     <div id="home-view">
+    <div class="language-segment" role="group" aria-label="Language">
+      <button type="button" data-language-option="en" aria-pressed="true">English</button>
+      <button type="button" data-language-option="zh" aria-pressed="false">中文</button>
+    </div>
+    <p id="language-status" role="status" aria-live="polite"></p>
     <section class="clone-workspace" aria-label="Clone repository">
 
       <div class="protocol-tabs" role="tablist" aria-label="Clone protocol">
@@ -81,7 +86,6 @@
         <button id="settings-back" type="button" class="settings-link">← Back</button>
         <h2 id="settings-title">Settings</h2>
       </div>
-      <div class="language-setting"><label for="language-select">Language</label><select id="language-select" data-language-select><option value="en">English</option><option value="zh">简体中文</option></select><p id="language-status" role="status"></p></div>
       <form id="popup-settings-form" class="clone-workspace settings-form">
         <label for="settings-directory">Default folder</label>
         <input id="settings-directory" type="text" placeholder="~/Projects" spellcheck="false" disabled>
