@@ -1,6 +1,6 @@
 # Chrome Web Store Listing — Quick Clone
 
-> Last Updated: 2026-09-09
+> Last Updated: 2026-09-11
 
 ## Store Listing
 
@@ -44,7 +44,7 @@ English
 
 ### Screenshot Notes
 
-- Branding is now Quick Clone, with two overlapping white rounded squares on a #07BEB8 icon. Refresh all store screenshots to use this name and icon.
+- Branding is now Quick Clone, with a white folder and downward download arrow on a #07BEB8 background. Refresh all store screenshots to use this name and icon.
 
 - Refresh popup screenshots for the flat layout: no workspace title or address labels; header settings icon and version inside settings.
 
