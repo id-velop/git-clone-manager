@@ -13,6 +13,8 @@ for file in manifest.json i18n.js background.js content.js content.css popup.htm
 done
 mkdir -p "$STAGING_DIR/icons"
 cp "$SOURCE_DIR/icons/icon.svg" "$SOURCE_DIR/icons/icon16.png" "$SOURCE_DIR/icons/icon48.png" "$SOURCE_DIR/icons/icon128.png" "$STAGING_DIR/icons/"
+mkdir -p "$STAGING_DIR/images"
+cp "$SOURCE_DIR/images/open-terminal-macos.png" "$SOURCE_DIR/images/open-command-windows.png" "$STAGING_DIR/images/"
 
 rm -f "$OUTPUT"
 (cd "$STAGING_DIR" && zip -qr "$OUTPUT" .)

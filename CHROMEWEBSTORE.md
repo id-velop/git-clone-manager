@@ -106,7 +106,7 @@ Quick Clone processes the current repository address, selected destination folde
 
 | Version | Date | Changes | Status |
 |---|---|---|---|
-| 1.1.5 setup revision | 2026-09-11 | Adds a three-step, platform-specific setup guide and shows the install command directly without a collapsible heading. | Draft |
+| 1.1.5 setup revision | 2026-09-11 | Adds platform-specific screenshots to the first step of the three-step setup guide and shows the install command directly without a collapsible heading. | Draft |
 | 1.1.5 companion revision | 2026-09-11 | Replaces an older local companion during setup so stale extension-ID registrations cannot block folder selection. | Draft |
 | 1.1.5 protocol revision | 2026-09-11 | Uses HTTPS by default and keeps protocol changes inside the extension popup, removing the repository-page chooser. | Draft |
 | 1.1.5 platform revision | 2026-09-11 | Adds one-command Windows setup, native Windows folder selection, Windows Terminal support, and automatic prerequisite installation. | Draft |

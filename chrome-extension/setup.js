@@ -5,6 +5,8 @@ const setupNote = document.getElementById('setup-note');
 const setupInstruction = document.getElementById('setup-instruction');
 const setupStepOpen = document.getElementById('setup-step-open');
 const setupStepRun = document.getElementById('setup-step-run');
+const setupImageMac = document.getElementById('setup-image-macos');
+const setupImageWindows = document.getElementById('setup-image-windows');
 const extensionId = globalThis.chrome?.runtime?.id;
 if (/^[a-p]{32}$/.test(extensionId || '')) {
   const platform = navigator.userAgentData?.platform || navigator.platform || '';
@@ -13,6 +15,8 @@ if (/^[a-p]{32}$/.test(extensionId || '')) {
     if (setupInstruction) setupInstruction.textContent = 'Run this in PowerShell, then reconnect.';
     if (setupStepOpen) setupStepOpen.textContent = 'Open Command.';
     if (setupStepRun) setupStepRun.textContent = 'Copy the command below, paste it into Command, then press Enter.';
+    if (setupImageMac) setupImageMac.hidden = true;
+    if (setupImageWindows) setupImageWindows.hidden = false;
     if (setupNote) setupNote.textContent = 'Installs Node.js and Git if needed. No manual configuration required.';
   } else {
     command.textContent = `curl -fsSL https://raw.githubusercontent.com/id-velop/quick-clone/main/scripts/install-companion.sh | bash -s -- ${extensionId}`;
