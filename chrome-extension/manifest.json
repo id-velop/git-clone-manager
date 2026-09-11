@@ -51,7 +51,7 @@
   "web_accessible_resources": [
     {
       "resources": [
-        "icons/icon48.png"
+        "icons/icon.svg"
       ],
       "matches": [
         "https://github.com/*",

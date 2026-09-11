@@ -64,6 +64,7 @@ test('GitHub button and clone URL still work', () => {
 
 test('icon is accessible on all content-script hosts', () => {
   const manifest = JSON.parse(fs.readFileSync('chrome-extension/manifest.json', 'utf8'));
+  assert.ok(manifest.web_accessible_resources[0].resources.includes('icons/icon.svg'));
   for (const match of manifest.content_scripts[0].matches) {
     assert.ok(manifest.web_accessible_resources[0].matches.includes(match));
   }

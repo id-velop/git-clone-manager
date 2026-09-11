@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="#0969DA" role="img" aria-labelledby="title">
+  <title id="title">Quick Clone</title>
+  <path d="M27 8h-9.44a1 1 0 0 1-1-.75l-.24-1A3 3 0 0 0 13.44 4H5a3 3 0 0 0-3 3v18a3 3 0 0 0 3 3h22a3 3 0 0 0 3-3V11a3 3 0 0 0-3-3ZM16 25a7 7 0 1 1 7-7 7 7 0 0 1-7 7Z"/>
+  <path d="M17 18.66V14h-2v4.66l-1.83-1.83-1.41 1.41 3.53 3.54a1 1 0 0 0 1.42 0l3.53-3.54-1.41-1.41Z"/>
+</svg>

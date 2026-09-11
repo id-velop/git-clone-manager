@@ -319,7 +319,7 @@
         btn.style.setProperty('--gm-button-font-size', metrics.fontSize);
         btn.style.setProperty('--gm-button-radius', metrics.borderRadius);
       }
-      const iconUrl = chrome.runtime.getURL?.('icons/icon48.png') || '';
+      const iconUrl = chrome.runtime.getURL?.('icons/icon.svg') || '';
       btn.innerHTML = `
         <img class="gm-clone-icon" src="${iconUrl}" width="22" height="22" alt="">
         Instant Clone
