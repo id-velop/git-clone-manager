@@ -17,8 +17,8 @@ test('setup shows a self-contained Windows PowerShell command', () => {
   assert.match(command, /install-companion\.ps1/);
   assert.match(command, /aamnpggmnckbdjbhecooigjddpnjffjl/);
   assert.equal(elements.get('copy-command').disabled, false);
-  assert.equal(elements.get('setup-step-open').textContent, 'Open Command Prompt.');
-  assert.match(elements.get('setup-step-run').textContent, /paste it into Command Prompt/);
+  assert.equal(elements.get('setup-step-open').textContent, 'Open Command.');
+  assert.match(elements.get('setup-step-run').textContent, /paste it into Command/);
   assert.match(elements.get('setup-note').textContent, /No manual configuration required/);
 });
 

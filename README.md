@@ -18,7 +18,7 @@ Requirements: Google Chrome on macOS or Windows.
 1. Open `chrome://extensions` in Chrome.
 2. Enable **Developer mode** and choose **Load unpacked**.
 3. Select the `chrome-extension` folder.
-4. Open Quick Clone and follow the three setup steps. The provided command installs missing dependencies and registers the local companion automatically.
+4. Open Quick Clone and follow the three setup steps. The provided command configures the local companion automatically.
 
 ## Usage
 
