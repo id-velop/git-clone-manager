@@ -4,7 +4,7 @@ set -euo pipefail
 PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 SOURCE_DIR="$PROJECT_DIR/chrome-extension"
 VERSION="$(node -p "require('$SOURCE_DIR/manifest.json').version")"
-OUTPUT="$PROJECT_DIR/clone-manager-v$VERSION.zip"
+OUTPUT="$PROJECT_DIR/quick-clone-v$VERSION.zip"
 STAGING_DIR="$(mktemp -d)"
 trap 'rm -rf "$STAGING_DIR"' EXIT
 
