@@ -118,7 +118,7 @@
       chrome.runtime.sendMessage(message, (response) => {
         if (chrome.runtime.lastError) {
           reject(new Error(/context invalidated|Receiving end does not exist|message port closed/i.test(chrome.runtime.lastError.message)
-            ? '扩展已更新，请刷新当前页面后重试。' : chrome.runtime.lastError.message));
+            ? 'Extension updated. Refresh this page and try again.' : chrome.runtime.lastError.message));
         } else {
           resolve(response);
         }
@@ -131,7 +131,7 @@
       const result = await sendMessageToBackground({ type: 'CHECK_SERVER' });
       return result === true;
     } catch (e) {
-      throw new Error('无法连接扩展，请刷新当前页面后重试。');
+      throw new Error('Cannot connect to extension. Refresh this page and try again.');
     }
   }
 
@@ -189,6 +189,7 @@
           <label><input id="remember" type="checkbox"> Remember my choice</label>
           <p class="hint">Change this later from the extension popup.</p>
         </div>`;
+      const stopTranslation = globalThis.QuickCloneI18n?.observe(root);
       const previousFocus = document.activeElement;
       let finished = false;
       function finish(result, restoreFocus = true) {
@@ -201,6 +202,7 @@
         window.removeEventListener('resize', position);
         anchor.removeAttribute('aria-expanded');
         anchor.removeAttribute('aria-haspopup');
+        stopTranslation?.();
         host.remove();
         if (restoreFocus) previousFocus?.focus();
         resolve(result);
@@ -369,7 +371,7 @@
   function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `gm-notification gm-notification-${type}`;
-    notification.textContent = message;
+    notification.textContent = globalThis.QuickCloneI18n?.translate(message) || message;
     document.body.appendChild(notification);
 
     requestAnimationFrame(() => {
@@ -425,6 +427,7 @@
       btn.addEventListener('click', startCloneWithPreference);
 
       actionBar.appendChild(btn);
+      globalThis.QuickCloneI18n?.observe(btn);
     }
   }
 

@@ -39,6 +39,7 @@
         "https://*.example.com/*"
       ],
       "js": [
+        "i18n.js",
         "content.js"
       ],
       "css": [
