@@ -47,13 +47,21 @@
 
     <section id="no-server" class="connection-card" hidden>
       <div id="inline-setup">
-        <p id="setup-instruction" class="connection-copy">Run this in Terminal, then reconnect.</p>
-        <pre tabindex="0"><code id="install-command">Loading install command…</code></pre>
-        <button id="copy-command" class="install-link" type="button" disabled>Copy command</button>
-        <p id="copy-status" role="status"></p>
-        <p id="setup-note" class="setup-note">macOS · Installs Node.js and Git if needed. May ask for your Mac password.</p>
+        <ol class="setup-steps">
+          <li><span id="setup-step-open">Open Terminal.</span></li>
+          <li>
+            <span id="setup-step-run">Copy the command below, paste it into Terminal, then press Enter.</span>
+            <pre tabindex="0"><code id="install-command">Loading install command…</code></pre>
+            <button id="copy-command" class="install-link" type="button" disabled>Copy command</button>
+            <p id="copy-status" role="status"></p>
+            <p id="setup-note" class="setup-note">Installs Node.js and Git if needed. May ask for your Mac password.</p>
+          </li>
+          <li>
+            <span>Return to Quick Clone and click Reconnect.</span>
+            <button id="start-server-btn" class="connect-btn" type="button">Reconnect</button>
+          </li>
+        </ol>
       </div>
-      <button id="start-server-btn" class="connect-btn" type="button">Reconnect</button>
       <p id="start-error" class="start-error" role="alert" hidden></p>
     </section>
 

@@ -13,18 +13,12 @@ Quickly clone GitHub and GitLab repositories with one click—no terminal needed
 
 ## Setup
 
-Requirements: Google Chrome, Node.js, and Git on macOS or Windows.
+Requirements: Google Chrome on macOS or Windows.
 
 1. Open `chrome://extensions` in Chrome.
 2. Enable **Developer mode** and choose **Load unpacked**.
 3. Select the `chrome-extension` folder.
-4. Install the native host:
-
-```bash
-bash native-host/install-native-host.sh YOUR_EXTENSION_ID
-```
-
-Replace `YOUR_EXTENSION_ID` with the ID shown in Chrome.
+4. Open Quick Clone and follow the three setup steps. The provided command installs missing dependencies and registers the local companion automatically.
 
 ## Usage
 

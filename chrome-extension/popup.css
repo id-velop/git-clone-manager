@@ -232,14 +232,16 @@ body { background: #f6f8fa; }
 .start-error { padding: 10px 12px; border-radius: 12px; background: #f2f4f4; line-height: 1.5; }
 .preference-card { margin: 0 0 12px; padding: 12px 4px; }
 .connection-card { padding: 20px 0 0; border-top: 1px solid var(--line); }
-#inline-setup .connection-copy { margin: 0 0 12px; font-size: .75rem; }
-#inline-setup pre { max-height: 108px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; margin: 0 0 12px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #f6f8fa; font: .6875rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
+.setup-steps { display: grid; gap: 18px; margin: 0; padding: 0; list-style: none; counter-reset: setup-step; }
+.setup-steps > li { position: relative; min-width: 0; padding-left: 30px; color: var(--ink); font-size: .75rem; line-height: 1.5; counter-increment: setup-step; }
+.setup-steps > li::before { position: absolute; top: 0; left: 0; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #ddf4ff; color: #0550AE; font-size: .6875rem; font-weight: 700; content: counter(setup-step); }
+#inline-setup pre { max-height: 108px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; margin: 10px 0 12px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: #f6f8fa; font: .6875rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; }
 #inline-setup .install-link { border: 0; width: 100%; justify-content: center; cursor: pointer; font: inherit; font-size: .8125rem; font-weight: 650; }
 #inline-setup .install-link:disabled { opacity: .5; cursor: default; }
 .setup-note { margin: 10px 0 0; color: var(--muted); font-size: .6875rem; line-height: 1.5; }
 #copy-status { margin: 8px 0 0; font-size: .75rem; color: #0550AE; }
 #copy-status:empty { margin: 0; }
-.connection-card > .connect-btn { display: block; margin: 12px auto 0; }
+.setup-steps .connect-btn { display: block; margin: 10px 0 0; }
 .clone-workspace + .connection-card { margin-top: 14px; }
 .settings-heading { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; }
 .settings-heading h2 { font-size: 1.125rem; }
