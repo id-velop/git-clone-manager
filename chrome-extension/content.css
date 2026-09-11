@@ -50,7 +50,7 @@
   border-radius: var(--gm-button-radius, 6px);
 }
 
-.gm-clone-icon { display: block; width: 22px; height: 22px; flex: 0 0 auto; filter: brightness(0) invert(1); }
+.gm-clone-icon { display: block; width: 18px; height: 18px; flex: 0 0 auto; filter: brightness(0) invert(1); }
 .gm-page-btn:hover:not(:disabled) { background: var(--gm-accent-hover); box-shadow: none; }
 .gm-page-btn:active:not(:disabled) { background: #0757BA; }
 .gm-page-btn:focus-visible { outline: 3px solid #54AEFF; outline-offset: 3px; }

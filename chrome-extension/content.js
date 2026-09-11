@@ -321,7 +321,7 @@
       }
       const iconUrl = chrome.runtime.getURL?.('icons/icon.svg') || '';
       btn.innerHTML = `
-        <img class="gm-clone-icon" src="${iconUrl}" width="22" height="22" alt="">
+        <img class="gm-clone-icon" src="${iconUrl}" width="18" height="18" alt="">
         Instant Clone
       `;
 
