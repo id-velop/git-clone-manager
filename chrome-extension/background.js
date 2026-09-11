@@ -19,8 +19,11 @@ async function readServerResponse(response) {
 }
 
 // Check server health on install
-chrome.runtime.onInstalled.addListener(() => {
+chrome.runtime.onInstalled.addListener((details) => {
   console.log('[Quick Clone] Extension installed');
+  if (details.reason === 'install') {
+    chrome.storage.local.set({ language: 'en' });
+  }
   checkServerHealth();
 });
 
