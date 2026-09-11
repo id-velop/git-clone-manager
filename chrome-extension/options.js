@@ -8,12 +8,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   const saveBtn = document.getElementById('save-btn');
   const statusDiv = document.getElementById('status');
 
+  try {
+    const platform = await chrome.runtime.getPlatformInfo();
+    if (platform.os === 'win') {
+      terminalAppSelect.replaceChildren(new Option('Windows Terminal', 'WindowsTerminal'));
+    }
+  } catch (_) {
+    // Keep macOS terminal choices when platform information is unavailable.
+  }
+
   // Load current config
   try {
     const config = await chrome.runtime.sendMessage({ type: 'GET_CONFIG' });
     if (config && !config.error) {
       cloneDirInput.value = config.cloneDirectory || '';
-      terminalAppSelect.value = config.terminalApp || 'Terminal';
+      terminalAppSelect.value = config.terminalApp || terminalAppSelect.options[0]?.value || 'Terminal';
       openTerminalToggle.checked = config.openInTerminal === true;
     }
   } catch (e) {

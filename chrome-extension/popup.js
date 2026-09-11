@@ -20,6 +20,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   const protocolStatus = document.getElementById('protocol-save-status');
   const protocolTabs = [...document.querySelectorAll('[data-protocol-tab]')];
   const protocolPanels = [...document.querySelectorAll('[data-protocol-panel]')];
+  try {
+    const platform = await chrome.runtime.getPlatformInfo();
+    if (platform.os === 'win') {
+      for (const select of [document.getElementById('settings-terminal')]) {
+        select.replaceChildren(new Option('Windows Terminal', 'WindowsTerminal'));
+      }
+    }
+  } catch (_) {
+    // Keep macOS terminal choices when platform information is unavailable.
+  }
 
   function selectProtocolPanel(protocol, moveFocus = false) {
     activeProtocol = protocol;
@@ -262,7 +272,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const config = await chrome.runtime.sendMessage({ type: 'GET_CONFIG' });
       if (!config || config.error || config.success === false) throw new Error('Connect the companion to edit settings.');
       directoryInput.value = config.cloneDirectory || '';
-      terminalSelect.value = config.terminalApp || 'Terminal';
+      terminalSelect.value = config.terminalApp || (terminalSelect.options[0]?.value || 'Terminal');
       settingsTerminalToggle.checked = config.openInTerminal === true;
       settingsStatus.textContent = '';
       settingsControls.forEach(control => { control.disabled = false; });

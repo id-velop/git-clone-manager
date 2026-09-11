@@ -58,11 +58,11 @@
     <section id="no-server" class="connection-card" hidden>
       <details id="inline-setup" open>
         <summary>Set up local companion</summary>
-        <p class="connection-copy">Run this in Terminal, then reconnect.</p>
+        <p id="setup-instruction" class="connection-copy">Run this in Terminal, then reconnect.</p>
         <pre tabindex="0"><code id="install-command">Loading install command…</code></pre>
         <button id="copy-command" class="install-link" type="button" disabled>Copy command</button>
         <p id="copy-status" role="status"></p>
-        <p class="setup-note">macOS · Installs Node.js and Git if needed. May ask for your Mac password.</p>
+        <p id="setup-note" class="setup-note">macOS · Installs Node.js and Git if needed. May ask for your Mac password.</p>
       </details>
       <button id="start-server-btn" class="connect-btn" type="button">Reconnect</button>
       <p id="start-error" class="start-error" role="alert" hidden></p>

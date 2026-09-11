@@ -14,11 +14,11 @@ async function run(selected, openTerminal = false) {
     }, process, console, setTimeout,
     choose: async () => selected,
     clone: async (url, config) => { calls.push({ url, config, terminal: false }); return { success: true }; },
-    terminal: async (url, config) => { calls.push({ url, config, terminal: true }); return { success: true }; }
+    terminal: async (directory, config) => { calls.push({ directory, config, terminal: true }); return { success: true }; }
   });
   vm.runInContext(fs.readFileSync('native-host/server.js', 'utf8') + `
     loadConfig = () => ({ cloneDirectory: '/default', openInTerminal: false });
-    chooseFolder = choose; cloneRepo = clone; openInTerminal = terminal;
+    chooseFolder = choose; cloneRepo = clone; openTerminalAt = terminal;
   `, context);
   const req = new EventEmitter();
   Object.assign(req, { method: 'POST', url: '/clone-with-picker', headers: { host: '127.0.0.1:9456' } });
@@ -42,6 +42,8 @@ test('cancelled picker never clones', async () => {
 });
 test('terminal preference uses the chosen directory', async () => {
   const { calls } = await run('/selected', true);
-  assert.equal(calls[0].terminal, true);
+  assert.equal(calls[0].terminal, false);
   assert.equal(calls[0].config.cloneDirectory, '/selected');
+  assert.equal(calls[1].terminal, true);
+  assert.equal(calls[1].directory, '/selected/repo');
 });

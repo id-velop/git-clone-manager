@@ -7,7 +7,8 @@ const path = require('path');
 const os = require('os');
 
 const PORT = 9456;
-const EXTENSION_ID = process.env.GM_EXTENSION_ID || '';
+const EXTENSION_ID = process.env.GM_EXTENSION_ID || process.argv[2] || '';
+const GIT_BIN = process.env.GM_GIT_BIN || process.argv[3] || 'git';
 if (EXTENSION_ID && !/^[a-p]{32}$/.test(EXTENSION_ID)) throw new Error('Invalid extension ID');
 const CONFIG_FILE = path.join(os.homedir(), '.git-magager.json');
 
@@ -15,7 +16,7 @@ const CONFIG_FILE = path.join(os.homedir(), '.git-magager.json');
 const DEFAULT_CONFIG = {
   cloneDirectory: path.join(os.homedir(), 'Projects'),
   openInTerminal: false,
-  terminalApp: 'Terminal'
+  terminalApp: process.platform === 'win32' ? 'WindowsTerminal' : 'Terminal'
 };
 
 function loadConfig() {
@@ -52,7 +53,7 @@ function cloneRepo(url, config) {
     ensureCloneDir(cloneDir);
 
     console.log(`Cloning ${url} into ${cloneDir}...`);
-    execFile('git', ['clone', '--', url], {
+    execFile(GIT_BIN, ['clone', '--', url], {
       cwd: cloneDir,
       env: { ...process.env, GIT_TERMINAL_PROMPT: '0' },
       maxBuffer: 16 * 1024 * 1024
@@ -68,10 +69,26 @@ function cloneRepo(url, config) {
   });
 }
 
-function openInTerminal(url, config) {
+function repositoryName(url) {
+  return url.replace(/[\\/]+$/, '').split(/[\\/:]/).pop().replace(/\.git$/, '');
+}
+
+function openTerminalAt(directory, config) {
   return new Promise((resolve, reject) => {
-    const cloneDir = config.cloneDirectory;
-    ensureCloneDir(cloneDir);
+    if (process.platform === 'win32') {
+      let settled = false;
+      const finish = result => { if (!settled) { settled = true; resolve(result); } };
+      const child = require('child_process').spawn('wt.exe', ['-d', directory], { detached: true, stdio: 'ignore' });
+      child.once('spawn', () => { child.unref(); finish({ success: true }); });
+      child.once('error', () => {
+        const fallback = require('child_process').spawn('cmd.exe', ['/d', '/k', 'cd', '/d', directory], {
+          detached: true, stdio: 'ignore', windowsHide: false
+        });
+        fallback.once('spawn', () => { fallback.unref(); finish({ success: true }); });
+        fallback.once('error', error => reject({ success: false, error: error.message }));
+      });
+      return;
+    }
 
     const terminalApp = config.terminalApp || 'Terminal';
     let command;
@@ -82,7 +99,7 @@ function openInTerminal(url, config) {
           activate
           create window with default profile
           tell current session of current window
-            write text "cd \\"${cloneDir}\\" && git clone ${url} && cd \\"$(basename ${url} .git)\\""
+            write text "cd \\"${directory}\\""
           end tell
         end tell'`;
     } else if (terminalApp === 'Warp') {
@@ -93,7 +110,7 @@ function openInTerminal(url, config) {
         tell application "System Events"
           keystroke "t" using command down
           delay 0.3
-          keystroke "cd \\"${cloneDir}\\" && git clone ${url} && cd \\"$(basename ${url} .git)\\""
+          keystroke "cd \\"${directory}\\""
           keystroke return
         end tell'`;
     } else {
@@ -101,7 +118,7 @@ function openInTerminal(url, config) {
       command = `osascript -e '
         tell application "Terminal"
           activate
-          do script "cd \\"${cloneDir}\\" && git clone ${url} && cd \\"$(basename ${url} .git)\\""
+          do script "cd \\"${directory}\\""
         end tell'`;
     }
 
@@ -117,6 +134,19 @@ function openInTerminal(url, config) {
 
 function chooseFolder(defaultPath) {
   return new Promise((resolve) => {
+    if (process.platform === 'win32') {
+      const ps = [
+        'Add-Type -AssemblyName System.Windows.Forms',
+        '$dialog = New-Object System.Windows.Forms.FolderBrowserDialog',
+        "$dialog.Description = 'Choose a folder to clone into'",
+        defaultPath && fs.existsSync(defaultPath) ? `$dialog.SelectedPath = '${defaultPath.replace(/'/g, "''")}'` : '',
+        'if ($dialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) { [Console]::Out.Write($dialog.SelectedPath) }'
+      ].filter(Boolean).join('; ');
+      execFile('powershell.exe', ['-NoProfile', '-STA', '-Command', ps], { windowsHide: true }, (error, stdout) => {
+        resolve(error ? null : (stdout.trim() || null));
+      });
+      return;
+    }
     const escapedPath = (defaultPath || '~').replace(/'/g, "'\\''");
 
     // Only set default location if the directory actually exists
@@ -206,7 +236,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Choose folder endpoint - shows native macOS folder picker
+  // Choose folder endpoint - shows the operating system's native folder picker.
   if (req.method === 'POST' && req.url === '/choose-folder') {
     let body = '';
     req.on('data', chunk => { body += chunk; });
@@ -302,15 +332,12 @@ const server = http.createServer((req, res) => {
         }
         const shouldOpenTerminal = openTerminal !== undefined ? openTerminal : config.openInTerminal;
 
+        const result = await cloneRepo(url, config);
         if (shouldOpenTerminal) {
-          const result = await openInTerminal(url, config);
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(result));
-        } else {
-          const result = await cloneRepo(url, config);
-          res.writeHead(200, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify(result));
+          await openTerminalAt(path.join(config.cloneDirectory, repositoryName(url)), config);
         }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(result));
       } catch (e) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({

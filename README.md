@@ -14,15 +14,14 @@ Clone GitHub and GitLab repositories to a chosen local folder with one click.
 
 ## 📦 Installation
 
-Install the extension from Chrome Web Store when the listing is published, then install the separate Quick Clone local companion.
+Install the extension from Chrome Web Store when the listing is published, then run the one-line setup command shown in the popup. It detects macOS or Windows, installs missing Node.js and Git, and registers the companion without manual path configuration.
 
 The steps below are for local development builds.
 
 ### Prerequisites
 
-- **Node.js** (v14 or higher) - [Download here](https://nodejs.org)
 - **Google Chrome** browser
-- **Git** installed on your system
+- **macOS or Windows 10/11** (the setup command installs Node.js and Git when missing)
 
 ### Development Quick Start
 
@@ -94,7 +93,7 @@ The script will:
 
 ## 🔧 Configuration
 
-Configuration is stored in `~/.git-magager.json`:
+Configuration is stored in `.git-magager.json` in the user's home folder:
 
 ```json
 {
@@ -108,7 +107,7 @@ Configuration is stored in `~/.git-magager.json`:
 
 - **cloneDirectory**: Default directory for cloning repositories
 - **openInTerminal**: Whether to open terminal after clone (default: false)
-- **terminalApp**: Terminal application to use (`Terminal`, `iTerm`, or `Warp`)
+- **terminalApp**: Terminal application to use (macOS Terminal, iTerm2, Warp, or Windows Terminal)
 
 You can modify this file manually, or use the extension's options page.
 
@@ -196,7 +195,7 @@ bash native-host/install-native-host.sh YOUR_EXTENSION_ID
 
 Use the ID of the loaded extension shown in `chrome://extensions`, then reload
 that extension. The installer registers `com.git_magager.host` and copies the
-server into `~/Library/Application Support/Clone to Folder`. It records the current
+server into the current user's application data folder. It records the current
 Node.js executable path, so Chrome does not depend on your shell's PATH. Rerun
 the installer after updating the helper code or moving/removing that Node.js
 installation. The extension needs permission to access `http://127.0.0.1:9456/*`.
